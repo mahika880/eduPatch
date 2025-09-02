@@ -4,7 +4,6 @@
     "buildCommand": "cd EduPatch && ./mvnw clean package -DskipTests"
   },
   "deploy": {
-    "startCommand": "cd EduPatch && java -jar target/*.jar",
-    "healthcheckPath": "/"
+    "startCommand": "java -Dserver.port=$PORT -jar EduPatch/target/*.jar"
   }
 }
