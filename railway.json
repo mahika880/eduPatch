@@ -1,0 +1,10 @@
+{
+  "build": {
+    "builder": "nixpacks",
+    "buildCommand": "cd EduPatch && ./mvnw clean package -DskipTests"
+  },
+  "deploy": {
+    "startCommand": "cd EduPatch && java -jar target/*.jar",
+    "healthcheckPath": "/"
+  }
+}
