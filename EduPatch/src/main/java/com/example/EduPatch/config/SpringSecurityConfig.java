@@ -19,31 +19,38 @@ public class SpringSecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
-
     }
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // disable CSRF
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // configure CORS
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/register").permitAll() // allow public access
-                        .anyRequest().permitAll() // secure all other endpoints
+                        // Public endpoints for students (no authentication)
+                        .requestMatchers("/pages/**").permitAll()  // Allow public access to pages
+                        .requestMatchers("/quizzes/**").permitAll() // Allow public access to quizzes
+                        .requestMatchers("/demo/workflow").permitAll() // Allow content creation
+                        
+                        // Admin-only endpoints
+                        .requestMatchers("/user/register").permitAll() // Admin registration
+                        .requestMatchers("/user/login").permitAll()    // Admin login
+                        .requestMatchers("/user/**").authenticated()   // Other user operations
+                        
+                        .anyRequest().permitAll() // Allow all other requests for now
                 );
 
         return http.build();
     }
 
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins for development
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // React dev server
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
