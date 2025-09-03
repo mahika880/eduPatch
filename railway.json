@@ -1,9 +1,0 @@
-{
-  "build": {
-    "builder": "nixpacks",
-    "buildCommand": "cd EduPatch && ./mvnw clean package -DskipTests"
-  },
-  "deploy": {
-    "startCommand": "java -Dserver.port=$PORT -jar EduPatch/target/*.jar"
-  }
-}
