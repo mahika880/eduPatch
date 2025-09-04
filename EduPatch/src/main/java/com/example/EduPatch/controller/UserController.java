@@ -58,19 +58,25 @@ public class UserController {
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
             
+            System.out.println("Login attempt - Email: " + email + ", Password: " + password);
+            
             Optional<User> userOptional = userService.getUserByEmail(email);
             
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 
+                // DEBUG: Print stored password
+                System.out.println("Stored password: " + user.getPassword());
+                System.out.println("Entered password: " + password);
+                System.out.println("Passwords match: " + user.getPassword().equals(password));
+                
                 // Check password
-                // In the login method, make sure the response includes 'name' field:
                 if (user.getPassword().equals(password)) {
                     Map<String, Object> response = new HashMap<>();
                     response.put("message", "Login successful");
                     response.put("userId", user.getId());
                     response.put("email", user.getEmail());
-                    response.put("name", user.getName());     // Make sure this exists
+                    response.put("name", user.getName());
                     response.put("role", user.getRole());
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
