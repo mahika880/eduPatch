@@ -14,36 +14,75 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = {"http://localhost:3000", "https://edu-patch.vercel.app"})
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user){
-        if(userService.getUserByEmail(user.getEmail()).isPresent()){
+    public ResponseEntity<?> registerUser(@RequestBody User user){
+        try {
+            if(userService.getUserByEmail(user.getEmail()).isPresent()){
+                Map<String, String> response = new HashMap<>();
+                response.put("Error", "email already in use");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            
+            // Set role to ADMIN for your use case
+            user.setRole("ADMIN");
+            
+            User savedUser = userService.registerUser(user);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Registration successful");
+            response.put("id", savedUser.getId());
+            response.put("email", savedUser.getEmail());
+            response.put("name", savedUser.getName());
+            response.put("role", savedUser.getRole());
+            
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
-            response.put("Error", "email already in use");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            response.put("Error", "Registration failed: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        User savedUser = userService.registerUser(user);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
+    
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String , String>loginRequest){
-        String email = loginRequest.get("email");
-        String password = loginRequest.get("password");
-        Optional<User> userOptional = userService.getUserByEmail(email);
-        if (userOptional.isPresent()) {
+        try {
+            String email = loginRequest.get("email");
+            String password = loginRequest.get("password");
+            
+            Optional<User> userOptional = userService.getUserByEmail(email);
+            
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                
+                // ✅ FIX: Actually check the password!
+                if (user.getPassword().equals(password)) {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("message", "Login successful");
+                    response.put("userId", user.getId());
+                    response.put("email", user.getEmail());
+                    response.put("name", user.getName());
+                    response.put("role", user.getRole());
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                } else {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("error", "Invalid password");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                Map<String, String> response = new HashMap<>();
+                response.put("error", "User not found");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
-            response.put("message", "Login successful");
-            response.put("userId", userOptional.get().getId());
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        else {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Invalid credentials");
-            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            response.put("error", "Login failed: " + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
