@@ -14,7 +14,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://localhost:3000", "https://edu-patch.vercel.app"}, allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
+@CrossOrigin(origins = {
+    "http://localhost:3000",           // Development
+    "https://edu-patch.vercel.app"     // Production - YOUR ACTUAL VERCEL URL
+})
 public class UserController {
 
     @Autowired
@@ -29,15 +32,17 @@ public class UserController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             
+            // Set role to ADMIN
+            user.setRole("ADMIN");
+            
             User savedUser = userService.registerUser(user);
             
-            // Return proper response format that matches frontend expectations
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Registration successful");
             response.put("id", savedUser.getId());
             response.put("email", savedUser.getEmail());
             response.put("name", savedUser.getName());
-            response.put("role", "ADMIN");
+            response.put("role", savedUser.getRole());
             
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -52,20 +57,29 @@ public class UserController {
         try {
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
+            
             Optional<User> userOptional = userService.getUserByEmail(email);
             
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                // Add password validation if needed
-                Map<String, Object> response = new HashMap<>();
-                response.put("message", "Login successful");
-                response.put("userId", user.getId());
-                response.put("email", user.getEmail());
-                response.put("name", user.getName());
-                return new ResponseEntity<>(response, HttpStatus.OK);
+                
+                // Check password
+                if (user.getPassword().equals(password)) {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("message", "Login successful");
+                    response.put("userId", user.getId());
+                    response.put("email", user.getEmail());
+                    response.put("name", user.getName());
+                    response.put("role", user.getRole());
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                } else {
+                    Map<String, String> response = new HashMap<>();
+                    response.put("error", "Invalid password");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                }
             } else {
                 Map<String, String> response = new HashMap<>();
-                response.put("error", "Invalid credentials");
+                response.put("error", "User not found");
                 return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
             }
         } catch (Exception e) {
@@ -75,22 +89,11 @@ public class UserController {
         }
     }
 
-    // Add OPTIONS method to handle preflight requests
-    @RequestMapping(value = "/register", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptionsRegister() {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> handleOptionsLogin() {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @GetMapping("/id/{id}")
     public ResponseEntity<?> getUserById(@PathVariable String id) {
-        Optional<User> user = userService.getUserById(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<User> userOptional = userService.getUserById(id);
+        if (userOptional.isPresent()) {
+            return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
         } else {
             Map<String, String> response = new HashMap<>();
             response.put("error", "User not found");
@@ -100,12 +103,8 @@ public class UserController {
 
     @GetMapping("/all-users")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> all = userService.getAllUsers();
-
-        if (all != null && !all.isEmpty()) {
-            return ResponseEntity.ok(all);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
 
