@@ -62,6 +62,7 @@ const Register = ({ onSwitchToLogin }) => {
     return true;
   };
 
+  // UPDATED handleSubmit - redirect to login instead of auto-login
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -69,20 +70,22 @@ const Register = ({ onSwitchToLogin }) => {
     
     setLoading(true);
     setError('');
+    setSuccess('');
 
     const userData = {
       name: formData.name,
       email: formData.email,
       password: formData.password,
-      role: 'ADMIN', // Always ADMIN
+      role: 'ADMIN',
     };
 
     const result = await register(userData);
     
     if (result.success) {
-      setSuccess('Admin account created successfully! Redirecting...');
+      setSuccess('Registration successful! Please login to continue.');
+      // Redirect to login page instead of auto-login
       setTimeout(() => {
-        navigate('/admin/dashboard');
+        onSwitchToLogin();
       }, 2000);
     } else {
       setError(result.error);
@@ -253,41 +256,3 @@ const Register = ({ onSwitchToLogin }) => {
 };
 
 export default Register;
-
-
-// In the handleSubmit function, around line 60-80
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
-  setSuccess('');
-  setLoading(true);
-
-  if (formData.password !== formData.confirmPassword) {
-    setError('Passwords do not match');
-    setLoading(false);
-    return;
-  }
-
-  try {
-    const result = await register({
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      role: formData.role
-    });
-
-    if (result.success) {
-      setSuccess('Registration successful! Please login to continue.');
-      // DON'T auto-login, just show success message
-      setTimeout(() => {
-        onSwitchToLogin(); // Redirect to login page
-      }, 2000);
-    } else {
-      setError(result.error);
-    }
-  } catch (error) {
-    setError('Registration failed. Please try again.');
-  } finally {
-    setLoading(false);
-  }
-};
