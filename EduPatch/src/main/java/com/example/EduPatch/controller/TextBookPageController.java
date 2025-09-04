@@ -17,9 +17,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pages")
+@CrossOrigin(origins = {
+    "http://localhost:3000",
+    "https://edu-patch.vercel.app"
+})
 public class TextBookPageController {
 
     @Autowired
@@ -47,19 +52,26 @@ public class TextBookPageController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPage(@RequestBody TextBookPage textBookPage) {
+    public ResponseEntity<?> createPage(@RequestBody TextBookPage textBookPage, @RequestHeader("X-User-ID") String userId) {
+        // Set the creator when creating new content
+        textBookPage.setCreatedBy(userId);
         TextBookPage savedPage = textBookPageService.createPage(textBookPage);
         return new ResponseEntity<>(savedPage, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<TextBookPage>> getAllPages() {
-        List<TextBookPage> all = textBookPageService.getAllPages();
+    public ResponseEntity<List<TextBookPage>> getAllPages(@RequestHeader("X-User-ID") String userId) {
+        List<TextBookPage> allPages = textBookPageService.getAllPages();
+        
+        // Filter pages to show only those created by the current user
+        List<TextBookPage> userPages = allPages.stream()
+            .filter(page -> userId.equals(page.getCreatedBy()))
+            .collect(Collectors.toList());
 
-        if (all != null && !all.isEmpty()) {
-            return ResponseEntity.ok(all);
+        if (userPages != null && !userPages.isEmpty()) {
+            return ResponseEntity.ok(userPages);
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(userPages); // Return empty list instead of 404
     }
     
     // New endpoints for AI content generation
@@ -76,16 +88,13 @@ public class TextBookPageController {
         TextBookPage page = pageOptional.get();
         String content = request.getOrDefault("content", page.getContent());
         
-        // Generate summary and explanation using Gemini API
         String summary = geminiService.generateSummary(content);
         String explanation = geminiService.generateExplanation(content);
         
-        // Update the page with generated content
         page.setSummary(summary);
         page.setExplanation(explanation);
         TextBookPage updatedPage = textBookPageService.updatePage(pageId, page);
         
-        // Generate a quiz for the page
         Quiz quiz = (Quiz) geminiService.generateQuiz(content, pageId);
         quizService.createQuiz(quiz);
         
@@ -99,7 +108,6 @@ public class TextBookPageController {
     @GetMapping("/{pageId}/qrcode")
     public ResponseEntity<byte[]> getQRCode(@PathVariable String pageId) {
         try {
-            // Generate QR code with frontend URL
             byte[] qrCodeImage = qrCodeService.generateQRCode(pageId);
             
             HttpHeaders headers = new HttpHeaders();
