@@ -27,15 +27,21 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await apiService.loginUser({ email, password });
+      
+      // FIX: Use the correct response data structure
       const userData = {
         id: response.data.userId,
-        email: email,
+        email: response.data.email,    // Use backend email
+        name: response.data.name,      // Add name
+        role: response.data.role,      // Add role
         message: response.data.message
       };
+      
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       return { success: true, data: userData };
     } catch (error) {
+      console.error('Login error:', error.response?.data); // Debug log
       return { 
         success: false, 
         error: error.response?.data?.error || 'Login failed' 
@@ -55,6 +61,7 @@ export const AuthProvider = ({ children }) => {
       };
       
     } catch (error) {
+      console.error('Registration error:', error.response?.data); // Debug log
       return { 
         success: false, 
         error: error.response?.data?.Error || 'Registration failed' 

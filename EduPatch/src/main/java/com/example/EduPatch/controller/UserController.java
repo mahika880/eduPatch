@@ -64,12 +64,13 @@ public class UserController {
                 User user = userOptional.get();
                 
                 // Check password
+                // In the login method, make sure the response includes 'name' field:
                 if (user.getPassword().equals(password)) {
                     Map<String, Object> response = new HashMap<>();
                     response.put("message", "Login successful");
                     response.put("userId", user.getId());
                     response.put("email", user.getEmail());
-                    response.put("name", user.getName());
+                    response.put("name", user.getName());     // Make sure this exists
                     response.put("role", user.getRole());
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
