@@ -46,15 +46,14 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await apiService.registerUser(userData);
-      const newUser = {
-        id: response.data.id,
-        email: response.data.email,
-        name: response.data.name,
-        role: response.data.role
+      
+      // DON'T auto-login - just return success
+      return { 
+        success: true, 
+        message: 'Registration successful! Please login to continue.',
+        data: response.data 
       };
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return { success: true, data: newUser };
+      
     } catch (error) {
       return { 
         success: false, 
