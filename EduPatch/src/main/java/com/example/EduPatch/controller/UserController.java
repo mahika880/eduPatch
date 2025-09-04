@@ -5,6 +5,7 @@ import com.example.EduPatch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -15,13 +16,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = {
-    "http://localhost:3000",           // Development
-    "https://edu-patch.vercel.app"     // Production - YOUR ACTUAL VERCEL URL
+    "http://localhost:3000",
+    "https://edu-patch.vercel.app"
 })
 public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
@@ -32,7 +35,8 @@ public class UserController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             
-            // Set role to ADMIN
+            // Hash the password before saving
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRole("ADMIN");
             
             User savedUser = userService.registerUser(user);
@@ -65,13 +69,13 @@ public class UserController {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 
-                // DEBUG: Print stored password
-                System.out.println("Stored password: " + user.getPassword());
-                System.out.println("Entered password: " + password);
-                System.out.println("Passwords match: " + user.getPassword().equals(password));
+                System.out.println("Stored hashed password: " + user.getPassword());
+                System.out.println("Entered plain password: " + password);
                 
-                // Check password
-                if (user.getPassword().equals(password)) {
+                // FIX: Use BCrypt to compare passwords
+                if (passwordEncoder.matches(password, user.getPassword())) {
+                    System.out.println("Password match successful!");
+                    
                     Map<String, Object> response = new HashMap<>();
                     response.put("message", "Login successful");
                     response.put("userId", user.getId());
@@ -80,6 +84,7 @@ public class UserController {
                     response.put("role", user.getRole());
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
+                    System.out.println("Password match failed!");
                     Map<String, String> response = new HashMap<>();
                     response.put("error", "Invalid password");
                     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
