@@ -48,12 +48,18 @@ const Login = ({ onSwitchToRegister }) => {
     setLoading(true);
     setError('');
 
+    console.log('Attempting login with:', { email: formData.email, password: formData.password });
+
     const result = await login(formData.email, formData.password);
     
+    console.log('Login result:', result);
+    
     if (result.success) {
+      console.log('Login successful, navigating to dashboard');
       navigate('/admin/dashboard');
     } else {
-      setError(result.error);
+      console.error('Login failed:', result.error);
+      setError(result.error || 'Login failed. Please check your credentials.');
     }
     
     setLoading(false);
