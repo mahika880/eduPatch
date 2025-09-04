@@ -253,3 +253,41 @@ const Register = ({ onSwitchToLogin }) => {
 };
 
 export default Register;
+
+
+// In the handleSubmit function, around line 60-80
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError('');
+  setSuccess('');
+  setLoading(true);
+
+  if (formData.password !== formData.confirmPassword) {
+    setError('Passwords do not match');
+    setLoading(false);
+    return;
+  }
+
+  try {
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role
+    });
+
+    if (result.success) {
+      setSuccess('Registration successful! Please login to continue.');
+      // DON'T auto-login, just show success message
+      setTimeout(() => {
+        onSwitchToLogin(); // Redirect to login page
+      }, 2000);
+    } else {
+      setError(result.error);
+    }
+  } catch (error) {
+    setError('Registration failed. Please try again.');
+  } finally {
+    setLoading(false);
+  }
+};

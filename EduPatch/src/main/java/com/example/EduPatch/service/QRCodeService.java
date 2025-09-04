@@ -14,34 +14,19 @@ import java.io.IOException;
 @Service
 public class QRCodeService {
 
-    @Value("${app.base-url:http://localhost:8080}")
-    private String baseUrl;
+    @Value("${app.frontend-url:https://edu-patch.vercel.app}")
+    private String frontendUrl;
 
-    /**
-     * Generates a QR code for a specific page ID
-     * @param pageId The ID of the page
-     * @return Byte array containing the QR code image
-     */
-    public byte[] generateQRCode(String pageId) {
-        String qrCodeContent = baseUrl + "/pages/" + pageId;
-        return generateQRCodeFromText(qrCodeContent);
-    }
-
-    /**
-     * Generates a QR code from the given text content
-     * @param text The text to encode in the QR code
-     * @return Byte array containing the QR code image
-     */
-    public byte[] generateQRCodeFromText(String text) {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    public byte[] generateQRCode(String pageId) throws WriterException, IOException {
+        // Generate frontend URL for students
+        String studentUrl = frontendUrl + "/page/" + pageId;
         
-        try {
-            BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 250, 250);
-            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-            return outputStream.toByteArray();
-        } catch (WriterException | IOException e) {
-            throw new RuntimeException("Failed to generate QR code", e);
-        }
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(studentUrl, BarcodeFormat.QR_CODE, 300, 300);
+        
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
+        
+        return outputStream.toByteArray();
     }
 }

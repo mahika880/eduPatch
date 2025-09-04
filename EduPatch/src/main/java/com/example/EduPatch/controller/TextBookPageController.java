@@ -98,17 +98,19 @@ public class TextBookPageController {
     
     @GetMapping("/{pageId}/qrcode")
     public ResponseEntity<byte[]> getQRCode(@PathVariable String pageId) {
-        Optional<TextBookPage> pageOptional = textBookPageService.getPageById(pageId);
-        if (!pageOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
+        try {
+            // Generate QR code with frontend URL
+            byte[] qrCodeImage = qrCodeService.generateQRCode(pageId);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_PNG);
+            headers.setContentLength(qrCodeImage.length);
+            headers.setContentDispositionFormData("attachment", "qr-" + pageId + ".png");
+            
+            return new ResponseEntity<>(qrCodeImage, headers, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        byte[] qrCodeImage = qrCodeService.generateQRCode(pageId);
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        headers.setContentLength(qrCodeImage.length);
-        
-        return new ResponseEntity<>(qrCodeImage, headers, HttpStatus.OK);
     }
 }
