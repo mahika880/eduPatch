@@ -16,14 +16,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = {
-        "http://localhost:3000",
-        "https://edu-patch.vercel.app"
+    "http://localhost:3000",
+    "https://edu-patch.vercel.app"
 })
 public class UserController {
 
     @Autowired
     private UserService userService;
-
+    
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/register")
@@ -34,20 +34,20 @@ public class UserController {
                 response.put("Error", "email already in use");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-
+            
             // Hash the password before saving
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRole("ADMIN");
-
+            
             User savedUser = userService.registerUser(user);
-
+            
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Registration successful");
             response.put("id", savedUser.getId());
             response.put("email", savedUser.getEmail());
             response.put("name", savedUser.getName());
             response.put("role", savedUser.getRole());
-
+            
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             Map<String, String> response = new HashMap<>();
@@ -55,27 +55,27 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String , String>loginRequest){
         try {
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
-
+            
             System.out.println("Login attempt - Email: " + email + ", Password: " + password);
-
+            
             Optional<User> userOptional = userService.getUserByEmail(email);
-
+            
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-
+                
                 System.out.println("Stored hashed password: " + user.getPassword());
                 System.out.println("Entered plain password: " + password);
-
+                
                 // FIX: Use BCrypt to compare passwords
                 if (passwordEncoder.matches(password, user.getPassword())) {
                     System.out.println("Password match successful!");
-
+                    
                     Map<String, Object> response = new HashMap<>();
                     response.put("message", "Login successful");
                     response.put("userId", user.getId());
@@ -119,3 +119,4 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }
+

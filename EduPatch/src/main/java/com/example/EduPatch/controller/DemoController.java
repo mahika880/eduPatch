@@ -19,10 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/demo")
-@CrossOrigin(origins = {
-    "http://localhost:3000",
-    "https://edu-patch.vercel.app"
-})
 public class DemoController {
 
     @Autowired
@@ -38,7 +34,7 @@ public class DemoController {
     private QuizService quizService;
     
     @PostMapping("/workflow")
-    public ResponseEntity<?> demoWorkflow(@RequestBody WorkflowRequest request, @RequestHeader("X-User-ID") String userId) {
+    public ResponseEntity<?> demoWorkflow(@RequestBody WorkflowRequest request) {
         try {
             String content = request.getContent();
             String chapter = request.getChapter();
@@ -54,14 +50,13 @@ public class DemoController {
             String summary = geminiService.generateSummary(content);
             String explanation = geminiService.generateExplanation(content);
             
-            // Step 2: Create a new page with creator info
+            // Step 2: Create a new page
             TextBookPage page = new TextBookPage();
             page.setChapter(chapter);
             page.setPageNumber(pageNumber);
             page.setContent(content);
             page.setSummary(summary);
             page.setExplanation(explanation);
-            page.setCreatedBy(userId);  // NEW: Set the creator
             
             TextBookPage savedPage = textBookPageService.createPage(page);
             
@@ -78,7 +73,7 @@ public class DemoController {
             // Prepare response
             Map<String, Object> response = new HashMap<>();
             response.put("page", savedPage);
-            response.put("quizzes", savedQuizzes);
+            response.put("quizzes", savedQuizzes);  // Now returns 5 questions
             response.put("qrCodeUrl", qrCodeUrl);
             response.put("status", "success");
             

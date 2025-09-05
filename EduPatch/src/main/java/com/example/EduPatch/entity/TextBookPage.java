@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "TextBook_Pages")
+
 public class TextBookPage {
     @Id
     private String pageId;
@@ -19,7 +20,7 @@ public class TextBookPage {
     private String content;
     private String summary;
     private String explanation;
-    private String createdBy;  // NEW: Track which admin created this content
+
 
     public String getPageId() {
         return pageId;
@@ -67,14 +68,5 @@ public class TextBookPage {
 
     public void setExplanation(String explanation) {
         this.explanation = explanation;
-    }
-
-    // NEW: Getter and setter for createdBy
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 }

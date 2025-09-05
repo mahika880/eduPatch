@@ -4,25 +4,11 @@ import axios from 'axios';
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: BASE_URL,  // Points to your Spring Boot server
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
-// Add request interceptor to include user ID in headers
-api.interceptors.request.use(
-  (config) => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.id) {
-      config.headers['X-User-ID'] = user.id;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // All your API endpoints
 export const apiService = {
