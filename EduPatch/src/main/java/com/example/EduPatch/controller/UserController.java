@@ -62,20 +62,13 @@ public class UserController {
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
             
-            System.out.println("Login attempt - Email: " + email + ", Password: " + password);
-            
             Optional<User> userOptional = userService.getUserByEmail(email);
             
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 
-                System.out.println("Stored hashed password: " + user.getPassword());
-                System.out.println("Entered plain password: " + password);
-                
-                // FIX: Use BCrypt to compare passwords
+                // Use BCrypt to compare passwords
                 if (passwordEncoder.matches(password, user.getPassword())) {
-                    System.out.println("Password match successful!");
-                    
                     Map<String, Object> response = new HashMap<>();
                     response.put("message", "Login successful");
                     response.put("userId", user.getId());
@@ -84,7 +77,6 @@ public class UserController {
                     response.put("role", user.getRole());
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {
-                    System.out.println("Password match failed!");
                     Map<String, String> response = new HashMap<>();
                     response.put("error", "Invalid password");
                     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
