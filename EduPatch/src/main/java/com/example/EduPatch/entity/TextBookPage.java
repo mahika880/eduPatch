@@ -3,7 +3,6 @@ package com.example.EduPatch.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "TextBook_Pages")
-
 public class TextBookPage {
     @Id
     private String pageId;
@@ -20,8 +18,9 @@ public class TextBookPage {
     private String content;
     private String summary;
     private String explanation;
+    private String createdBy; // New field for admin specificity
 
-
+    // Getters and Setters
     public String getPageId() {
         return pageId;
     }
@@ -68,5 +67,13 @@ public class TextBookPage {
 
     public void setExplanation(String explanation) {
         this.explanation = explanation;
+    }
+    
+    public String getCreatedBy() {
+        return createdBy;
+    }
+    
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 }

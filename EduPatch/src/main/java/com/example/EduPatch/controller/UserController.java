@@ -5,6 +5,7 @@ import com.example.EduPatch.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user){
@@ -32,7 +35,8 @@ public class UserController {
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
             
-            // Store password as plain text (removed BCrypt hashing)
+            // Hash the password before saving
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setRole("ADMIN");
             
             User savedUser = userService.registerUser(user);
@@ -58,18 +62,30 @@ public class UserController {
             String email = loginRequest.get("email");
             String password = loginRequest.get("password");
             
-            System.out.println("Login attempt - Email: " + email + ", Password: " + password);
+            System.out.println("Login attempt - Email: " + email);
             
             Optional<User> userOptional = userService.getUserByEmail(email);
             
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 
-                System.out.println("Stored password: " + user.getPassword());
-                System.out.println("Entered password: " + password);
+                // Check if password is already hashed (starts with $2a$) or plain text
+                boolean passwordMatches;
+                if (user.getPassword().startsWith("$2a$")) {
+                    // Password is already hashed, use BCrypt comparison
+                    passwordMatches = passwordEncoder.matches(password, user.getPassword());
+                } else {
+                    // Password is plain text (existing users), compare directly
+                    passwordMatches = password.equals(user.getPassword());
+                    
+                    // If login successful, update to hashed password for future
+                    if (passwordMatches) {
+                        user.setPassword(passwordEncoder.encode(password));
+                        userService.updateUser(user);
+                    }
+                }
                 
-                // Simple string comparison (removed BCrypt)
-                if (password.equals(user.getPassword())) {
+                if (passwordMatches) {
                     System.out.println("Password match successful!");
                     
                     Map<String, Object> response = new HashMap<>();
