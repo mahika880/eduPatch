@@ -745,7 +745,7 @@ const Dashboard = () => {
                                     p: 2, 
                                     background: 'linear-gradient(135deg, #667eea20, #764ba220)',
                                     borderRadius: 2,
-                                    mb: 2
+                                    border: `1px solid ${currentTheme.accent}20`
                                   }}>
                                     <Typography variant="caption" sx={{ 
                                       fontWeight: 600,
