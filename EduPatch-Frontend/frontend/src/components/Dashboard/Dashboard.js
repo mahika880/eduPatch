@@ -23,6 +23,7 @@ import {
   TextField,
   InputAdornment,
   Divider,
+  Tooltip,
 } from '@mui/material';
 import {
   MenuBook,
@@ -38,7 +39,8 @@ import {
   Menu,
   School,
   CloudDownload,
-  ManageAccounts,
+  ChevronLeft,
+  ChevronRight,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
@@ -57,6 +59,9 @@ const Dashboard = () => {
     light: '#f5e6d3',
     lightest: '#faf5f0',
   };
+
+  const sidebarWidth = 280;
+  const miniSidebarWidth = 70;
 
   useEffect(() => {
     fetchPages();
@@ -124,7 +129,15 @@ const Dashboard = () => {
           <IconButton
             edge="start"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ mr: 2, color: colors.primary }}
+            sx={{ 
+              mr: 2, 
+              color: colors.primary,
+              '&:hover': {
+                backgroundColor: `${colors.accent}40`,
+                transform: 'scale(1.1)',
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
             <Menu />
           </IconButton>
@@ -171,7 +184,13 @@ const Dashboard = () => {
           />
 
           {/* Notifications */}
-          <IconButton sx={{ mr: 2, color: colors.primary }}>
+          <IconButton sx={{ 
+            mr: 2, 
+            color: colors.primary,
+            '&:hover': {
+              backgroundColor: `${colors.accent}40`,
+            }
+          }}>
             <Badge badgeContent={3} color="error">
               <Notifications />
             </Badge>
@@ -183,137 +202,206 @@ const Dashboard = () => {
             cursor: 'pointer',
             '&:hover': {
               transform: 'scale(1.05)',
-            }
+            },
+            transition: 'all 0.3s ease',
           }}>
             A
           </Avatar>
         </Toolbar>
       </AppBar>
 
-      {/* Left Sidebar */}
+      {/* Foldable Left Sidebar */}
       <Drawer
-        variant="persistent"
-        anchor="left"
-        open={sidebarOpen}
+        variant="permanent"
         sx={{
-          width: sidebarOpen ? 280 : 0,
+          width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
           flexShrink: 0,
           transition: 'width 0.3s ease',
           '& .MuiDrawer-paper': {
-            width: 280,
+            width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
             boxSizing: 'border-box',
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             borderRight: `1px solid ${colors.light}`,
             boxShadow: `4px 0 20px ${colors.primary}10`,
+            transition: 'width 0.3s ease',
+            overflowX: 'hidden',
           },
         }}
       >
         <Toolbar /> {/* Spacer for top navbar */}
         
-        <Box sx={{ p: 3 }}>
-          {/* User Info */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          {/* Sidebar Toggle Button */}
           <Box sx={{ 
-            textAlign: 'center', 
-            mb: 3, 
-            p: 2, 
-            borderRadius: 3,
-            background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 100%)`,
+            display: 'flex', 
+            justifyContent: sidebarOpen ? 'flex-end' : 'center',
+            p: 1,
+            borderBottom: `1px solid ${colors.light}`,
           }}>
-            <Avatar sx={{ 
-              width: 60, 
-              height: 60, 
-              mx: 'auto', 
-              mb: 1,
-              background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-            }}>
-              A
-            </Avatar>
-            <Typography variant="h6" sx={{ color: colors.primary, fontWeight: 600 }}>
-              Admin User
-            </Typography>
-            <Typography variant="body2" sx={{ color: colors.secondary }}>
-              Content Creator
-            </Typography>
+            <IconButton
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              sx={{
+                color: colors.secondary,
+                '&:hover': {
+                  backgroundColor: `${colors.accent}40`,
+                  transform: 'scale(1.1)',
+                },
+                transition: 'all 0.3s ease',
+              }}
+            >
+              {sidebarOpen ? <ChevronLeft /> : <ChevronRight />}
+            </IconButton>
           </Box>
 
-          <Divider sx={{ mb: 2 }} />
+          {/* User Info - Only show when expanded */}
+          {sidebarOpen && (
+            <Box sx={{ 
+              p: 2,
+              borderBottom: `1px solid ${colors.light}`,
+            }}>
+              <Box sx={{ 
+                textAlign: 'center', 
+                p: 2, 
+                borderRadius: 3,
+                background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 100%)`,
+              }}>
+                <Avatar sx={{ 
+                  width: 50, 
+                  height: 50, 
+                  mx: 'auto', 
+                  mb: 1,
+                  background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
+                }}>
+                  A
+                </Avatar>
+                <Typography variant="subtitle1" sx={{ color: colors.primary, fontWeight: 600 }}>
+                  Admin User
+                </Typography>
+                <Typography variant="caption" sx={{ color: colors.secondary }}>
+                  Content Creator
+                </Typography>
+              </Box>
+            </Box>
+          )}
+
+          {/* Mini User Avatar - Only show when collapsed */}
+          {!sidebarOpen && (
+            <Box sx={{ 
+              display: 'flex',
+              justifyContent: 'center',
+              p: 1,
+              borderBottom: `1px solid ${colors.light}`,
+            }}>
+              <Tooltip title="Admin User" placement="right">
+                <Avatar sx={{ 
+                  width: 40, 
+                  height: 40,
+                  background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
+                }}>
+                  A
+                </Avatar>
+              </Tooltip>
+            </Box>
+          )}
 
           {/* Navigation Menu */}
-          <Typography variant="overline" sx={{ 
-            color: colors.secondary, 
-            fontWeight: 600,
-            px: 2,
-            mb: 1,
-            display: 'block'
-          }}>
-            Navigation
-          </Typography>
-          
-          <List sx={{ p: 0 }}>
-            {sidebarItems.map((item, index) => (
-              <ListItem 
-                key={item.text}
-                button 
-                onClick={() => navigate(item.path)}
-                sx={{
-                  borderRadius: 2,
-                  mb: 1,
-                  background: item.active ? `${colors.accent}40` : 'transparent',
-                  color: item.active ? colors.primary : colors.secondary,
-                  '&:hover': {
-                    background: `${colors.accent}60`,
-                    color: colors.primary,
-                    transform: 'translateX(4px)',
-                  },
-                  transition: 'all 0.3s ease',
-                }}
-              >
-                <ListItemIcon sx={{ 
-                  color: 'inherit',
-                  minWidth: 40,
-                }}>
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText 
-                  primary={item.text}
-                  primaryTypographyProps={{
-                    fontWeight: item.active ? 600 : 500,
-                    fontSize: '0.95rem'
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-
-          <Divider sx={{ my: 2 }} />
-
-          {/* Quick Stats */}
-          <Box sx={{ 
-            p: 2, 
-            borderRadius: 3,
-            background: `linear-gradient(135deg, ${colors.primary}10 0%, ${colors.secondary}10 100%)`,
-          }}>
-            <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
-              📊 Quick Stats
-            </Typography>
-            <Box display="flex" justifyContent="space-between" mb={1}>
-              <Typography variant="caption" sx={{ color: colors.secondary }}>
-                Content Created
+          <Box sx={{ flexGrow: 1, p: sidebarOpen ? 2 : 1 }}>
+            {sidebarOpen && (
+              <Typography variant="overline" sx={{ 
+                color: colors.secondary, 
+                fontWeight: 600,
+                px: 2,
+                mb: 1,
+                display: 'block'
+              }}>
+                Navigation
               </Typography>
-              <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
-                {pages.length}
-              </Typography>
-            </Box>
-            <Box display="flex" justifyContent="space-between">
-              <Typography variant="caption" sx={{ color: colors.secondary }}>
-                AI Quizzes
-              </Typography>
-              <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
-                {pages.length * 5}
-              </Typography>
-            </Box>
+            )}
+            
+            <List sx={{ p: 0 }}>
+              {sidebarItems.map((item, index) => (
+                <Tooltip 
+                  key={item.text}
+                  title={!sidebarOpen ? item.text : ''} 
+                  placement="right"
+                  arrow
+                >
+                  <ListItem 
+                    button 
+                    onClick={() => navigate(item.path)}
+                    sx={{
+                      borderRadius: 2,
+                      mb: 1,
+                      minHeight: 48,
+                      justifyContent: sidebarOpen ? 'initial' : 'center',
+                      px: sidebarOpen ? 2 : 1.5,
+                      background: item.active ? `${colors.accent}40` : 'transparent',
+                      color: item.active ? colors.primary : colors.secondary,
+                      '&:hover': {
+                        background: `${colors.accent}60`,
+                        color: colors.primary,
+                        transform: sidebarOpen ? 'translateX(4px)' : 'scale(1.1)',
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    <ListItemIcon sx={{ 
+                      color: 'inherit',
+                      minWidth: sidebarOpen ? 40 : 'auto',
+                      mr: sidebarOpen ? 2 : 0,
+                      justifyContent: 'center',
+                    }}>
+                      {item.icon}
+                    </ListItemIcon>
+                    {sidebarOpen && (
+                      <ListItemText 
+                        primary={item.text}
+                        primaryTypographyProps={{
+                          fontWeight: item.active ? 600 : 500,
+                          fontSize: '0.95rem'
+                        }}
+                      />
+                    )}
+                  </ListItem>
+                </Tooltip>
+              ))}
+            </List>
           </Box>
+
+          {/* Quick Stats - Only show when expanded */}
+          {sidebarOpen && (
+            <Box sx={{ 
+              p: 2,
+              borderTop: `1px solid ${colors.light}`,
+            }}>
+              <Box sx={{ 
+                p: 2, 
+                borderRadius: 3,
+                background: `linear-gradient(135deg, ${colors.primary}10 0%, ${colors.secondary}10 100%)`,
+              }}>
+                <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
+                  📊 Quick Stats
+                </Typography>
+                <Box display="flex" justifyContent="space-between" mb={1}>
+                  <Typography variant="caption" sx={{ color: colors.secondary }}>
+                    Content Created
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
+                    {pages.length}
+                  </Typography>
+                </Box>
+                <Box display="flex" justifyContent="space-between">
+                  <Typography variant="caption" sx={{ color: colors.secondary }}>
+                    AI Quizzes
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
+                    {pages.length * 5}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          )}
         </Box>
       </Drawer>
 
@@ -326,7 +414,7 @@ const Dashboard = () => {
           background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 100%)`,
           minHeight: '100vh',
           transition: 'margin-left 0.3s ease',
-          marginLeft: sidebarOpen ? 0 : '-280px',
+          marginLeft: 0, // Remove margin since we're using permanent drawer
         }}
       >
         <Toolbar /> {/* Spacer for top navbar */}
