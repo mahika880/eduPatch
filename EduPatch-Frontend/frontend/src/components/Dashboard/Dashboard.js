@@ -64,18 +64,18 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  // Sunset Color Palette
+  // Sunset Color Palette - Solid Colors
   const colors = {
     primary: '#493129',      // Dark Brown
     secondary: '#8b597b',    // Purple
     accent: '#e1c3d0',       // Light Pink
     light: '#f5e6d3',       // Cream
     lightest: '#faf5f0',    // Very Light Cream
-    gradient: {
-      primary: 'linear-gradient(135deg, #493129 0%, #8b597b 100%)',
-      secondary: 'linear-gradient(135deg, #8b597b 0%, #e1c3d0 100%)',
-      light: 'linear-gradient(135deg, #f5e6d3 0%, #faf5f0 100%)',
-      accent: 'linear-gradient(135deg, #e1c3d0 0%, #f5e6d3 100%)',
+    white: '#ffffff',       // Pure White
+    text: {
+      primary: '#493129',
+      secondary: '#8b597b',
+      light: '#666666',
     }
   };
 
@@ -147,9 +147,7 @@ const Dashboard = () => {
         alignItems="center" 
         minHeight="100vh"
         sx={{
-          background: darkMode 
-            ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-            : colors.gradient.light,
+          background: darkMode ? '#1a1a2e' : colors.lightest,
         }}
       >
         <motion.div
@@ -178,9 +176,7 @@ const Dashboard = () => {
     <Box sx={{ 
       display: 'flex',
       minHeight: '100vh',
-      background: darkMode 
-        ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)'
-        : colors.gradient.light,
+      background: darkMode ? '#0f0f23' : colors.lightest,
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -189,14 +185,10 @@ const Dashboard = () => {
         position="fixed" 
         sx={{ 
           zIndex: 1201,
-          background: darkMode 
-            ? 'rgba(26, 26, 46, 0.95)'
-            : 'rgba(255, 255, 255, 0.95)',
+          background: darkMode ? 'rgba(26, 26, 46, 0.95)' : colors.white,
           backdropFilter: 'blur(20px)',
-          borderBottom: darkMode 
-            ? '1px solid rgba(255, 255, 255, 0.1)'
-            : `1px solid ${colors.light}`,
-          boxShadow: `0 8px 32px ${colors.primary}20`,
+          borderBottom: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+          boxShadow: `0 2px 20px ${colors.primary}10`,
         }}
       >
         <Toolbar>
@@ -212,9 +204,7 @@ const Dashboard = () => {
             <School sx={{ mr: 1, color: colors.secondary, fontSize: 32 }} />
             <Typography variant="h6" sx={{ 
               fontWeight: 700, 
-              background: colors.gradient.primary,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: colors.primary,
             }}>
               EduPatch AI
             </Typography>
@@ -261,7 +251,7 @@ const Dashboard = () => {
           </IconButton>
 
           <Avatar sx={{ 
-            background: colors.gradient.primary,
+            background: colors.primary,
             cursor: 'pointer'
           }}>
             A
@@ -280,13 +270,9 @@ const Dashboard = () => {
           '& .MuiDrawer-paper': {
             width: 280,
             boxSizing: 'border-box',
-            background: darkMode 
-              ? 'rgba(26, 26, 46, 0.95)'
-              : 'rgba(255, 255, 255, 0.95)',
+            background: darkMode ? 'rgba(26, 26, 46, 0.95)' : colors.white,
             backdropFilter: 'blur(20px)',
-            borderRight: darkMode 
-              ? '1px solid rgba(255, 255, 255, 0.1)'
-              : `1px solid ${colors.light}`,
+            borderRight: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
             mt: 8,
           },
         }}
@@ -314,9 +300,7 @@ const Dashboard = () => {
                     borderRadius: 2,
                     mb: 1,
                     '&:hover': {
-                      background: darkMode 
-                        ? 'rgba(255, 255, 255, 0.1)'
-                        : `${colors.light}80`,
+                      background: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
                     }
                   }}
                 >
@@ -355,19 +339,15 @@ const Dashboard = () => {
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
-                background: darkMode 
-                  ? 'rgba(255, 255, 255, 0.05)'
-                  : 'rgba(255, 255, 255, 0.9)',
+                background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                 backdropFilter: 'blur(20px)',
-                border: darkMode 
-                  ? '1px solid rgba(255, 255, 255, 0.1)'
-                  : `1px solid ${colors.light}`,
+                border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                 borderRadius: 4,
                 overflow: 'hidden',
                 position: 'relative',
               }}>
                 <Box sx={{
-                  background: colors.gradient.primary,
+                  background: colors.primary,
                   p: 4,
                   color: 'white',
                   position: 'relative',
@@ -405,7 +385,7 @@ const Dashboard = () => {
                     </Grid>
                     
                     <Grid item xs={12} md={4}>
-                      <Box display="flex" flexWrap="wrap" gap={1}>
+                      <Box display="flex" flexWrap="wrap" gap={1} justifyContent="center">
                         {achievements.map((achievement, index) => (
                           <motion.div
                             key={achievement.title}
@@ -431,24 +411,23 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* 2. Quick Actions (Right after Welcome) */}
+            {/* 2. Quick Actions (Perfectly Aligned) */}
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
                 p: 3,
-                background: darkMode 
-                  ? 'rgba(255, 255, 255, 0.05)'
-                  : 'rgba(255, 255, 255, 0.9)',
+                background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                 backdropFilter: 'blur(20px)',
-                border: darkMode 
-                  ? '1px solid rgba(255, 255, 255, 0.1)'
-                  : `1px solid ${colors.light}`,
+                border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                 borderRadius: 3,
               }}>
                 <Typography variant="h5" sx={{ 
                   mb: 3, 
                   fontWeight: 600,
-                  color: darkMode ? '#fff' : colors.primary
+                  color: darkMode ? '#fff' : colors.primary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1
                 }}>
                   🚀 Quick Actions
                 </Typography>
@@ -456,8 +435,8 @@ const Dashboard = () => {
                   {quickActions.map((action, index) => (
                     <Grid item xs={12} md={4} key={action.title}>
                       <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         <Button
                           fullWidth
@@ -466,16 +445,17 @@ const Dashboard = () => {
                           startIcon={action.icon}
                           onClick={action.action}
                           sx={{
-                            py: 2,
+                            py: 2.5,
                             borderRadius: 3,
-                            background: `linear-gradient(135deg, ${action.color}, ${action.color}dd)`,
+                            background: action.color,
                             color: 'white',
                             fontWeight: 600,
                             fontSize: '1.1rem',
-                            boxShadow: `0 8px 32px ${action.color}40`,
+                            boxShadow: `0 4px 20px ${action.color}30`,
                             '&:hover': {
-                              background: `linear-gradient(135deg, ${action.color}dd, ${action.color})`,
-                              boxShadow: `0 12px 40px ${action.color}60`,
+                              background: action.color,
+                              filter: 'brightness(1.1)',
+                              boxShadow: `0 6px 25px ${action.color}40`,
                             }
                           }}
                         >
@@ -488,7 +468,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* 3. Stats Cards */}
+            {/* 3. Stats Cards (Perfectly Aligned Grid) */}
             <motion.div variants={itemVariants}>
               <Grid container spacing={3} sx={{ mb: 4 }}>
                 {[
@@ -503,24 +483,24 @@ const Dashboard = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.2 + index * 0.1 }}
                       whileHover={{ 
-                        y: -10,
+                        y: -5,
                         transition: { duration: 0.2 }
                       }}
                     >
                       <Card sx={{
                         p: 3,
-                        background: darkMode 
-                          ? 'rgba(255, 255, 255, 0.05)'
-                          : 'rgba(255, 255, 255, 0.9)',
+                        background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                         backdropFilter: 'blur(20px)',
-                        border: darkMode 
-                          ? '1px solid rgba(255, 255, 255, 0.1)'
-                          : `1px solid ${colors.light}`,
+                        border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                         borderRadius: 3,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
+                        height: '140px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
                         '&:hover': {
-                          boxShadow: `0 20px 40px ${stat.color}30`,
+                          boxShadow: `0 8px 30px ${stat.color}20`,
                           transform: 'translateY(-5px)',
                         }
                       }}>
@@ -529,7 +509,8 @@ const Dashboard = () => {
                             <Typography variant="h3" sx={{ 
                               fontWeight: 700, 
                               color: darkMode ? '#fff' : colors.primary,
-                              mb: 1 
+                              mb: 1,
+                              lineHeight: 1
                             }}>
                               <CountUp 
                                 end={stat.value} 
@@ -538,8 +519,9 @@ const Dashboard = () => {
                               />
                             </Typography>
                             <Typography variant="body2" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
-                              fontWeight: 500 
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary,
+                              fontWeight: 500,
+                              fontSize: '0.9rem'
                             }}>
                               {stat.title}
                             </Typography>
@@ -549,6 +531,9 @@ const Dashboard = () => {
                             borderRadius: '50%',
                             backgroundColor: `${stat.color}20`,
                             color: stat.color,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                           }}>
                             {stat.icon}
                           </Box>
@@ -560,27 +545,27 @@ const Dashboard = () => {
               </Grid>
             </motion.div>
 
-            {/* 4. Recent Activity & Content Grid */}
+            {/* 4. Recent Activity & Content Grid (Aligned) */}
             <Grid container spacing={3}>
               {/* Recent Activity */}
               <Grid item xs={12} md={4}>
                 <motion.div variants={itemVariants}>
                   <Card sx={{
                     p: 3,
-                    background: darkMode 
-                      ? 'rgba(255, 255, 255, 0.05)'
-                      : 'rgba(255, 255, 255, 0.9)',
+                    background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                     backdropFilter: 'blur(20px)',
-                    border: darkMode 
-                      ? '1px solid rgba(255, 255, 255, 0.1)'
-                      : `1px solid ${colors.light}`,
+                    border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                     borderRadius: 3,
                     height: 'fit-content',
+                    minHeight: '300px'
                   }}>
                     <Typography variant="h6" sx={{ 
                       mb: 3, 
                       fontWeight: 600,
-                      color: darkMode ? '#fff' : colors.primary
+                      color: darkMode ? '#fff' : colors.primary,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1
                     }}>
                       📈 Recent Activity
                     </Typography>
@@ -591,31 +576,35 @@ const Dashboard = () => {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: 0.5 + index * 0.1 }}
                       >
-                        <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
+                        <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
                           <Box sx={{
-                            p: 1,
+                            p: 1.5,
                             borderRadius: '50%',
                             backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
                             mr: 2,
-                            color: colors.secondary
+                            color: colors.secondary,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
                           }}>
                             {activity.icon}
                           </Box>
                           <Box>
                             <Typography variant="body2" sx={{ 
                               fontWeight: 500,
-                              color: darkMode ? '#fff' : colors.primary
+                              color: darkMode ? '#fff' : colors.primary,
+                              mb: 0.5
                             }}>
                               {activity.title}
                             </Typography>
                             <Typography variant="caption" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.light
                             }}>
                               {activity.time}
                             </Typography>
                           </Box>
                         </Box>
-                        {index < recentActivities.length - 1 && <Divider sx={{ my: 1 }} />}
+                        {index < recentActivities.length - 1 && <Divider sx={{ my: 2 }} />}
                       </motion.div>
                     ))}
                   </Card>
@@ -629,14 +618,14 @@ const Dashboard = () => {
                     <Card sx={{
                       textAlign: 'center',
                       p: 6,
-                      background: darkMode 
-                        ? 'rgba(255, 255, 255, 0.05)'
-                        : 'rgba(255, 255, 255, 0.9)',
+                      background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                       backdropFilter: 'blur(20px)',
-                      border: darkMode 
-                        ? '1px solid rgba(255, 255, 255, 0.1)'
-                        : `1px solid ${colors.light}`,
+                      border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                       borderRadius: 3,
+                      minHeight: '300px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center'
                     }}>
                       <motion.div
                         initial={{ scale: 0 }}
@@ -656,7 +645,7 @@ const Dashboard = () => {
                         </Typography>
                         <Typography variant="body1" sx={{ 
                           mb: 3,
-                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
+                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary
                         }}>
                           Start by creating your first AI-powered educational content!
                         </Typography>
@@ -666,17 +655,18 @@ const Dashboard = () => {
                           startIcon={<Add />}
                           onClick={() => navigate('/admin/create')}
                           sx={{
-                            background: colors.gradient.primary,
+                            background: colors.primary,
                             color: 'white',
                             px: 4,
                             py: 1.5,
                             borderRadius: 3,
                             fontWeight: 600,
-                            boxShadow: `0 8px 32px ${colors.primary}40`,
+                            boxShadow: `0 4px 20px ${colors.primary}30`,
                             '&:hover': {
-                              background: colors.gradient.secondary,
+                              background: colors.primary,
+                              filter: 'brightness(1.1)',
                               transform: 'translateY(-2px)',
-                              boxShadow: `0 12px 40px ${colors.primary}60`,
+                              boxShadow: `0 6px 25px ${colors.primary}40`,
                             },
                           }}
                         >
@@ -696,22 +686,21 @@ const Dashboard = () => {
                           >
                             <Card sx={{
                               height: '100%',
-                              background: darkMode 
-                                ? 'rgba(255, 255, 255, 0.05)'
-                                : 'rgba(255, 255, 255, 0.9)',
+                              background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
                               backdropFilter: 'blur(20px)',
-                              border: darkMode 
-                                ? '1px solid rgba(255, 255, 255, 0.1)'
-                                : `1px solid ${colors.light}`,
+                              border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
                               borderRadius: 3,
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
+                              minHeight: '280px',
+                              display: 'flex',
+                              flexDirection: 'column',
                               '&:hover': {
-                                boxShadow: `0 20px 40px ${colors.primary}20`,
+                                boxShadow: `0 8px 30px ${colors.primary}15`,
                                 transform: 'translateY(-5px)',
                               }
                             }}>
-                              <CardContent sx={{ p: 3 }}>
+                              <CardContent sx={{ p: 3, flexGrow: 1 }}>
                                 <Box display="flex" alignItems="center" mb={2}>
                                   <MenuBook sx={{ 
                                     mr: 1, 
@@ -730,7 +719,7 @@ const Dashboard = () => {
                                   size="small" 
                                   sx={{
                                     mb: 2,
-                                    backgroundColor: `${colors.accent}40`,
+                                    backgroundColor: colors.lightest,
                                     color: colors.primary,
                                     fontWeight: 600,
                                   }}
@@ -738,7 +727,7 @@ const Dashboard = () => {
                                 
                                 <Typography variant="body2" sx={{ 
                                   lineHeight: 1.6,
-                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
+                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary,
                                   mb: 2
                                 }}>
                                   {page.content.substring(0, 100)}...
@@ -747,7 +736,7 @@ const Dashboard = () => {
                                 {page.summary && (
                                   <Box sx={{ 
                                     p: 2, 
-                                    background: `${colors.accent}20`,
+                                    background: colors.lightest,
                                     borderRadius: 2,
                                     mb: 2
                                   }}>
@@ -770,7 +759,7 @@ const Dashboard = () => {
                                   sx={{ 
                                     color: colors.primary,
                                     '&:hover': {
-                                      backgroundColor: `${colors.primary}20`,
+                                      backgroundColor: `${colors.primary}15`,
                                     }
                                   }}
                                 >
@@ -783,7 +772,7 @@ const Dashboard = () => {
                                   sx={{ 
                                     color: colors.secondary,
                                     '&:hover': {
-                                      backgroundColor: `${colors.secondary}20`,
+                                      backgroundColor: `${colors.secondary}15`,
                                     }
                                   }}
                                 >
@@ -830,7 +819,7 @@ const Dashboard = () => {
               minWidth: 64,
               background: colors.gradient.primary,
               color: 'white',
-              boxShadow: `0 8px 32px ${colors.primary}40`,
+              boxShadow: `0 4px 20px ${colors.primary}40`,
               '&:hover': {
                 background: colors.gradient.secondary,
                 boxShadow: `0 12px 40px ${colors.primary}60`,
