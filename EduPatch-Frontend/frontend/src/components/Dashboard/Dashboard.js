@@ -64,6 +64,21 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
+  // Sunset Color Palette
+  const colors = {
+    primary: '#493129',      // Dark Brown
+    secondary: '#8b597b',    // Purple
+    accent: '#e1c3d0',       // Light Pink
+    light: '#f5e6d3',       // Cream
+    lightest: '#faf5f0',    // Very Light Cream
+    gradient: {
+      primary: 'linear-gradient(135deg, #493129 0%, #8b597b 100%)',
+      secondary: 'linear-gradient(135deg, #8b597b 0%, #e1c3d0 100%)',
+      light: 'linear-gradient(135deg, #f5e6d3 0%, #faf5f0 100%)',
+      accent: 'linear-gradient(135deg, #e1c3d0 0%, #f5e6d3 100%)',
+    }
+  };
+
   useEffect(() => {
     fetchPages();
   }, []);
@@ -88,9 +103,9 @@ const Dashboard = () => {
   ];
 
   const quickActions = [
-    { title: 'Create Content', icon: <Create />, color: '#FF6B6B', action: () => navigate('/admin/create') },
-    { title: 'Generate Quiz', icon: <Psychology />, color: '#4ECDC4', action: () => navigate('/admin/create') },
-    { title: 'Scan QR Code', icon: <QrCodeScanner />, color: '#45B7D1', action: () => navigate('/admin/scanner') },
+    { title: 'Create Content', icon: <Create />, color: colors.primary, action: () => navigate('/admin/create') },
+    { title: 'Generate Quiz', icon: <Psychology />, color: colors.secondary, action: () => navigate('/admin/create') },
+    { title: 'Scan QR Code', icon: <QrCodeScanner />, color: colors.accent, action: () => navigate('/admin/scanner') },
   ];
 
   const recentActivities = [
@@ -100,9 +115,9 @@ const Dashboard = () => {
   ];
 
   const achievements = [
-    { title: 'AI Powered', icon: <AutoAwesome />, color: '#FFD93D' },
-    { title: 'Content Creator', icon: <Create />, color: '#6BCF7F' },
-    { title: 'Quiz Master', icon: <EmojiEvents />, color: '#4D96FF' },
+    { title: 'AI Powered', icon: <AutoAwesome />, color: colors.secondary },
+    { title: 'Content Creator', icon: <Create />, color: colors.primary },
+    { title: 'Quiz Master', icon: <EmojiEvents />, color: colors.accent },
   ];
 
   const containerVariants = {
@@ -134,7 +149,7 @@ const Dashboard = () => {
         sx={{
           background: darkMode 
             ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            : colors.gradient.light,
         }}
       >
         <motion.div
@@ -146,11 +161,11 @@ const Dashboard = () => {
             <CircularProgress 
               size={80} 
               sx={{ 
-                color: '#FFFFFF',
+                color: colors.primary,
                 mb: 3,
               }} 
             />
-            <Typography variant="h5" sx={{ color: '#FFFFFF', fontWeight: 300 }}>
+            <Typography variant="h5" sx={{ color: colors.primary, fontWeight: 300 }}>
               Loading your AI-powered dashboard...
             </Typography>
           </Box>
@@ -165,21 +180,9 @@ const Dashboard = () => {
       minHeight: '100vh',
       background: darkMode 
         ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)'
-        : 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        : colors.gradient.light,
       position: 'relative',
       overflow: 'hidden',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: darkMode 
-          ? 'radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)'
-          : 'radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%)',
-        pointerEvents: 'none',
-      }
     }}>
       {/* Top Navigation Bar */}
       <AppBar 
@@ -187,29 +190,29 @@ const Dashboard = () => {
         sx={{ 
           zIndex: 1201,
           background: darkMode 
-            ? 'rgba(26, 26, 46, 0.9)'
-            : 'rgba(255, 255, 255, 0.9)',
+            ? 'rgba(26, 26, 46, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
           borderBottom: darkMode 
             ? '1px solid rgba(255, 255, 255, 0.1)'
-            : '1px solid rgba(0, 0, 0, 0.1)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            : `1px solid ${colors.light}`,
+          boxShadow: `0 8px 32px ${colors.primary}20`,
         }}
       >
         <Toolbar>
           <IconButton
             edge="start"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ mr: 2, color: darkMode ? '#fff' : '#333' }}
+            sx={{ mr: 2, color: darkMode ? '#fff' : colors.primary }}
           >
             <Menu />
           </IconButton>
           
           <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
-            <School sx={{ mr: 1, color: '#667eea', fontSize: 32 }} />
+            <School sx={{ mr: 1, color: colors.secondary, fontSize: 32 }} />
             <Typography variant="h6" sx={{ 
               fontWeight: 700, 
-              background: 'linear-gradient(45deg, #667eea, #764ba2)',
+              background: colors.gradient.primary,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}>
@@ -225,13 +228,14 @@ const Dashboard = () => {
               minWidth: 300,
               '& .MuiOutlinedInput-root': {
                 borderRadius: 3,
-                background: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.8)',
+                background: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
+                borderColor: colors.light,
               }
             }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Search sx={{ color: darkMode ? '#fff' : '#666' }} />
+                  <Search sx={{ color: darkMode ? '#fff' : colors.primary }} />
                 </InputAdornment>
               ),
             }}
@@ -250,14 +254,14 @@ const Dashboard = () => {
             sx={{ mr: 2 }}
           />
 
-          <IconButton sx={{ mr: 2, color: darkMode ? '#fff' : '#333' }}>
+          <IconButton sx={{ mr: 2, color: darkMode ? '#fff' : colors.primary }}>
             <Badge badgeContent={3} color="error">
               <Notifications />
             </Badge>
           </IconButton>
 
           <Avatar sx={{ 
-            background: 'linear-gradient(45deg, #667eea, #764ba2)',
+            background: colors.gradient.primary,
             cursor: 'pointer'
           }}>
             A
@@ -282,7 +286,7 @@ const Dashboard = () => {
             backdropFilter: 'blur(20px)',
             borderRight: darkMode 
               ? '1px solid rgba(255, 255, 255, 0.1)'
-              : '1px solid rgba(0, 0, 0, 0.1)',
+              : `1px solid ${colors.light}`,
             mt: 8,
           },
         }}
@@ -290,7 +294,7 @@ const Dashboard = () => {
         <Box sx={{ p: 3 }}>
           <Typography variant="h6" sx={{ 
             mb: 2, 
-            color: darkMode ? '#fff' : '#333',
+            color: darkMode ? '#fff' : colors.primary,
             fontWeight: 600 
           }}>
             Navigation
@@ -312,16 +316,16 @@ const Dashboard = () => {
                     '&:hover': {
                       background: darkMode 
                         ? 'rgba(255, 255, 255, 0.1)'
-                        : 'rgba(102, 126, 234, 0.1)',
+                        : `${colors.light}80`,
                     }
                   }}
                 >
-                  <ListItemIcon sx={{ color: darkMode ? '#fff' : '#667eea' }}>
+                  <ListItemIcon sx={{ color: darkMode ? '#fff' : colors.secondary }}>
                     {item.icon}
                   </ListItemIcon>
                   <ListItemText 
                     primary={item.text} 
-                    sx={{ color: darkMode ? '#fff' : '#333' }}
+                    sx={{ color: darkMode ? '#fff' : colors.primary }}
                   />
                 </ListItem>
               </motion.div>
@@ -347,7 +351,7 @@ const Dashboard = () => {
             initial="hidden"
             animate="visible"
           >
-            {/* Welcome Card */}
+            {/* 1. Welcome Card */}
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
@@ -357,13 +361,13 @@ const Dashboard = () => {
                 backdropFilter: 'blur(20px)',
                 border: darkMode 
                   ? '1px solid rgba(255, 255, 255, 0.1)'
-                  : '1px solid rgba(255, 255, 255, 0.2)',
+                  : `1px solid ${colors.light}`,
                 borderRadius: 4,
                 overflow: 'hidden',
                 position: 'relative',
               }}>
                 <Box sx={{
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: colors.gradient.primary,
                   p: 4,
                   color: 'white',
                   position: 'relative',
@@ -390,7 +394,7 @@ const Dashboard = () => {
                             borderRadius: 4,
                             backgroundColor: 'rgba(255, 255, 255, 0.3)',
                             '& .MuiLinearProgress-bar': {
-                              backgroundColor: '#FFD93D',
+                              backgroundColor: colors.accent,
                             }
                           }}
                         />
@@ -427,79 +431,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* Stats Cards */}
-            <motion.div variants={itemVariants}>
-              <Grid container spacing={3} sx={{ mb: 4 }}>
-                {[
-                  { title: 'Total Content', value: pages.length, icon: <MenuBook />, color: '#FF6B6B' },
-                  { title: 'AI Quizzes', value: pages.length * 5, icon: <Psychology />, color: '#4ECDC4' },
-                  { title: 'Success Rate', value: 98, icon: <TrendingUp />, color: '#45B7D1', suffix: '%' },
-                  { title: 'AI Generated', value: 100, icon: <AutoAwesome />, color: '#96CEB4', suffix: '%' },
-                ].map((stat, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={stat.title}>
-                    <motion.div
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{ delay: 0.2 + index * 0.1 }}
-                      whileHover={{ 
-                        y: -10,
-                        transition: { duration: 0.2 }
-                      }}
-                    >
-                      <Card sx={{
-                        p: 3,
-                        background: darkMode 
-                          ? 'rgba(255, 255, 255, 0.05)'
-                          : 'rgba(255, 255, 255, 0.9)',
-                        backdropFilter: 'blur(20px)',
-                        border: darkMode 
-                          ? '1px solid rgba(255, 255, 255, 0.1)'
-                          : '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: 3,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        '&:hover': {
-                          boxShadow: `0 20px 40px ${stat.color}30`,
-                          transform: 'translateY(-5px)',
-                        }
-                      }}>
-                        <Box display="flex" alignItems="center" justifyContent="space-between">
-                          <Box>
-                            <Typography variant="h3" sx={{ 
-                              fontWeight: 700, 
-                              color: darkMode ? '#fff' : '#333',
-                              mb: 1 
-                            }}>
-                              <CountUp 
-                                end={stat.value} 
-                                duration={2} 
-                                suffix={stat.suffix || ''}
-                              />
-                            </Typography>
-                            <Typography variant="body2" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : '#666',
-                              fontWeight: 500 
-                            }}>
-                              {stat.title}
-                            </Typography>
-                          </Box>
-                          <Box sx={{
-                            p: 2,
-                            borderRadius: '50%',
-                            backgroundColor: `${stat.color}20`,
-                            color: stat.color,
-                          }}>
-                            {stat.icon}
-                          </Box>
-                        </Box>
-                      </Card>
-                    </motion.div>
-                  </Grid>
-                ))}
-              </Grid>
-            </motion.div>
-
-            {/* Quick Actions */}
+            {/* 2. Quick Actions (Right after Welcome) */}
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
@@ -510,13 +442,13 @@ const Dashboard = () => {
                 backdropFilter: 'blur(20px)',
                 border: darkMode 
                   ? '1px solid rgba(255, 255, 255, 0.1)'
-                  : '1px solid rgba(255, 255, 255, 0.2)',
+                  : `1px solid ${colors.light}`,
                 borderRadius: 3,
               }}>
                 <Typography variant="h5" sx={{ 
                   mb: 3, 
                   fontWeight: 600,
-                  color: darkMode ? '#fff' : '#333'
+                  color: darkMode ? '#fff' : colors.primary
                 }}>
                   🚀 Quick Actions
                 </Typography>
@@ -556,7 +488,79 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* Recent Activity & Content Grid */}
+            {/* 3. Stats Cards */}
+            <motion.div variants={itemVariants}>
+              <Grid container spacing={3} sx={{ mb: 4 }}>
+                {[
+                  { title: 'Total Content', value: pages.length, icon: <MenuBook />, color: colors.primary },
+                  { title: 'AI Quizzes', value: pages.length * 5, icon: <Psychology />, color: colors.secondary },
+                  { title: 'Success Rate', value: 98, icon: <TrendingUp />, color: colors.accent, suffix: '%' },
+                  { title: 'AI Generated', value: 100, icon: <AutoAwesome />, color: colors.primary, suffix: '%' },
+                ].map((stat, index) => (
+                  <Grid item xs={12} sm={6} md={3} key={stat.title}>
+                    <motion.div
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 + index * 0.1 }}
+                      whileHover={{ 
+                        y: -10,
+                        transition: { duration: 0.2 }
+                      }}
+                    >
+                      <Card sx={{
+                        p: 3,
+                        background: darkMode 
+                          ? 'rgba(255, 255, 255, 0.05)'
+                          : 'rgba(255, 255, 255, 0.9)',
+                        backdropFilter: 'blur(20px)',
+                        border: darkMode 
+                          ? '1px solid rgba(255, 255, 255, 0.1)'
+                          : `1px solid ${colors.light}`,
+                        borderRadius: 3,
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          boxShadow: `0 20px 40px ${stat.color}30`,
+                          transform: 'translateY(-5px)',
+                        }
+                      }}>
+                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                          <Box>
+                            <Typography variant="h3" sx={{ 
+                              fontWeight: 700, 
+                              color: darkMode ? '#fff' : colors.primary,
+                              mb: 1 
+                            }}>
+                              <CountUp 
+                                end={stat.value} 
+                                duration={2} 
+                                suffix={stat.suffix || ''}
+                              />
+                            </Typography>
+                            <Typography variant="body2" sx={{ 
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
+                              fontWeight: 500 
+                            }}>
+                              {stat.title}
+                            </Typography>
+                          </Box>
+                          <Box sx={{
+                            p: 2,
+                            borderRadius: '50%',
+                            backgroundColor: `${stat.color}20`,
+                            color: stat.color,
+                          }}>
+                            {stat.icon}
+                          </Box>
+                        </Box>
+                      </Card>
+                    </motion.div>
+                  </Grid>
+                ))}
+              </Grid>
+            </motion.div>
+
+            {/* 4. Recent Activity & Content Grid */}
             <Grid container spacing={3}>
               {/* Recent Activity */}
               <Grid item xs={12} md={4}>
@@ -569,14 +573,14 @@ const Dashboard = () => {
                     backdropFilter: 'blur(20px)',
                     border: darkMode 
                       ? '1px solid rgba(255, 255, 255, 0.1)'
-                      : '1px solid rgba(255, 255, 255, 0.2)',
+                      : `1px solid ${colors.light}`,
                     borderRadius: 3,
                     height: 'fit-content',
                   }}>
                     <Typography variant="h6" sx={{ 
                       mb: 3, 
                       fontWeight: 600,
-                      color: darkMode ? '#fff' : '#333'
+                      color: darkMode ? '#fff' : colors.primary
                     }}>
                       📈 Recent Activity
                     </Typography>
@@ -591,21 +595,21 @@ const Dashboard = () => {
                           <Box sx={{
                             p: 1,
                             borderRadius: '50%',
-                            backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : '#f5f5f5',
+                            backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
                             mr: 2,
-                            color: '#667eea'
+                            color: colors.secondary
                           }}>
                             {activity.icon}
                           </Box>
                           <Box>
                             <Typography variant="body2" sx={{ 
                               fontWeight: 500,
-                              color: darkMode ? '#fff' : '#333'
+                              color: darkMode ? '#fff' : colors.primary
                             }}>
                               {activity.title}
                             </Typography>
                             <Typography variant="caption" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : '#666'
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
                             }}>
                               {activity.time}
                             </Typography>
@@ -631,7 +635,7 @@ const Dashboard = () => {
                       backdropFilter: 'blur(20px)',
                       border: darkMode 
                         ? '1px solid rgba(255, 255, 255, 0.1)'
-                        : '1px solid rgba(255, 255, 255, 0.2)',
+                        : `1px solid ${colors.light}`,
                       borderRadius: 3,
                     }}>
                       <motion.div
@@ -642,17 +646,17 @@ const Dashboard = () => {
                         <Lightbulb sx={{ 
                           fontSize: 80, 
                           mb: 2, 
-                          color: '#FFD93D'
+                          color: colors.accent
                         }} />
                         <Typography variant="h4" gutterBottom sx={{ 
                           fontWeight: 600,
-                          color: darkMode ? '#fff' : '#333'
+                          color: darkMode ? '#fff' : colors.primary
                         }}>
                           Ready to Create Amazing Content?
                         </Typography>
                         <Typography variant="body1" sx={{ 
                           mb: 3,
-                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : '#666'
+                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
                         }}>
                           Start by creating your first AI-powered educational content!
                         </Typography>
@@ -662,17 +666,17 @@ const Dashboard = () => {
                           startIcon={<Add />}
                           onClick={() => navigate('/admin/create')}
                           sx={{
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            background: colors.gradient.primary,
                             color: 'white',
                             px: 4,
                             py: 1.5,
                             borderRadius: 3,
                             fontWeight: 600,
-                            boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
+                            boxShadow: `0 8px 32px ${colors.primary}40`,
                             '&:hover': {
-                              background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+                              background: colors.gradient.secondary,
                               transform: 'translateY(-2px)',
-                              boxShadow: '0 12px 40px rgba(102, 126, 234, 0.6)',
+                              boxShadow: `0 12px 40px ${colors.primary}60`,
                             },
                           }}
                         >
@@ -698,12 +702,12 @@ const Dashboard = () => {
                               backdropFilter: 'blur(20px)',
                               border: darkMode 
                                 ? '1px solid rgba(255, 255, 255, 0.1)'
-                                : '1px solid rgba(255, 255, 255, 0.2)',
+                                : `1px solid ${colors.light}`,
                               borderRadius: 3,
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
                               '&:hover': {
-                                boxShadow: '0 20px 40px rgba(102, 126, 234, 0.2)',
+                                boxShadow: `0 20px 40px ${colors.primary}20`,
                                 transform: 'translateY(-5px)',
                               }
                             }}>
@@ -711,11 +715,11 @@ const Dashboard = () => {
                                 <Box display="flex" alignItems="center" mb={2}>
                                   <MenuBook sx={{ 
                                     mr: 1, 
-                                    color: '#667eea'
+                                    color: colors.secondary
                                   }} />
                                   <Typography variant="h6" sx={{ 
                                     fontWeight: 600,
-                                    color: darkMode ? '#fff' : '#333'
+                                    color: darkMode ? '#fff' : colors.primary
                                   }}>
                                     {page.chapter}
                                   </Typography>
@@ -726,15 +730,15 @@ const Dashboard = () => {
                                   size="small" 
                                   sx={{
                                     mb: 2,
-                                    backgroundColor: '#667eea20',
-                                    color: '#667eea',
+                                    backgroundColor: `${colors.accent}40`,
+                                    color: colors.primary,
                                     fontWeight: 600,
                                   }}
                                 />
                                 
                                 <Typography variant="body2" sx={{ 
                                   lineHeight: 1.6,
-                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : '#666',
+                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
                                   mb: 2
                                 }}>
                                   {page.content.substring(0, 100)}...
@@ -743,13 +747,13 @@ const Dashboard = () => {
                                 {page.summary && (
                                   <Box sx={{ 
                                     p: 2, 
-                                    background: 'linear-gradient(135deg, #667eea20, #764ba220)',
+                                    background: `${colors.accent}20`,
                                     borderRadius: 2,
-                                    border: `1px solid ${currentTheme.accent}20`
+                                    mb: 2
                                   }}>
                                     <Typography variant="caption" sx={{ 
                                       fontWeight: 600,
-                                      color: '#667eea'
+                                      color: colors.primary
                                     }}>
                                       <AutoAwesome sx={{ fontSize: 14, mr: 1, verticalAlign: 'middle' }} />
                                       AI Summary: {page.summary.substring(0, 60)}...
@@ -764,9 +768,9 @@ const Dashboard = () => {
                                   startIcon={<Visibility />}
                                   onClick={() => navigate(`/page/${page.pageId}`)}
                                   sx={{ 
-                                    color: '#667eea',
+                                    color: colors.primary,
                                     '&:hover': {
-                                      backgroundColor: '#667eea20',
+                                      backgroundColor: `${colors.primary}20`,
                                     }
                                   }}
                                 >
@@ -777,9 +781,9 @@ const Dashboard = () => {
                                   startIcon={<Quiz />}
                                   onClick={() => navigate(`/quiz/${page.pageId}`)}
                                   sx={{ 
-                                    color: '#764ba2',
+                                    color: colors.secondary,
                                     '&:hover': {
-                                      backgroundColor: '#764ba220',
+                                      backgroundColor: `${colors.secondary}20`,
                                     }
                                   }}
                                 >
@@ -824,12 +828,12 @@ const Dashboard = () => {
               width: 64,
               height: 64,
               minWidth: 64,
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: colors.gradient.primary,
               color: 'white',
-              boxShadow: '0 8px 32px rgba(102, 126, 234, 0.4)',
+              boxShadow: `0 8px 32px ${colors.primary}40`,
               '&:hover': {
-                background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
-                boxShadow: '0 12px 40px rgba(102, 126, 234, 0.6)',
+                background: colors.gradient.secondary,
+                boxShadow: `0 12px 40px ${colors.primary}60`,
               },
             }}
           >
