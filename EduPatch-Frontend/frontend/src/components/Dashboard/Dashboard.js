@@ -50,7 +50,7 @@ const Dashboard = () => {
         alignItems="center" 
         minHeight="60vh"
         sx={{
-          background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
+          background: 'linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 100%)',
           borderRadius: 3,
           margin: 2,
         }}
@@ -59,34 +59,34 @@ const Dashboard = () => {
           <CircularProgress 
             size={60} 
             sx={{ 
-              color: '#F5DEB3',
+              color: '#FFFFFF',
               mb: 2,
             }} 
           />
-          <Typography variant="h6" sx={{ color: '#F5DEB3' }}>
+          <Typography variant="h6" sx={{ color: '#FFFFFF' }}>
             Loading your content...
           </Typography>
         </Box>
       </Box>
     );
-  }
+  };
 
   return (
     <Box sx={{ 
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #F5F5DC 0%, #FAEBD7 100%)',
+      background: 'linear-gradient(135deg, #FFF0F5 0%, #FFE4E1 100%)',
       py: 3
     }}>
       <Container maxWidth="xl">
         {/* Welcome Header */}
         <Box 
           sx={{
-            background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
+            background: 'linear-gradient(135deg, #FFB6C1 0%, #FFC0CB 100%)',
             borderRadius: 4,
             p: 4,
             mb: 4,
-            color: '#F5DEB3',
-            boxShadow: '0 8px 32px rgba(139, 69, 19, 0.3)',
+            color: '#FFFFFF',
+            boxShadow: '0 8px 32px rgba(255, 182, 193, 0.4)',
           }}
         >
           <Typography 
@@ -95,11 +95,11 @@ const Dashboard = () => {
             align="center"
             sx={{ 
               fontWeight: 700,
-              color: '#F5DEB3',
-              textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+              color: '#FFFFFF',
+              textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
             }}
           >
-            📚 Welcome Back, Admin!
+            💖 Welcome Back, Admin!
           </Typography>
           <Typography 
             variant="h6" 
@@ -117,64 +117,68 @@ const Dashboard = () => {
           <Grid container spacing={3} sx={{ mt: 2 }}>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{
-                background: 'rgba(245, 222, 179, 0.2)',
+                background: 'rgba(255, 255, 255, 0.3)',
                 borderRadius: 2,
                 p: 2,
                 textAlign: 'center',
-                border: '1px solid rgba(245, 222, 179, 0.3)'
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: '#F5DEB3' }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#FFFFFF' }}>
                   {pages.length}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Total Content
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{
-                background: 'rgba(245, 222, 179, 0.2)',
+                background: 'rgba(255, 255, 255, 0.3)',
                 borderRadius: 2,
                 p: 2,
                 textAlign: 'center',
-                border: '1px solid rgba(245, 222, 179, 0.3)'
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: '#F5DEB3' }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#FFFFFF' }}>
                   {pages.length * 5}
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   AI Quizzes
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{
-                background: 'rgba(245, 222, 179, 0.2)',
+                background: 'rgba(255, 255, 255, 0.3)',
                 borderRadius: 2,
                 p: 2,
                 textAlign: 'center',
-                border: '1px solid rgba(245, 222, 179, 0.3)'
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: '#F5DEB3' }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#FFFFFF' }}>
                   100%
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   AI Generated
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Box sx={{
-                background: 'rgba(245, 222, 179, 0.2)',
+                background: 'rgba(255, 255, 255, 0.3)',
                 borderRadius: 2,
                 p: 2,
                 textAlign: 'center',
-                border: '1px solid rgba(245, 222, 179, 0.3)'
+                border: '1px solid rgba(255, 255, 255, 0.4)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <Typography variant="h4" sx={{ fontWeight: 700, color: '#F5DEB3' }}>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: '#FFFFFF' }}>
                   24/7
                 </Typography>
-                <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Available
                 </Typography>
               </Box>
@@ -188,14 +192,14 @@ const Dashboard = () => {
             sx={{
               textAlign: 'center',
               p: 6,
-              background: 'linear-gradient(135deg, #D2B48C 0%, #DEB887 100%)',
-              color: '#8B4513',
+              background: 'linear-gradient(135deg, #FFCCCB 0%, #FFB6C1 100%)',
+              color: '#8B008B',
               borderRadius: 4,
-              boxShadow: '0 8px 32px rgba(139, 69, 19, 0.2)',
+              boxShadow: '0 8px 32px rgba(255, 182, 193, 0.3)',
             }}
           >
-            <AutoAwesome sx={{ fontSize: 80, mb: 2, opacity: 0.8, color: '#8B4513' }} />
-            <Typography variant="h4" gutterBottom fontWeight={600} sx={{ color: '#8B4513' }}>
+            <AutoAwesome sx={{ fontSize: 80, mb: 2, opacity: 0.8, color: '#8B008B' }} />
+            <Typography variant="h4" gutterBottom fontWeight={600} sx={{ color: '#8B008B' }}>
               Ready to Create Amazing Content?
             </Typography>
             <Typography variant="body1" sx={{ mb: 3, opacity: 0.8 }}>
@@ -206,16 +210,16 @@ const Dashboard = () => {
               size="large"
               onClick={() => navigate('/admin/create')}
               sx={{
-                background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
-                color: '#F5DEB3',
+                background: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 100%)',
+                color: '#FFFFFF',
                 px: 4,
                 py: 1.5,
                 borderRadius: 3,
                 fontWeight: 600,
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #A0522D 0%, #8B4513 100%)',
+                  background: 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)',
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 24px rgba(139, 69, 19, 0.3)',
+                  boxShadow: '0 12px 24px rgba(255, 105, 180, 0.4)',
                 },
               }}
             >
@@ -231,16 +235,16 @@ const Dashboard = () => {
                     height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    background: 'linear-gradient(135deg, #FFFFFF 0%, #F5F5DC 100%)',
+                    background: 'linear-gradient(135deg, #FFFFFF 0%, #FFF0F5 100%)',
                     borderRadius: 3,
-                    boxShadow: '0 8px 32px rgba(139, 69, 19, 0.15)',
-                    border: '1px solid rgba(139, 69, 19, 0.1)',
+                    boxShadow: '0 8px 32px rgba(255, 182, 193, 0.2)',
+                    border: '1px solid rgba(255, 182, 193, 0.2)',
                     transition: 'all 0.3s ease',
                     position: 'relative',
                     overflow: 'hidden',
                     '&:hover': {
                       transform: 'translateY(-8px)',
-                      boxShadow: '0 16px 48px rgba(139, 69, 19, 0.25)',
+                      boxShadow: '0 16px 48px rgba(255, 182, 193, 0.3)',
                     },
                     '&::before': {
                       content: '""',
@@ -250,9 +254,9 @@ const Dashboard = () => {
                       right: 0,
                       height: '4px',
                       background: `linear-gradient(90deg, 
-                        ${index % 3 === 0 ? '#8B4513, #A0522D' : 
-                          index % 3 === 1 ? '#D2B48C, #DEB887' : 
-                          '#CD853F, #D2691E'})`,
+                        ${index % 3 === 0 ? '#FFB6C1, #FFC0CB' : 
+                          index % 3 === 1 ? '#FF69B4, #FFB6C1' : 
+                          '#DDA0DD, #FFCCCB'})`,
                     },
                   }}
                 >
@@ -261,15 +265,15 @@ const Dashboard = () => {
                       <MenuBook 
                         sx={{ 
                           mr: 1, 
-                          color: index % 3 === 0 ? '#8B4513' : 
-                                 index % 3 === 1 ? '#A0522D' : '#CD853F'
+                          color: index % 3 === 0 ? '#FF69B4' : 
+                                 index % 3 === 1 ? '#FFB6C1' : '#DDA0DD'
                         }} 
                       />
                       <Typography 
                         variant="h6" 
                         component="h2" 
                         fontWeight={600}
-                        sx={{ color: '#8B4513' }}
+                        sx={{ color: '#8B008B' }}
                       >
                         {page.chapter}
                       </Typography>
@@ -280,9 +284,9 @@ const Dashboard = () => {
                       size="small" 
                       sx={{
                         mb: 2,
-                        backgroundColor: index % 3 === 0 ? '#F5DEB3' : 
-                                       index % 3 === 1 ? '#DEB887' : '#D2B48C',
-                        color: '#8B4513',
+                        backgroundColor: index % 3 === 0 ? '#FFE4E1' : 
+                                       index % 3 === 1 ? '#FFCCCB' : '#F0E6FF',
+                        color: '#8B008B',
                         fontWeight: 600,
                       }}
                     />
@@ -291,7 +295,7 @@ const Dashboard = () => {
                       variant="body2" 
                       color="text.secondary" 
                       paragraph
-                      sx={{ lineHeight: 1.6, color: '#8B4513', opacity: 0.8 }}
+                      sx={{ lineHeight: 1.6, color: '#8B008B', opacity: 0.8 }}
                     >
                       {page.content.substring(0, 150)}...
                     </Typography>
@@ -301,9 +305,9 @@ const Dashboard = () => {
                         sx={{ 
                           mt: 2, 
                           p: 2, 
-                          background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
+                          background: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 100%)',
                           borderRadius: 2,
-                          color: '#F5DEB3',
+                          color: '#FFFFFF',
                         }}
                       >
                         <Typography variant="body2" fontWeight={600}>
@@ -322,11 +326,11 @@ const Dashboard = () => {
                       onClick={() => navigate(`/page/${page.pageId}`)}
                       sx={{ 
                         borderRadius: 2,
-                        borderColor: '#8B4513',
-                        color: '#8B4513',
+                        borderColor: '#FF69B4',
+                        color: '#FF69B4',
                         '&:hover': {
-                          borderColor: '#A0522D',
-                          backgroundColor: 'rgba(139, 69, 19, 0.1)',
+                          borderColor: '#FFB6C1',
+                          backgroundColor: 'rgba(255, 105, 180, 0.1)',
                         }
                       }}
                     >
@@ -339,11 +343,11 @@ const Dashboard = () => {
                       onClick={() => navigate(`/quiz/${page.pageId}`)}
                       sx={{ 
                         borderRadius: 2,
-                        borderColor: '#A0522D',
-                        color: '#A0522D',
+                        borderColor: '#FFB6C1',
+                        color: '#FFB6C1',
                         '&:hover': {
-                          borderColor: '#8B4513',
-                          backgroundColor: 'rgba(160, 82, 45, 0.1)',
+                          borderColor: '#FF69B4',
+                          backgroundColor: 'rgba(255, 182, 193, 0.1)',
                         }
                       }}
                     >
@@ -356,11 +360,11 @@ const Dashboard = () => {
                       onClick={() => window.open(`${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/pages/${page.pageId}/qrcode`, '_blank')}
                       sx={{ 
                         borderRadius: 2,
-                        borderColor: '#CD853F',
-                        color: '#CD853F',
+                        borderColor: '#DDA0DD',
+                        color: '#DDA0DD',
                         '&:hover': {
-                          borderColor: '#D2691E',
-                          backgroundColor: 'rgba(205, 133, 63, 0.1)',
+                          borderColor: '#DA70D6',
+                          backgroundColor: 'rgba(221, 160, 221, 0.1)',
                         }
                       }}
                     >
@@ -390,14 +394,14 @@ const Dashboard = () => {
               borderRadius: '50px',
               px: 3,
               py: 1.5,
-              background: 'linear-gradient(135deg, #8B4513 0%, #A0522D 100%)',
-              color: '#F5DEB3',
-              boxShadow: '0 8px 32px rgba(139, 69, 19, 0.4)',
+              background: 'linear-gradient(135deg, #FF69B4 0%, #FFB6C1 100%)',
+              color: '#FFFFFF',
+              boxShadow: '0 8px 32px rgba(255, 105, 180, 0.4)',
               fontWeight: 600,
               '&:hover': {
                 transform: 'scale(1.05)',
-                boxShadow: '0 12px 40px rgba(139, 69, 19, 0.5)',
-                background: 'linear-gradient(135deg, #A0522D 0%, #8B4513 100%)',
+                boxShadow: '0 12px 40px rgba(255, 105, 180, 0.5)',
+                background: 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)',
               },
             }}
           >
