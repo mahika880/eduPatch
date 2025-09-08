@@ -64,24 +64,31 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
   const navigate = useNavigate();
 
-  // Sunset Color Palette - Solid Colors
+  // Sunset Color Palette
   const colors = {
     primary: '#493129',      // Dark Brown
     secondary: '#8b597b',    // Purple
     accent: '#e1c3d0',       // Light Pink
     light: '#f5e6d3',       // Cream
     lightest: '#faf5f0',    // Very Light Cream
-    white: '#ffffff',       // Pure White
-    text: {
-      primary: '#493129',
-      secondary: '#8b597b',
-      light: '#666666',
+    gradient: {
+      primary: 'linear-gradient(135deg, #493129 0%, #8b597b 100%)',
+      secondary: 'linear-gradient(135deg, #8b597b 0%, #e1c3d0 100%)',
+      light: 'linear-gradient(135deg, #f5e6d3 0%, #faf5f0 100%)',
+      accent: 'linear-gradient(135deg, #e1c3d0 0%, #f5e6d3 100%)',
     }
   };
 
   useEffect(() => {
     fetchPages();
   }, []);
+
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+      setSidebarCollapsed(false);
+    }
+  }, [isMobile]);
 
   const fetchPages = async () => {
     try {
@@ -91,6 +98,19 @@ const Dashboard = () => {
       console.error('Error fetching pages:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSidebarToggle = () => {
+    if (isMobile) {
+      setSidebarOpen(!sidebarOpen);
+    } else {
+      if (sidebarOpen) {
+        setSidebarCollapsed(!sidebarCollapsed);
+      } else {
+        setSidebarOpen(true);
+        setSidebarCollapsed(false);
+      }
     }
   };
 
@@ -139,6 +159,11 @@ const Dashboard = () => {
     }
   };
 
+  const getMainContentMargin = () => {
+    if (isMobile || !sidebarOpen) return 0;
+    return sidebarCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH;
+  };
+
   if (loading) {
     return (
       <Box 
@@ -147,7 +172,9 @@ const Dashboard = () => {
         alignItems="center" 
         minHeight="100vh"
         sx={{
-          background: darkMode ? '#1a1a2e' : colors.lightest,
+          background: darkMode 
+            ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+            : colors.gradient.light,
         }}
       >
         <motion.div
@@ -176,7 +203,9 @@ const Dashboard = () => {
     <Box sx={{ 
       display: 'flex',
       minHeight: '100vh',
-      background: darkMode ? '#0f0f23' : colors.lightest,
+      background: darkMode 
+        ? 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%)'
+        : colors.gradient.light,
       position: 'relative',
       overflow: 'hidden',
     }}>
@@ -184,17 +213,25 @@ const Dashboard = () => {
       <AppBar 
         position="fixed" 
         sx={{ 
-          zIndex: 1201,
-          background: darkMode ? 'rgba(26, 26, 46, 0.95)' : colors.white,
+          zIndex: theme.zIndex.drawer + 1,
+          background: darkMode 
+            ? 'rgba(26, 26, 46, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
-          borderBottom: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
-          boxShadow: `0 2px 20px ${colors.primary}10`,
+          borderBottom: darkMode 
+            ? '1px solid rgba(255, 255, 255, 0.1)'
+            : `1px solid ${colors.light}`,
+          boxShadow: `0 8px 32px ${colors.primary}20`,
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
         }}
       >
         <Toolbar>
           <IconButton
             edge="start"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
+            onClick={handleSidebarToggle}
             sx={{ mr: 2, color: darkMode ? '#fff' : colors.primary }}
           >
             <Menu />
@@ -204,32 +241,36 @@ const Dashboard = () => {
             <School sx={{ mr: 1, color: colors.secondary, fontSize: 32 }} />
             <Typography variant="h6" sx={{ 
               fontWeight: 700, 
-              color: colors.primary,
+              background: colors.gradient.primary,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
             }}>
               EduPatch AI
             </Typography>
           </Box>
 
-          <TextField
-            placeholder="Search content, quizzes..."
-            size="small"
-            sx={{ 
-              mr: 2, 
-              minWidth: 300,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 3,
-                background: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
-                borderColor: colors.light,
-              }
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: darkMode ? '#fff' : colors.primary }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+          {!isMobile && (
+            <TextField
+              placeholder="Search content, quizzes..."
+              size="small"
+              sx={{ 
+                mr: 2, 
+                minWidth: 300,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                  background: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
+                  borderColor: colors.light,
+                }
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: darkMode ? '#fff' : colors.primary }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
 
           <FormControlLabel
             control={
@@ -251,7 +292,7 @@ const Dashboard = () => {
           </IconButton>
 
           <Avatar sx={{ 
-            background: colors.primary,
+            background: colors.gradient.primary,
             cursor: 'pointer'
           }}>
             A
@@ -259,33 +300,68 @@ const Dashboard = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar */}
+      {/* Enhanced Foldable Sidebar */}
       <Drawer
-        variant="persistent"
+        variant={isMobile ? 'temporary' : 'persistent'}
         anchor="left"
         open={sidebarOpen}
+        onClose={() => isMobile && setSidebarOpen(false)}
         sx={{
-          width: 280,
+          width: sidebarCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
           flexShrink: 0,
           '& .MuiDrawer-paper': {
-            width: 280,
+            width: sidebarCollapsed ? DRAWER_WIDTH_COLLAPSED : DRAWER_WIDTH,
             boxSizing: 'border-box',
-            background: darkMode ? 'rgba(26, 26, 46, 0.95)' : colors.white,
+            background: darkMode 
+              ? 'rgba(26, 26, 46, 0.95)'
+              : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
-            borderRight: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+            borderRight: darkMode 
+              ? '1px solid rgba(255, 255, 255, 0.1)'
+              : `1px solid ${colors.light}`,
             mt: 8,
+            transition: theme.transitions.create('width', {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            overflowX: 'hidden',
           },
         }}
       >
-        <Box sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ 
-            mb: 2, 
-            color: darkMode ? '#fff' : colors.primary,
-            fontWeight: 600 
-          }}>
-            Navigation
-          </Typography>
-          <List>
+        <Box sx={{ p: sidebarCollapsed ? 1 : 3, position: 'relative' }}>
+          {/* Collapse Toggle Button */}
+          {!isMobile && (
+            <IconButton
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                color: darkMode ? '#fff' : colors.primary,
+                backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
+                '&:hover': {
+                  backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.2)' : colors.light,
+                },
+                width: 32,
+                height: 32,
+              }}
+            >
+              {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
+            </IconButton>
+          )}
+
+          {!sidebarCollapsed && (
+            <Typography variant="h6" sx={{ 
+              mb: 2, 
+              mt: 2,
+              color: darkMode ? '#fff' : colors.primary,
+              fontWeight: 600 
+            }}>
+              Navigation
+            </Typography>
+          )}
+          
+          <List sx={{ mt: sidebarCollapsed ? 5 : 0 }}>
             {sidebarItems.map((item, index) => (
               <motion.div
                 key={item.text}
@@ -299,18 +375,36 @@ const Dashboard = () => {
                   sx={{
                     borderRadius: 2,
                     mb: 1,
+                    minHeight: 48,
+                    justifyContent: sidebarCollapsed ? 'center' : 'initial',
+                    px: sidebarCollapsed ? 1 : 2,
                     '&:hover': {
-                      background: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
+                      background: darkMode 
+                        ? 'rgba(255, 255, 255, 0.1)'
+                        : `${colors.light}80`,
                     }
                   }}
                 >
-                  <ListItemIcon sx={{ color: darkMode ? '#fff' : colors.secondary }}>
+                  <ListItemIcon sx={{ 
+                    color: darkMode ? '#fff' : colors.secondary,
+                    minWidth: sidebarCollapsed ? 0 : 40,
+                    mr: sidebarCollapsed ? 0 : 1,
+                    justifyContent: 'center',
+                  }}>
                     {item.icon}
                   </ListItemIcon>
-                  <ListItemText 
-                    primary={item.text} 
-                    sx={{ color: darkMode ? '#fff' : colors.primary }}
-                  />
+                  {!sidebarCollapsed && (
+                    <ListItemText 
+                      primary={item.text} 
+                      sx={{ 
+                        color: darkMode ? '#fff' : colors.primary,
+                        '& .MuiListItemText-primary': {
+                          fontSize: '0.95rem',
+                          fontWeight: 500,
+                        }
+                      }}
+                    />
+                  )}
                 </ListItem>
               </motion.div>
             ))}
@@ -318,46 +412,60 @@ const Dashboard = () => {
         </Box>
       </Drawer>
 
-      {/* Main Content */}
+      {/* Main Content with Perfect Alignment */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           mt: 8,
-          ml: sidebarOpen ? 0 : -35,
-          transition: 'margin-left 0.3s ease',
+          ml: isMobile ? 0 : 0,
+          transition: theme.transitions.create(['margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          marginLeft: `${getMainContentMargin()}px`,
         }}
       >
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
-            {/* 1. Welcome Card */}
+            {/* 1. Welcome Card - Full Width */}
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
-                background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                background: darkMode 
+                  ? 'rgba(255, 255, 255, 0.05)'
+                  : 'rgba(255, 255, 255, 0.9)',
                 backdropFilter: 'blur(20px)',
-                border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                border: darkMode 
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : `1px solid ${colors.light}`,
                 borderRadius: 4,
                 overflow: 'hidden',
-                position: 'relative',
               }}>
                 <Box sx={{
-                  background: colors.primary,
-                  p: 4,
+                  background: colors.gradient.primary,
+                  p: { xs: 3, md: 4 },
                   color: 'white',
-                  position: 'relative',
                 }}>
                   <Grid container alignItems="center" spacing={3}>
                     <Grid item xs={12} md={8}>
-                      <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                      <Typography variant="h3" sx={{ 
+                        fontWeight: 700, 
+                        mb: 1,
+                        fontSize: { xs: '1.8rem', md: '3rem' }
+                      }}>
                         Welcome back, Admin! 👋
                       </Typography>
-                      <Typography variant="h6" sx={{ opacity: 0.9, mb: 2 }}>
+                      <Typography variant="h6" sx={{ 
+                        opacity: 0.9, 
+                        mb: 2,
+                        fontSize: { xs: '1rem', md: '1.25rem' }
+                      }}>
                         Your AI-powered learning platform is ready to create amazing content
                       </Typography>
                       
@@ -385,7 +493,7 @@ const Dashboard = () => {
                     </Grid>
                     
                     <Grid item xs={12} md={4}>
-                      <Box display="flex" flexWrap="wrap" gap={1} justifyContent="center">
+                      <Box display="flex" flexWrap="wrap" gap={1} justifyContent={{ xs: 'center', md: 'flex-end' }}>
                         {achievements.map((achievement, index) => (
                           <motion.div
                             key={achievement.title}
@@ -411,32 +519,34 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* 2. Quick Actions (Perfectly Aligned) */}
+            {/* 2. Quick Actions - Perfectly Aligned */}
             <motion.div variants={itemVariants}>
               <Card sx={{
                 mb: 4,
-                p: 3,
-                background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                p: { xs: 2, md: 3 },
+                background: darkMode 
+                  ? 'rgba(255, 255, 255, 0.05)'
+                  : 'rgba(255, 255, 255, 0.9)',
                 backdropFilter: 'blur(20px)',
-                border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                border: darkMode 
+                  ? '1px solid rgba(255, 255, 255, 0.1)'
+                  : `1px solid ${colors.light}`,
                 borderRadius: 3,
               }}>
                 <Typography variant="h5" sx={{ 
                   mb: 3, 
                   fontWeight: 600,
                   color: darkMode ? '#fff' : colors.primary,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1
+                  textAlign: { xs: 'center', md: 'left' }
                 }}>
                   🚀 Quick Actions
                 </Typography>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} justifyContent="center">
                   {quickActions.map((action, index) => (
-                    <Grid item xs={12} md={4} key={action.title}>
+                    <Grid item xs={12} sm={6} md={4} key={action.title}>
                       <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
                         <Button
                           fullWidth
@@ -445,17 +555,16 @@ const Dashboard = () => {
                           startIcon={action.icon}
                           onClick={action.action}
                           sx={{
-                            py: 2.5,
+                            py: 2,
                             borderRadius: 3,
-                            background: action.color,
+                            background: `linear-gradient(135deg, ${action.color}, ${action.color}dd)`,
                             color: 'white',
                             fontWeight: 600,
                             fontSize: '1.1rem',
-                            boxShadow: `0 4px 20px ${action.color}30`,
+                            boxShadow: `0 8px 32px ${action.color}40`,
                             '&:hover': {
-                              background: action.color,
-                              filter: 'brightness(1.1)',
-                              boxShadow: `0 6px 25px ${action.color}40`,
+                              background: `linear-gradient(135deg, ${action.color}dd, ${action.color})`,
+                              boxShadow: `0 12px 40px ${action.color}60`,
                             }
                           }}
                         >
@@ -468,7 +577,7 @@ const Dashboard = () => {
               </Card>
             </motion.div>
 
-            {/* 3. Stats Cards (Perfectly Aligned Grid) */}
+            {/* 3. Stats Cards - Perfect Grid Alignment */}
             <motion.div variants={itemVariants}>
               <Grid container spacing={3} sx={{ mb: 4 }}>
                 {[
@@ -483,34 +592,37 @@ const Dashboard = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.2 + index * 0.1 }}
                       whileHover={{ 
-                        y: -5,
+                        y: -10,
                         transition: { duration: 0.2 }
                       }}
                     >
                       <Card sx={{
                         p: 3,
-                        background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                        background: darkMode 
+                          ? 'rgba(255, 255, 255, 0.05)'
+                          : 'rgba(255, 255, 255, 0.9)',
                         backdropFilter: 'blur(20px)',
-                        border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                        border: darkMode 
+                          ? '1px solid rgba(255, 255, 255, 0.1)'
+                          : `1px solid ${colors.light}`,
                         borderRadius: 3,
                         cursor: 'pointer',
                         transition: 'all 0.3s ease',
-                        height: '140px',
+                        height: '100%',
                         display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
+                        alignItems: 'center',
                         '&:hover': {
-                          boxShadow: `0 8px 30px ${stat.color}20`,
+                          boxShadow: `0 20px 40px ${stat.color}30`,
                           transform: 'translateY(-5px)',
                         }
                       }}>
-                        <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
                           <Box>
                             <Typography variant="h3" sx={{ 
                               fontWeight: 700, 
                               color: darkMode ? '#fff' : colors.primary,
                               mb: 1,
-                              lineHeight: 1
+                              fontSize: { xs: '2rem', md: '3rem' }
                             }}>
                               <CountUp 
                                 end={stat.value} 
@@ -519,9 +631,9 @@ const Dashboard = () => {
                               />
                             </Typography>
                             <Typography variant="body2" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary,
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
                               fontWeight: 500,
-                              fontSize: '0.9rem'
+                              fontSize: { xs: '0.8rem', md: '0.875rem' }
                             }}>
                               {stat.title}
                             </Typography>
@@ -533,7 +645,7 @@ const Dashboard = () => {
                             color: stat.color,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                           }}>
                             {stat.icon}
                           </Box>
@@ -545,27 +657,27 @@ const Dashboard = () => {
               </Grid>
             </motion.div>
 
-            {/* 4. Recent Activity & Content Grid (Aligned) */}
+            {/* 4. Recent Activity & Content Grid - Perfectly Aligned */}
             <Grid container spacing={3}>
               {/* Recent Activity */}
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} lg={4}>
                 <motion.div variants={itemVariants}>
                   <Card sx={{
                     p: 3,
-                    background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                    background: darkMode 
+                      ? 'rgba(255, 255, 255, 0.05)'
+                      : 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(20px)',
-                    border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                    border: darkMode 
+                      ? '1px solid rgba(255, 255, 255, 0.1)'
+                      : `1px solid ${colors.light}`,
                     borderRadius: 3,
                     height: 'fit-content',
-                    minHeight: '300px'
                   }}>
                     <Typography variant="h6" sx={{ 
                       mb: 3, 
                       fontWeight: 600,
-                      color: darkMode ? '#fff' : colors.primary,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1
+                      color: darkMode ? '#fff' : colors.primary
                     }}>
                       📈 Recent Activity
                     </Typography>
@@ -576,35 +688,34 @@ const Dashboard = () => {
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ delay: 0.5 + index * 0.1 }}
                       >
-                        <Box display="flex" alignItems="center" sx={{ mb: 3 }}>
+                        <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
                           <Box sx={{
-                            p: 1.5,
+                            p: 1,
                             borderRadius: '50%',
                             backgroundColor: darkMode ? 'rgba(255, 255, 255, 0.1)' : colors.lightest,
                             mr: 2,
                             color: colors.secondary,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                           }}>
                             {activity.icon}
                           </Box>
-                          <Box>
+                          <Box flex={1}>
                             <Typography variant="body2" sx={{ 
                               fontWeight: 500,
-                              color: darkMode ? '#fff' : colors.primary,
-                              mb: 0.5
+                              color: darkMode ? '#fff' : colors.primary
                             }}>
                               {activity.title}
                             </Typography>
                             <Typography variant="caption" sx={{ 
-                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.light
+                              color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
                             }}>
                               {activity.time}
                             </Typography>
                           </Box>
                         </Box>
-                        {index < recentActivities.length - 1 && <Divider sx={{ my: 2 }} />}
+                        {index < recentActivities.length - 1 && <Divider sx={{ my: 1 }} />}
                       </motion.div>
                     ))}
                   </Card>
@@ -612,20 +723,20 @@ const Dashboard = () => {
               </Grid>
 
               {/* Content Grid */}
-              <Grid item xs={12} md={8}>
+              <Grid item xs={12} lg={8}>
                 <motion.div variants={itemVariants}>
                   {pages.length === 0 ? (
                     <Card sx={{
                       textAlign: 'center',
                       p: 6,
-                      background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                      background: darkMode 
+                        ? 'rgba(255, 255, 255, 0.05)'
+                        : 'rgba(255, 255, 255, 0.9)',
                       backdropFilter: 'blur(20px)',
-                      border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                      border: darkMode 
+                        ? '1px solid rgba(255, 255, 255, 0.1)'
+                        : `1px solid ${colors.light}`,
                       borderRadius: 3,
-                      minHeight: '300px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center'
                     }}>
                       <motion.div
                         initial={{ scale: 0 }}
@@ -645,7 +756,7 @@ const Dashboard = () => {
                         </Typography>
                         <Typography variant="body1" sx={{ 
                           mb: 3,
-                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary
+                          color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary
                         }}>
                           Start by creating your first AI-powered educational content!
                         </Typography>
@@ -655,18 +766,17 @@ const Dashboard = () => {
                           startIcon={<Add />}
                           onClick={() => navigate('/admin/create')}
                           sx={{
-                            background: colors.primary,
+                            background: colors.gradient.primary,
                             color: 'white',
                             px: 4,
                             py: 1.5,
                             borderRadius: 3,
                             fontWeight: 600,
-                            boxShadow: `0 4px 20px ${colors.primary}30`,
+                            boxShadow: `0 8px 32px ${colors.primary}40`,
                             '&:hover': {
-                              background: colors.primary,
-                              filter: 'brightness(1.1)',
+                              background: colors.gradient.secondary,
                               transform: 'translateY(-2px)',
-                              boxShadow: `0 6px 25px ${colors.primary}40`,
+                              boxShadow: `0 12px 40px ${colors.primary}60`,
                             },
                           }}
                         >
@@ -686,17 +796,20 @@ const Dashboard = () => {
                           >
                             <Card sx={{
                               height: '100%',
-                              background: darkMode ? 'rgba(255, 255, 255, 0.05)' : colors.white,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              background: darkMode 
+                                ? 'rgba(255, 255, 255, 0.05)'
+                                : 'rgba(255, 255, 255, 0.9)',
                               backdropFilter: 'blur(20px)',
-                              border: darkMode ? '1px solid rgba(255, 255, 255, 0.1)' : `1px solid ${colors.light}`,
+                              border: darkMode 
+                                ? '1px solid rgba(255, 255, 255, 0.1)'
+                                : `1px solid ${colors.light}`,
                               borderRadius: 3,
                               cursor: 'pointer',
                               transition: 'all 0.3s ease',
-                              minHeight: '280px',
-                              display: 'flex',
-                              flexDirection: 'column',
                               '&:hover': {
-                                boxShadow: `0 8px 30px ${colors.primary}15`,
+                                boxShadow: `0 20px 40px ${colors.primary}20`,
                                 transform: 'translateY(-5px)',
                               }
                             }}>
@@ -719,7 +832,7 @@ const Dashboard = () => {
                                   size="small" 
                                   sx={{
                                     mb: 2,
-                                    backgroundColor: colors.lightest,
+                                    backgroundColor: `${colors.accent}40`,
                                     color: colors.primary,
                                     fontWeight: 600,
                                   }}
@@ -727,7 +840,7 @@ const Dashboard = () => {
                                 
                                 <Typography variant="body2" sx={{ 
                                   lineHeight: 1.6,
-                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.text.secondary,
+                                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : colors.secondary,
                                   mb: 2
                                 }}>
                                   {page.content.substring(0, 100)}...
@@ -736,7 +849,7 @@ const Dashboard = () => {
                                 {page.summary && (
                                   <Box sx={{ 
                                     p: 2, 
-                                    background: colors.lightest,
+                                    background: `${colors.accent}20`,
                                     borderRadius: 2,
                                     mb: 2
                                   }}>
@@ -759,7 +872,7 @@ const Dashboard = () => {
                                   sx={{ 
                                     color: colors.primary,
                                     '&:hover': {
-                                      backgroundColor: `${colors.primary}15`,
+                                      backgroundColor: `${colors.primary}20`,
                                     }
                                   }}
                                 >
@@ -772,7 +885,7 @@ const Dashboard = () => {
                                   sx={{ 
                                     color: colors.secondary,
                                     '&:hover': {
-                                      backgroundColor: `${colors.secondary}15`,
+                                      backgroundColor: `${colors.secondary}20`,
                                     }
                                   }}
                                 >
@@ -819,7 +932,7 @@ const Dashboard = () => {
               minWidth: 64,
               background: colors.gradient.primary,
               color: 'white',
-              boxShadow: `0 4px 20px ${colors.primary}40`,
+              boxShadow: `0 8px 32px ${colors.primary}40`,
               '&:hover': {
                 background: colors.gradient.secondary,
                 boxShadow: `0 12px 40px ${colors.primary}60`,
