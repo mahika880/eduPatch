@@ -39,13 +39,17 @@ const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  // Sunset Color Palette
+  // Enhanced Color Palette with Animation Colors
   const colors = {
     primary: '#493129',
     secondary: '#8b597b',
     accent: '#e1c3d0',
     light: '#f5e6d3',
     lightest: '#faf5f0',
+    // Animation colors
+    softPink: '#FFB6C1',
+    lavender: '#E6E6FA',
+    lightPeach: '#FFDBAC',
   };
 
   const handleInputChange = (e) => {
@@ -85,9 +89,25 @@ const Login = ({ onSwitchToRegister }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 50%, ${colors.accent} 100%)`,
         position: 'relative',
         overflow: 'hidden',
+        // Animated Gradient Background
+        background: `linear-gradient(-45deg, ${colors.softPink}, ${colors.lavender}, ${colors.lightPeach}, ${colors.accent})`,
+        backgroundSize: '400% 400%',
+        animation: 'gradientShift 15s ease infinite',
+        // Keyframes for gradient animation
+        '@keyframes gradientShift': {
+          '0%': {
+            backgroundPosition: '0% 50%'
+          },
+          '50%': {
+            backgroundPosition: '100% 50%'
+          },
+          '100%': {
+            backgroundPosition: '0% 50%'
+          }
+        },
+        // Additional overlay effects
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -98,9 +118,21 @@ const Login = ({ onSwitchToRegister }) => {
           backgroundImage: `
             radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
             radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, ${colors.accent}30 0%, transparent 50%)
+            radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
           `,
           pointerEvents: 'none',
+          animation: 'float 20s ease-in-out infinite',
+        },
+        '@keyframes float': {
+          '0%, 100%': {
+            transform: 'translateY(0px) rotate(0deg)',
+          },
+          '33%': {
+            transform: 'translateY(-10px) rotate(1deg)',
+          },
+          '66%': {
+            transform: 'translateY(5px) rotate(-1deg)',
+          }
         },
         '&::after': {
           content: '""',
@@ -109,7 +141,7 @@ const Login = ({ onSwitchToRegister }) => {
           left: 0,
           right: 0,
           height: '40%',
-          background: `linear-gradient(to top, ${colors.primary}40, transparent)`,
+          background: `linear-gradient(to top, ${colors.primary}20, transparent)`,
           pointerEvents: 'none',
         }
       }}
@@ -127,6 +159,16 @@ const Login = ({ onSwitchToRegister }) => {
             boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
             position: 'relative',
             overflow: 'hidden',
+            // Subtle card animation
+            animation: 'cardFloat 6s ease-in-out infinite',
+            '@keyframes cardFloat': {
+              '0%, 100%': {
+                transform: 'translateY(0px)',
+              },
+              '50%': {
+                transform: 'translateY(-5px)',
+              }
+            },
             '&::before': {
               content: '""',
               position: 'absolute',
@@ -152,6 +194,18 @@ const Login = ({ onSwitchToRegister }) => {
                     justifyContent: 'center',
                     margin: '0 auto 20px',
                     boxShadow: `0 10px 30px ${colors.primary}40`,
+                    // Pulsing animation for logo
+                    animation: 'logoPulse 4s ease-in-out infinite',
+                    '@keyframes logoPulse': {
+                      '0%, 100%': {
+                        transform: 'scale(1)',
+                        boxShadow: `0 10px 30px ${colors.primary}40`,
+                      },
+                      '50%': {
+                        transform: 'scale(1.05)',
+                        boxShadow: `0 15px 40px ${colors.primary}60`,
+                      }
+                    }
                   }}
                 >
                   <School sx={{ fontSize: 40, color: 'white' }} />
@@ -174,6 +228,17 @@ const Login = ({ onSwitchToRegister }) => {
                       background: `linear-gradient(90deg, transparent, ${colors.accent}60, transparent)`,
                       borderRadius: '4px',
                       zIndex: -1,
+                      animation: 'highlightPulse 3s ease-in-out infinite',
+                    },
+                    '@keyframes highlightPulse': {
+                      '0%, 100%': {
+                        opacity: 0.6,
+                        transform: 'translateX(-50%) scaleX(1)',
+                      },
+                      '50%': {
+                        opacity: 0.8,
+                        transform: 'translateX(-50%) scaleX(1.1)',
+                      }
                     }
                   }}
                 >
@@ -227,13 +292,17 @@ const Login = ({ onSwitchToRegister }) => {
                       borderRadius: 3,
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       color: 'white',
+                      transition: 'all 0.3s ease',
                       '&:hover': {
                         border: '1px solid rgba(255, 255, 255, 0.3)',
                         background: 'rgba(255, 255, 255, 0.15)',
+                        transform: 'translateY(-2px)',
                       },
                       '&.Mui-focused': {
                         border: '1px solid rgba(255, 255, 255, 0.4)',
                         background: 'rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-2px)',
                       },
                       '& fieldset': {
                         border: 'none',
@@ -273,13 +342,17 @@ const Login = ({ onSwitchToRegister }) => {
                       borderRadius: 3,
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       color: 'white',
+                      transition: 'all 0.3s ease',
                       '&:hover': {
                         border: '1px solid rgba(255, 255, 255, 0.3)',
                         background: 'rgba(255, 255, 255, 0.15)',
+                        transform: 'translateY(-2px)',
                       },
                       '&.Mui-focused': {
                         border: '1px solid rgba(255, 255, 255, 0.4)',
                         background: 'rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        transform: 'translateY(-2px)',
                       },
                       '& fieldset': {
                         border: 'none',
@@ -352,6 +425,8 @@ const Login = ({ onSwitchToRegister }) => {
                     letterSpacing: '0.5px',
                     boxShadow: `0 10px 30px ${colors.primary}40`,
                     border: '1px solid rgba(255, 255, 255, 0.2)',
+                    position: 'relative',
+                    overflow: 'hidden',
                     '&:hover': {
                       background: `linear-gradient(135deg, ${colors.secondary}, ${colors.primary})`,
                       transform: 'translateY(-2px)',
@@ -362,6 +437,25 @@ const Login = ({ onSwitchToRegister }) => {
                       color: 'rgba(255, 255, 255, 0.5)',
                     },
                     transition: 'all 0.3s ease',
+                    // Subtle shimmer effect
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: '-100%',
+                      width: '100%',
+                      height: '100%',
+                      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                      animation: 'shimmer 3s infinite',
+                    },
+                    '@keyframes shimmer': {
+                      '0%': {
+                        left: '-100%',
+                      },
+                      '100%': {
+                        left: '100%',
+                      }
+                    }
                   }}
                 >
                   {loading ? 'Signing In...' : 'LOGIN'}
@@ -378,9 +472,11 @@ const Login = ({ onSwitchToRegister }) => {
                   sx={{ 
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
+                    transition: 'all 0.3s ease',
                     '&:hover': {
                       color: 'white',
                       textDecoration: 'underline',
+                      transform: 'translateY(-1px)',
                     },
                   }}
                 >
@@ -393,9 +489,11 @@ const Login = ({ onSwitchToRegister }) => {
                   sx={{ 
                     color: 'rgba(255, 255, 255, 0.8)',
                     textDecoration: 'none',
+                    transition: 'all 0.3s ease',
                     '&:hover': {
                       color: 'white',
                       textDecoration: 'underline',
+                      transform: 'translateY(-1px)',
                     },
                   }}
                 >
@@ -430,12 +528,12 @@ const Login = ({ onSwitchToRegister }) => {
                       background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
+                      transition: 'all 0.3s ease',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 1)',
-                        transform: 'scale(1.1)',
+                        transform: 'scale(1.1) translateY(-2px)',
                         boxShadow: '0 8px 25px rgba(66, 133, 244, 0.3)',
                       },
-                      transition: 'all 0.3s ease',
                     }}
                   >
                     <svg width="24" height="24" viewBox="0 0 24 24">
@@ -454,12 +552,12 @@ const Login = ({ onSwitchToRegister }) => {
                       background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.3)',
+                      transition: 'all 0.3s ease',
                       '&:hover': {
                         background: 'rgba(255, 255, 255, 1)',
-                        transform: 'scale(1.1)',
+                        transform: 'scale(1.1) translateY(-2px)',
                         boxShadow: '0 8px 25px rgba(24, 119, 242, 0.3)',
                       },
-                      transition: 'all 0.3s ease',
                     }}
                   >
                     <Facebook sx={{ 
