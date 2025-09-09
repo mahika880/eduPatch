@@ -156,19 +156,46 @@ const Login = ({ onSwitchToRegister }) => {
                 >
                   <School sx={{ fontSize: 40, color: 'white' }} />
                 </Box>
-                <Typography 
-                  variant="h3" 
-                  component="h1" 
-                  gutterBottom
+                
+                {/* Enhanced Welcome Text with Highlight */}
+                <Box
                   sx={{
-                    color: 'white',
-                    fontWeight: 300,
-                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
+                    position: 'relative',
+                    display: 'inline-block',
                     mb: 1,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '120%',
+                      height: '8px',
+                      background: `linear-gradient(90deg, transparent, ${colors.accent}60, transparent)`,
+                      borderRadius: '4px',
+                      zIndex: -1,
+                    }
                   }}
                 >
-                  Welcome
-                </Typography>
+                  <Typography 
+                    variant="h3" 
+                    component="h1" 
+                    sx={{
+                      color: 'white',
+                      fontWeight: 600,
+                      textShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+                      letterSpacing: '1px',
+                      position: 'relative',
+                      background: `linear-gradient(135deg, white, ${colors.lightest})`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
+                    Welcome
+                  </Typography>
+                </Box>
+                
                 <Typography 
                   variant="body1" 
                   sx={{ 
@@ -377,7 +404,7 @@ const Login = ({ onSwitchToRegister }) => {
               </Box>
             </Fade>
             
-            {/* Social Login */}
+            {/* Social Login with Brand Colors */}
             <Fade in={true} timeout={1800}>
               <Box>
                 <Typography 
@@ -395,39 +422,48 @@ const Login = ({ onSwitchToRegister }) => {
                 </Typography>
                 
                 <Box display="flex" justifyContent="center" gap={2}>
+                  {/* Google Button with Authentic Colors */}
                   <IconButton
                     sx={{
                       width: 50,
                       height: 50,
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: 'rgba(255, 255, 255, 1)',
                         transform: 'scale(1.1)',
+                        boxShadow: '0 8px 25px rgba(66, 133, 244, 0.3)',
                       },
                       transition: 'all 0.3s ease',
                     }}
                   >
-                    <Google />
+                    <Google sx={{ 
+                      color: '#4285f4', // Official Google Blue
+                      fontSize: 24,
+                    }} />
                   </IconButton>
+                  
+                  {/* Facebook Button with Authentic Colors */}
                   <IconButton
                     sx={{
                       width: 50,
                       height: 50,
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.95)',
                       backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
                       '&:hover': {
-                        background: 'rgba(255, 255, 255, 0.2)',
+                        background: 'rgba(255, 255, 255, 1)',
                         transform: 'scale(1.1)',
+                        boxShadow: '0 8px 25px rgba(24, 119, 242, 0.3)',
                       },
                       transition: 'all 0.3s ease',
                     }}
                   >
-                    <Facebook />
+                    <Facebook sx={{ 
+                      color: '#1877f2', // Official Facebook Blue
+                      fontSize: 24,
+                    }} />
                   </IconButton>
                 </Box>
               </Box>
