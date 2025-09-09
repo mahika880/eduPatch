@@ -43,13 +43,13 @@ const Register = ({ onSwitchToLogin }) => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Sunset Color Palette
+  // Sunset Color Palette - Using darker colors for better contrast
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#493129',      // Dark Brown - main background
+    secondary: '#8b597b',    // Purple - accents
+    accent: '#e1c3d0',       // Light Pink - highlights
+    light: '#f5e6d3',       // Cream - text
+    lightest: '#faf5f0',    // Very Light Cream - bright text
   };
 
   const handleInputChange = (e) => {
@@ -110,7 +110,8 @@ const Register = ({ onSwitchToLogin }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: `linear-gradient(135deg, ${colors.secondary} 0%, ${colors.accent} 50%, ${colors.light} 100%)`,
+        // Using darker background for better contrast
+        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
         position: 'relative',
         overflow: 'hidden',
         '&::before': {
@@ -121,22 +122,11 @@ const Register = ({ onSwitchToLogin }) => {
           right: 0,
           bottom: 0,
           backgroundImage: `
-            radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, ${colors.primary}20 0%, transparent 50%)
+            radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
           `,
           pointerEvents: 'none',
         },
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '40%',
-          background: `linear-gradient(to top, ${colors.secondary}30, transparent)`,
-          pointerEvents: 'none',
-        }
       }}
     >
       <Fade in={true} timeout={800}>
@@ -145,11 +135,12 @@ const Register = ({ onSwitchToLogin }) => {
             maxWidth: 480, 
             width: '100%', 
             mx: 2,
-            background: 'rgba(255, 255, 255, 0.15)',
+            // Enhanced glassmorphism with better opacity
+            background: 'rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.2)',
             borderRadius: 4,
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
+            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
             position: 'relative',
             overflow: 'hidden',
             '&::before': {
@@ -171,61 +162,38 @@ const Register = ({ onSwitchToLogin }) => {
                     width: 80,
                     height: 80,
                     borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
+                    background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 20px',
-                    boxShadow: `0 10px 30px ${colors.secondary}40`,
+                    boxShadow: `0 10px 30px ${colors.primary}60`,
                   }}
                 >
-                  <School sx={{ fontSize: 40, color: 'white' }} />
+                  <School sx={{ fontSize: 40, color: colors.primary }} />
                 </Box>
                 
-                {/* Enhanced Create Account Text */}
-                <Box
+                {/* High Contrast Join Us Text */}
+                <Typography 
+                  variant="h3" 
+                  component="h1" 
                   sx={{
-                    position: 'relative',
-                    display: 'inline-block',
+                    color: colors.lightest,
+                    fontWeight: 700,
+                    textShadow: `2px 2px 8px ${colors.primary}`,
+                    letterSpacing: '1px',
                     mb: 1,
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: 0,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: '120%',
-                      height: '8px',
-                      background: `linear-gradient(90deg, transparent, ${colors.light}60, transparent)`,
-                      borderRadius: '4px',
-                      zIndex: -1,
-                    }
                   }}
                 >
-                  <Typography 
-                    variant="h3" 
-                    component="h1" 
-                    sx={{
-                      color: 'white',
-                      fontWeight: 600,
-                      textShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
-                      letterSpacing: '1px',
-                      position: 'relative',
-                      background: `linear-gradient(135deg, white, ${colors.lightest})`,
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    Join Us
-                  </Typography>
-                </Box>
+                  Join Us
+                </Typography>
                 
                 <Typography 
                   variant="body1" 
                   sx={{ 
-                    color: 'rgba(255, 255, 255, 0.8)',
-                    fontWeight: 300,
+                    color: colors.light,
+                    fontWeight: 400,
+                    textShadow: `1px 1px 4px ${colors.primary}`,
                   }}
                 >
                   Create your admin account
@@ -246,36 +214,38 @@ const Register = ({ onSwitchToLogin }) => {
                   sx={{
                     mb: 2,
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.15)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: 3,
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: `1px solid ${colors.accent}40`,
+                      color: colors.lightest,
                       '&:hover': {
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        border: `1px solid ${colors.accent}60`,
+                        background: 'rgba(255, 255, 255, 0.2)',
                       },
                       '&.Mui-focused': {
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${colors.accent}`,
+                        background: 'rgba(255, 255, 255, 0.25)',
+                        boxShadow: `0 0 20px ${colors.accent}40`,
                       },
                       '& fieldset': {
                         border: 'none',
                       },
                     },
                     '& .MuiInputBase-input': {
-                      color: 'white',
+                      color: colors.lightest,
+                      fontWeight: 500,
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: colors.light,
                         opacity: 1,
+                        fontWeight: 400,
                       },
                     },
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Person sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                        <Person sx={{ color: colors.light }} />
                       </InputAdornment>
                     ),
                   }}
@@ -293,36 +263,38 @@ const Register = ({ onSwitchToLogin }) => {
                   sx={{
                     mb: 2,
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.15)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: 3,
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: `1px solid ${colors.accent}40`,
+                      color: colors.lightest,
                       '&:hover': {
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        border: `1px solid ${colors.accent}60`,
+                        background: 'rgba(255, 255, 255, 0.2)',
                       },
                       '&.Mui-focused': {
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${colors.accent}`,
+                        background: 'rgba(255, 255, 255, 0.25)',
+                        boxShadow: `0 0 20px ${colors.accent}40`,
                       },
                       '& fieldset': {
                         border: 'none',
                       },
                     },
                     '& .MuiInputBase-input': {
-                      color: 'white',
+                      color: colors.lightest,
+                      fontWeight: 500,
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: colors.light,
                         opacity: 1,
+                        fontWeight: 400,
                       },
                     },
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Email sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                        <Email sx={{ color: colors.light }} />
                       </InputAdornment>
                     ),
                   }}
@@ -340,36 +312,38 @@ const Register = ({ onSwitchToLogin }) => {
                   sx={{
                     mb: 2,
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.15)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: 3,
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: `1px solid ${colors.accent}40`,
+                      color: colors.lightest,
                       '&:hover': {
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        border: `1px solid ${colors.accent}60`,
+                        background: 'rgba(255, 255, 255, 0.2)',
                       },
                       '&.Mui-focused': {
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${colors.accent}`,
+                        background: 'rgba(255, 255, 255, 0.25)',
+                        boxShadow: `0 0 20px ${colors.accent}40`,
                       },
                       '& fieldset': {
                         border: 'none',
                       },
                     },
                     '& .MuiInputBase-input': {
-                      color: 'white',
+                      color: colors.lightest,
+                      fontWeight: 500,
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: colors.light,
                         opacity: 1,
+                        fontWeight: 400,
                       },
                     },
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Lock sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                        <Lock sx={{ color: colors.light }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -377,7 +351,7 @@ const Register = ({ onSwitchToLogin }) => {
                         <IconButton
                           onClick={() => setShowPassword(!showPassword)}
                           edge="end"
-                          sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                          sx={{ color: colors.light }}
                         >
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -398,36 +372,38 @@ const Register = ({ onSwitchToLogin }) => {
                   sx={{
                     mb: 3,
                     '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.15)',
                       backdropFilter: 'blur(10px)',
                       borderRadius: 3,
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'white',
+                      border: `1px solid ${colors.accent}40`,
+                      color: colors.lightest,
                       '&:hover': {
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        background: 'rgba(255, 255, 255, 0.15)',
+                        border: `1px solid ${colors.accent}60`,
+                        background: 'rgba(255, 255, 255, 0.2)',
                       },
                       '&.Mui-focused': {
-                        border: '1px solid rgba(255, 255, 255, 0.4)',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${colors.accent}`,
+                        background: 'rgba(255, 255, 255, 0.25)',
+                        boxShadow: `0 0 20px ${colors.accent}40`,
                       },
                       '& fieldset': {
                         border: 'none',
                       },
                     },
                     '& .MuiInputBase-input': {
-                      color: 'white',
+                      color: colors.lightest,
+                      fontWeight: 500,
                       '&::placeholder': {
-                        color: 'rgba(255, 255, 255, 0.7)',
+                        color: colors.light,
                         opacity: 1,
+                        fontWeight: 400,
                       },
                     },
                   }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Lock sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+                        <Lock sx={{ color: colors.light }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -435,7 +411,7 @@ const Register = ({ onSwitchToLogin }) => {
                         <IconButton
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                           edge="end"
-                          sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                          sx={{ color: colors.light }}
                         >
                           {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
@@ -450,11 +426,12 @@ const Register = ({ onSwitchToLogin }) => {
                       severity="error" 
                       sx={{ 
                         mb: 3,
-                        background: 'rgba(244, 67, 54, 0.1)',
+                        background: 'rgba(244, 67, 54, 0.15)',
                         backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(244, 67, 54, 0.3)',
+                        border: '1px solid rgba(244, 67, 54, 0.4)',
                         borderRadius: 2,
-                        color: '#ffcdd2',
+                        color: '#ffebee',
+                        fontWeight: 500,
                         '& .MuiAlert-icon': {
                           color: '#ffcdd2',
                         },
@@ -471,11 +448,12 @@ const Register = ({ onSwitchToLogin }) => {
                       severity="success" 
                       sx={{ 
                         mb: 3,
-                        background: 'rgba(76, 175, 80, 0.1)',
+                        background: 'rgba(76, 175, 80, 0.15)',
                         backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(76, 175, 80, 0.3)',
+                        border: '1px solid rgba(76, 175, 80, 0.4)',
                         borderRadius: 2,
-                        color: '#c8e6c9',
+                        color: '#e8f5e8',
+                        fontWeight: 500,
                         '& .MuiAlert-icon': {
                           color: '#c8e6c9',
                         },
@@ -491,26 +469,26 @@ const Register = ({ onSwitchToLogin }) => {
                   fullWidth
                   variant="contained"
                   size="large"
-                  startIcon={loading ? <CircularProgress size={20} sx={{ color: 'white' }} /> : <PersonAdd />}
+                  startIcon={loading ? <CircularProgress size={20} sx={{ color: colors.primary }} /> : <PersonAdd />}
                   disabled={loading || !formData.name || !formData.email || !formData.password || !formData.confirmPassword}
                   sx={{ 
                     py: 2,
                     borderRadius: 3,
-                    background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
-                    color: 'white',
-                    fontWeight: 600,
+                    background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
+                    color: colors.primary,
+                    fontWeight: 700,
                     fontSize: '1.1rem',
                     textTransform: 'uppercase',
                     letterSpacing: '0.5px',
-                    boxShadow: `0 10px 30px ${colors.secondary}40`,
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: `0 10px 30px ${colors.accent}60`,
+                    border: `1px solid ${colors.light}`,
                     '&:hover': {
-                      background: `linear-gradient(135deg, ${colors.accent}, ${colors.secondary})`,
+                      background: `linear-gradient(135deg, ${colors.light}, ${colors.lightest})`,
                       transform: 'translateY(-2px)',
-                      boxShadow: `0 15px 40px ${colors.secondary}60`,
+                      boxShadow: `0 15px 40px ${colors.accent}80`,
                     },
                     '&:disabled': {
-                      background: 'rgba(255, 255, 255, 0.1)',
+                      background: 'rgba(255, 255, 255, 0.2)',
                       color: 'rgba(255, 255, 255, 0.5)',
                     },
                     transition: 'all 0.3s ease',
@@ -525,17 +503,21 @@ const Register = ({ onSwitchToLogin }) => {
               sx={{ 
                 my: 3,
                 '&::before, &::after': {
-                  borderColor: 'rgba(255, 255, 255, 0.2)',
+                  borderColor: colors.accent,
                 },
               }} 
             />
             
-            {/* Sign In Link */}
+            {/* High Contrast Sign In Link */}
             <Fade in={true} timeout={1500}>
               <Box textAlign="center">
                 <Typography 
                   variant="body2" 
-                  sx={{ color: 'rgba(255, 255, 255, 0.8)' }}
+                  sx={{ 
+                    color: colors.light,
+                    fontWeight: 500,
+                    textShadow: `1px 1px 3px ${colors.primary}`,
+                  }}
                 >
                   Already have an admin account?{' '}
                   <Link
@@ -543,12 +525,13 @@ const Register = ({ onSwitchToLogin }) => {
                     variant="body2"
                     onClick={onSwitchToLogin}
                     sx={{ 
-                      color: 'white',
+                      color: colors.lightest,
                       textDecoration: 'none',
-                      fontWeight: 600,
+                      fontWeight: 700,
+                      textShadow: `1px 1px 3px ${colors.primary}`,
                       '&:hover': {
                         textDecoration: 'underline',
-                        color: colors.lightest,
+                        color: colors.accent,
                       },
                     }}
                   >
