@@ -85,7 +85,7 @@ const ContentCreator = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        borderRadius: '50%',
+        borderRadius: '5%',
         background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 50%, ${colors.accent} 100%)`,
         position: 'relative',
         overflow: 'hidden',
