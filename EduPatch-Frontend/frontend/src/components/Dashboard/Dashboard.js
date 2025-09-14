@@ -82,6 +82,7 @@ const Dashboard = () => {
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard', active: true },
     { text: 'Create Content', icon: <Create />, path: '/admin/create' },
     { text: 'Manage Quizzes', icon: <Quiz />, path: '/admin/quizzes' },
+    { text: 'QR Scanner', icon: <QrCode />, path: '/admin/qr-scanner' },
     { text: 'Offline Cache', icon: <CloudDownload />, path: '/admin/cache' },
     { text: 'Settings', icon: <Settings />, path: '/admin/settings' },
   ];
@@ -396,7 +397,7 @@ const Dashboard = () => {
                     AI Quizzes
                   </Typography>
                   <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
-                    {pages.length * 2}
+                    {pages.length * 5}
                   </Typography>
                 </Box>
               </Box>
@@ -533,7 +534,7 @@ const Dashboard = () => {
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {[
               { title: 'Total Content', value: pages.length, icon: <MenuBook />, color: colors.primary },
-              { title: 'AI Quizzes', value: pages.length * 2, icon: <Quiz />, color: colors.secondary },
+              { title: 'AI Quizzes', value: pages.length * 5, icon: <Quiz />, color: colors.secondary },
               { title: 'Success Rate', value: '98%', icon: <AutoAwesome />, color: colors.accent },
               { title: 'AI Generated', value: '100%', icon: <AutoAwesome />, color: colors.primary },
             ].map((stat, index) => (

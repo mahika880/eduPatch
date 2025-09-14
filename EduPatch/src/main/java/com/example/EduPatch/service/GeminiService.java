@@ -48,7 +48,7 @@ public class GeminiService {
      * Generates a quiz based on the given content
      * @param content The textbook content to create quiz from
      * @param pageId The page ID for the quiz
-     * @return A Quiz object with 2 questions (reduced from 5)
+     * @return A Quiz object with 5 questions
      */
     public List<Quiz> generateQuiz(String content, String pageId) {
         return generateIntelligentQuiz(content, pageId);
@@ -96,7 +96,7 @@ public class GeminiService {
     }
 
     /**
-     * Generate intelligent quiz with 2 questions based on content (reduced from 5)
+     * Generate intelligent quiz with 5 questions based on content
      */
     private List<Quiz> generateIntelligentQuiz(String content, String pageId) {
         if (content.toLowerCase().contains("mitosis")) {
@@ -104,36 +104,66 @@ public class GeminiService {
                 createQuiz(pageId, "What is the primary purpose of mitosis?", 
                     Arrays.asList("A. Sexual reproduction", "B. Producing identical daughter cells", "C. Creating genetic diversity", "D. Energy production"), "B"),
                 createQuiz(pageId, "During which phase do chromosomes align at the cell's equator?", 
-                    Arrays.asList("A. Prophase", "B. Metaphase", "C. Anaphase", "D. Telophase"), "B")
+                    Arrays.asList("A. Prophase", "B. Metaphase", "C. Anaphase", "D. Telophase"), "B"),
+                createQuiz(pageId, "What happens during anaphase?", 
+                    Arrays.asList("A. Chromosomes condense", "B. Nuclear envelope reforms", "C. Sister chromatids separate", "D. Spindle fibers form"), "C"),
+                createQuiz(pageId, "How many daughter cells are produced from one mitotic division?", 
+                    Arrays.asList("A. One", "B. Two", "C. Three", "D. Four"), "B"),
+                createQuiz(pageId, "What is cytokinesis?", 
+                    Arrays.asList("A. Chromosome condensation", "B. Nuclear division", "C. Cytoplasm division", "D. DNA replication"), "C")
             );
         } else if (content.toLowerCase().contains("photosynthesis")) {
             return Arrays.asList(
                 createQuiz(pageId, "What are the main reactants in photosynthesis?", 
                     Arrays.asList("A. Glucose and oxygen", "B. Carbon dioxide and water", "C. ATP and NADPH", "D. Chlorophyll and sunlight"), "B"),
                 createQuiz(pageId, "What is the primary product of photosynthesis?", 
-                    Arrays.asList("A. Carbon dioxide", "B. Water", "C. Glucose", "D. Nitrogen"), "C")
+                    Arrays.asList("A. Carbon dioxide", "B. Water", "C. Glucose", "D. Nitrogen"), "C"),
+                createQuiz(pageId, "Where does photosynthesis primarily occur in plants?", 
+                    Arrays.asList("A. Roots", "B. Stems", "C. Leaves", "D. Flowers"), "C"),
+                createQuiz(pageId, "What gas is released as a byproduct of photosynthesis?", 
+                    Arrays.asList("A. Carbon dioxide", "B. Nitrogen", "C. Hydrogen", "D. Oxygen"), "D"),
+                createQuiz(pageId, "What role does sunlight play in photosynthesis?", 
+                    Arrays.asList("A. Provides carbon", "B. Provides energy", "C. Provides water", "D. Provides oxygen"), "B")
             );
         } else if (content.toLowerCase().contains("newton") && content.toLowerCase().contains("law")) {
             return Arrays.asList(
                 createQuiz(pageId, "What does Newton's First Law describe?", 
                     Arrays.asList("A. Force equals mass times acceleration", "B. Objects at rest stay at rest unless acted upon", "C. Every action has an equal reaction", "D. Gravitational attraction"), "B"),
                 createQuiz(pageId, "What is inertia?", 
-                    Arrays.asList("A. The force applied to an object", "B. The speed of an object", "C. The tendency to resist changes in motion", "D. The weight of an object"), "C")
+                    Arrays.asList("A. The force applied to an object", "B. The speed of an object", "C. The tendency to resist changes in motion", "D. The weight of an object"), "C"),
+                createQuiz(pageId, "Which object has more inertia?", 
+                    Arrays.asList("A. A bicycle", "B. A car", "C. They have equal inertia", "D. It depends on speed"), "B"),
+                createQuiz(pageId, "What is required to change an object's state of motion?", 
+                    Arrays.asList("A. Time", "B. An unbalanced force", "C. Gravity", "D. Friction only"), "B"),
+                createQuiz(pageId, "Newton's First Law is also known as:", 
+                    Arrays.asList("A. Law of acceleration", "B. Law of action-reaction", "C. Law of inertia", "D. Law of gravitation"), "C")
             );
         } else if (content.toLowerCase().contains("atom")) {
             return Arrays.asList(
                 createQuiz(pageId, "What determines an element's atomic number?", 
                     Arrays.asList("A. Number of neutrons", "B. Number of protons", "C. Number of electrons", "D. Atomic mass"), "B"),
                 createQuiz(pageId, "How many electrons can the first energy shell hold?", 
-                    Arrays.asList("A. 2", "B. 8", "C. 18", "D. 32"), "A")
+                    Arrays.asList("A. 2", "B. 8", "C. 18", "D. 32"), "A"),
+                createQuiz(pageId, "Which particles are found in the nucleus?", 
+                    Arrays.asList("A. Protons and electrons", "B. Neutrons and electrons", "C. Protons and neutrons", "D. Only protons"), "C"),
+                createQuiz(pageId, "What charge do neutrons have?", 
+                    Arrays.asList("A. Positive", "B. Negative", "C. Neutral", "D. Variable"), "C"),
+                createQuiz(pageId, "How many electrons can the second energy shell hold?", 
+                    Arrays.asList("A. 2", "B. 8", "C. 18", "D. 32"), "B")
             );
         } else {
-            // Generic quiz for unknown content - reduced to 2 questions
+            // Generic quiz for unknown content
             return Arrays.asList(
                 createQuiz(pageId, "What is the main topic discussed in this content?", 
                     Arrays.asList("A. Basic principles", "B. Advanced concepts", "C. Practical applications", "D. All of the above"), "D"),
+                createQuiz(pageId, "Which aspect is most emphasized in this content?", 
+                    Arrays.asList("A. Historical context", "B. Scientific principles", "C. Mathematical formulas", "D. Experimental procedures"), "B"),
                 createQuiz(pageId, "What type of learning does this content support?", 
-                    Arrays.asList("A. Memorization only", "B. Conceptual understanding", "C. Practical skills", "D. Both B and C"), "D")
+                    Arrays.asList("A. Memorization only", "B. Conceptual understanding", "C. Practical skills", "D. Both B and C"), "D"),
+                createQuiz(pageId, "How does this content relate to real-world applications?", 
+                    Arrays.asList("A. No practical relevance", "B. Limited applications", "C. Broad practical significance", "D. Only theoretical importance"), "C"),
+                createQuiz(pageId, "What is the best approach to master this content?", 
+                    Arrays.asList("A. Rote memorization", "B. Understanding concepts and connections", "C. Skipping difficult parts", "D. Reading once"), "B")
             );
         }
     }
