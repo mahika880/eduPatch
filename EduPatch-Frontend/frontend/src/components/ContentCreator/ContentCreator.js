@@ -517,7 +517,7 @@ const ContentCreator = () => {
                         Content Generated Successfully
                       </Typography>
                       <Typography variant="body2">
-                        AI has generated comprehensive learning materials including summary, explanation, and {result.quizzes?.length || 5} quiz questions.
+                        AI has generated comprehensive learning materials including summary, explanation, and {result.quizzes?.length || 2} quiz questions.
                       </Typography>
                     </Alert>
                     
