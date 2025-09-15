@@ -10,7 +10,8 @@ import TextbookViewer from './components/TextbookViewer/TextbookViewer';
 import QuizInterface from './components/QuizInterface/QuizInterface';
 import ContentCreator from './components/ContentCreator/ContentCreator';
 import QuizManagement from './components/QuizManagement/QuizManagement';
-import QRScanner from './components/QRScanner/QRScanner'; // Add this import
+import QRScanner from './components/QRScanner/QRScanner';
+import AdminLayout from './components/Layout/AdminLayout'; // Add this import
 import Navbar from './components/Navbar/Navbar';
 
 // Admin-only Protected Route
@@ -30,53 +31,36 @@ const AppContent = () => {
 
   return (
     <Router>
-      {user && <Navbar />}
-      <Container maxWidth="lg" sx={{ mt: user ? 4 : 0, mb: 4 }}>
-        <Routes>
-          {/* Public routes for students (no authentication required) */}
-          <Route path="/page/:pageId" element={<TextbookViewer />} />
-          <Route path="/quiz/:pageId" element={<QuizInterface />} />
-          
-          {/* Admin routes (authentication required) */}
-          <Route path="/admin/login" element={user ? <Navigate to="/admin/dashboard" /> : <AuthPage />} />
-          <Route 
-            path="/admin/dashboard" 
-            element={
-              <AdminRoute>
-                <Dashboard />
-              </AdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/create" 
-            element={
-              <AdminRoute>
-                <ContentCreator />
-              </AdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/quizzes" 
-            element={
-              <AdminRoute>
-                <QuizManagement />
-              </AdminRoute>
-            } 
-          />
-          <Route 
-            path="/admin/qr-scanner" 
-            element={
-              <AdminRoute>
-                <QRScanner />
-              </AdminRoute>
-            } 
-          />
-          
-          {/* Default redirects */}
-          <Route path="/" element={<Navigate to="/admin/login" />} />
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" />} />
-        </Routes>
-      </Container>
+      <Routes>
+        {/* Public routes for students (no authentication required) */}
+        <Route path="/page/:pageId" element={<TextbookViewer />} />
+        <Route path="/quiz/:pageId" element={<QuizInterface />} />
+        
+        {/* Admin login (no layout) */}
+        <Route path="/admin/login" element={user ? <Navigate to="/admin/dashboard" /> : <AuthPage />} />
+        
+        {/* Admin routes with shared layout */}
+        <Route 
+          path="/admin/*" 
+          element={
+            <AdminRoute>
+              <AdminLayout>
+                <Routes>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="create" element={<ContentCreator />} />
+                  <Route path="quizzes" element={<QuizManagement />} />
+                  <Route path="qr-scanner" element={<QRScanner />} />
+                  <Route path="cache" element={<div>Offline Cache Page (Coming Soon)</div>} />
+                  <Route path="settings" element={<div>Settings Page (Coming Soon)</div>} />
+                </Routes>
+              </AdminLayout>
+            </AdminRoute>
+          } 
+        />
+        
+        {/* Default redirects */}
+        <Route path="/" element={<Navigate to="/admin/login" />} />
+      </Routes>
     </Router>
   );
 };
