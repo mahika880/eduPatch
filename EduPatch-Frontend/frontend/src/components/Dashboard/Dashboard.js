@@ -24,6 +24,8 @@ import {
   InputAdornment,
   Divider,
   Tooltip,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import {
   MenuBook,
@@ -49,6 +51,7 @@ const Dashboard = () => {
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const navigate = useNavigate();
 
   // Sunset Color Palette
@@ -76,6 +79,44 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // QR Code download handler
+  const handleDownloadQR = async (pageId, chapterName) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/pages/${pageId}/qrcode`);
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `qr-${chapterName.replace(/\s+/g, '-')}-${pageId}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        setSnackbar({
+          open: true,
+          message: `QR Code for "${chapterName}" downloaded successfully! 📱`,
+          severity: 'success'
+        });
+      } else {
+        throw new Error('Failed to download QR code');
+      }
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+      setSnackbar({
+        open: true,
+        message: 'Failed to download QR code. Please try again.',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   const sidebarItems = [
@@ -120,8 +161,8 @@ const Dashboard = () => {
           zIndex: (theme) => theme.zIndex.drawer + 1,
           background: 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${colors.light}`,
           boxShadow: `0 4px 20px ${colors.primary}10`,
+          borderBottom: `1px solid ${colors.light}`,
           color: colors.primary,
         }}
       >
@@ -224,48 +265,26 @@ const Dashboard = () => {
             background: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             borderRight: `1px solid ${colors.light}`,
-            boxShadow: `4px 0 20px ${colors.primary}10`,
             transition: 'width 0.3s ease',
             overflowX: 'hidden',
           },
         }}
       >
-        <Toolbar /> {/* Spacer for top navbar */}
+        <Toolbar />
         
         <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          {/* Sidebar Toggle Button */}
-          <Box sx={{ 
-            display: 'flex', 
-            justifyContent: sidebarOpen ? 'flex-end' : 'center',
-            p: 1,
-            borderBottom: `1px solid ${colors.light}`,
-          }}>
-            <IconButton
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              sx={{
-                color: colors.secondary,
-                '&:hover': {
-                  backgroundColor: `${colors.accent}40`,
-                  transform: 'scale(1.1)',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              {sidebarOpen ? <ChevronLeft /> : <ChevronRight />}
-            </IconButton>
-          </Box>
-
-          {/* User Info - Only show when expanded */}
+          {/* User Profile Section - Only show when expanded */}
           {sidebarOpen && (
             <Box sx={{ 
-              p: 2,
+              p: 3, 
               borderBottom: `1px solid ${colors.light}`,
+              background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light}40 100%)`,
             }}>
               <Box sx={{ 
-                textAlign: 'center', 
-                p: 2, 
+                textAlign: 'center',
+                p: 2,
                 borderRadius: 3,
-                background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 100%)`,
+                background: 'rgba(255, 255, 255, 0.7)',
               }}>
                 <Avatar sx={{ 
                   width: 50, 
@@ -643,12 +662,17 @@ const Dashboard = () => {
                       )}
                     </CardContent>
                     
-                    <CardActions>
+                    <CardActions sx={{ justifyContent: 'space-between', px: 2, pb: 2 }}>
                       <Button
                         size="small"
                         startIcon={<Visibility />}
                         onClick={() => navigate(`/page/${page.pageId}`)}
-                        sx={{ color: colors.primary }}
+                        sx={{ 
+                          color: colors.primary,
+                          '&:hover': {
+                            background: `${colors.primary}10`,
+                          }
+                        }}
                       >
                         View
                       </Button>
@@ -656,9 +680,28 @@ const Dashboard = () => {
                         size="small"
                         startIcon={<Quiz />}
                         onClick={() => navigate(`/quiz/${page.pageId}`)}
-                        sx={{ color: colors.secondary }}
+                        sx={{ 
+                          color: colors.secondary,
+                          '&:hover': {
+                            background: `${colors.secondary}10`,
+                          }
+                        }}
                       >
                         Quiz
+                      </Button>
+                      <Button
+                        size="small"
+                        startIcon={<QrCode />}
+                        onClick={() => handleDownloadQR(page.pageId, page.chapter)}
+                        sx={{ 
+                          color: colors.accent,
+                          '&:hover': {
+                            color: colors.primary,
+                            background: `${colors.accent}20`,
+                          }
+                        }}
+                      >
+                        QR Code
                       </Button>
                     </CardActions>
                   </Card>
@@ -668,6 +711,27 @@ const Dashboard = () => {
           )}
         </Container>
       </Box>
+
+      {/* Success/Error Snackbar */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity={snackbar.severity}
+          sx={{ 
+            borderRadius: 2,
+            '& .MuiAlert-icon': {
+              fontSize: '1.5rem'
+            }
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
