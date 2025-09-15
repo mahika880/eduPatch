@@ -9,7 +9,8 @@ import Dashboard from './components/Dashboard/Dashboard';
 import TextbookViewer from './components/TextbookViewer/TextbookViewer';
 import QuizInterface from './components/QuizInterface/QuizInterface';
 import ContentCreator from './components/ContentCreator/ContentCreator';
-import QuizManagement from './components/QuizManagement/QuizManagement'; // Add this import
+import QuizManagement from './components/QuizManagement/QuizManagement';
+import QRScanner from './components/QRScanner/QRScanner'; // Add this import
 import Navbar from './components/Navbar/Navbar';
 
 // Admin-only Protected Route
@@ -59,6 +60,14 @@ const AppContent = () => {
             element={
               <AdminRoute>
                 <QuizManagement />
+              </AdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/qr-scanner" 
+            element={
+              <AdminRoute>
+                <QRScanner />
               </AdminRoute>
             } 
           />
