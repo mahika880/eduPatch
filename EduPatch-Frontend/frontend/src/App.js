@@ -11,7 +11,8 @@ import QuizInterface from './components/QuizInterface/QuizInterface';
 import ContentCreator from './components/ContentCreator/ContentCreator';
 import QuizManagement from './components/QuizManagement/QuizManagement';
 import QRScanner from './components/QRScanner/QRScanner';
-import AdminLayout from './components/Layout/AdminLayout'; // Add this import
+import Settings from './components/Settings/Settings'; // Add this import
+import AdminLayout from './components/Layout/AdminLayout';
 import Navbar from './components/Navbar/Navbar';
 
 // Admin-only Protected Route
@@ -51,7 +52,7 @@ const AppContent = () => {
                   <Route path="quizzes" element={<QuizManagement />} />
                   <Route path="qr-scanner" element={<QRScanner />} />
                   <Route path="cache" element={<div>Offline Cache Page (Coming Soon)</div>} />
-                  <Route path="settings" element={<div>Settings Page (Coming Soon)</div>} />
+                  <Route path="settings" element={<Settings />} />
                 </Routes>
               </AdminLayout>
             </AdminRoute>
