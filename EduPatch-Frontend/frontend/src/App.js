@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import TextbookViewer from './components/TextbookViewer/TextbookViewer';
 import QuizInterface from './components/QuizInterface/QuizInterface';
 import ContentCreator from './components/ContentCreator/ContentCreator';
+import QuizManagement from './components/QuizManagement/QuizManagement'; // Add this import
 import Navbar from './components/Navbar/Navbar';
 
 // Admin-only Protected Route
@@ -50,6 +51,14 @@ const AppContent = () => {
             element={
               <AdminRoute>
                 <ContentCreator />
+              </AdminRoute>
+            } 
+          />
+          <Route 
+            path="/admin/quizzes" 
+            element={
+              <AdminRoute>
+                <QuizManagement />
               </AdminRoute>
             } 
           />
