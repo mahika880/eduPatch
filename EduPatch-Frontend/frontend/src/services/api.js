@@ -16,6 +16,13 @@ export const apiService = {
   registerUser: (data) => api.post('/user/register', data),
   loginUser: (data) => api.post('/user/login', data),
   
+  // User Profile Management
+  getUserById: (userId) => api.get(`/user/id/${userId}`),
+  updateProfile: (userId, profileData) => api.put(`/user/profile/${userId}`, profileData),
+  changePassword: (userId, passwordData) => api.put(`/user/password/${userId}`, passwordData),
+  updateSettings: (userId, settingsData) => api.put(`/user/settings/${userId}`, settingsData),
+  exportUserData: (userId) => api.get(`/user/export/${userId}`),
+  
   // Content creation (connects to DemoController)
   createContent: (data) => api.post('/demo/workflow', data),
   

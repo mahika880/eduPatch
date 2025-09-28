@@ -1,13 +1,16 @@
 package com.example.EduPatch.controller;
 
 import com.example.EduPatch.entity.User;
+import com.example.EduPatch.entity.UserSettings;
 import com.example.EduPatch.service.UserService;
+import com.example.EduPatch.service.UserSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserSettingsService userSettingsService;
     
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -41,6 +47,11 @@ public class UserController {
             
             User savedUser = userService.registerUser(user);
             
+            // Create default settings for new user
+            UserSettings defaultSettings = new UserSettings();
+            defaultSettings.setUserId(savedUser.getId());
+            userSettingsService.createSettings(defaultSettings);
+            
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Registration successful");
             response.put("id", savedUser.getId());
@@ -55,7 +66,7 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody Map<String , String>loginRequest){
         try {
@@ -129,6 +140,96 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+    
+    // Update user profile
+    @PutMapping("/profile/{userId}")
+    public ResponseEntity<?> updateProfile(@PathVariable String userId, @RequestBody Map<String, String> profileData) {
+        try {
+            Optional<User> userOptional = userService.getUserById(userId);
+            if (!userOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+            }
+            
+            User user = userOptional.get();
+            if (profileData.containsKey("name")) {
+                user.setName(profileData.get("name"));
+            }
+            if (profileData.containsKey("email")) {
+                user.setEmail(profileData.get("email"));
+            }
+            if (profileData.containsKey("phone")) {
+                // Add phone field to User entity if needed
+            }
+            
+            User updatedUser = userService.updateUser(user);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Profile updated successfully");
+            response.put("user", updatedUser);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to update profile: " + e.getMessage()));
+        }
+    }
+
+    // Change password
+    @PutMapping("/password/{userId}")
+    public ResponseEntity<?> changePassword(@PathVariable String userId, @RequestBody Map<String, String> passwordData) {
+        try {
+            Optional<User> userOptional = userService.getUserById(userId);
+            if (!userOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found"));
+            }
+            
+            User user = userOptional.get();
+            String currentPassword = passwordData.get("currentPassword");
+            String newPassword = passwordData.get("newPassword");
+            
+            // Verify current password
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", "Current password is incorrect"));
+            }
+            
+            // Update password
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userService.updateUser(user);
+            
+            return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to change password: " + e.getMessage()));
+        }
+    }
+
+    // Get user settings
+    @GetMapping("/settings/{userId}")
+    public ResponseEntity<?> getUserSettings(@PathVariable String userId) {
+        try {
+            UserSettings settings = userSettingsService.getUserSettings(userId);
+            return ResponseEntity.ok(settings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to get settings: " + e.getMessage()));
+        }
+    }
+
+    // Update user settings
+    @PutMapping("/settings/{userId}")
+    public ResponseEntity<?> updateUserSettings(@PathVariable String userId, @RequestBody UserSettings settings) {
+        try {
+            settings.setUserId(userId);
+            UserSettings updatedSettings = userSettingsService.updateUserSettings(settings);
+            return ResponseEntity.ok(Map.of("message", "Settings updated successfully", "settings", updatedSettings));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Failed to update settings: " + e.getMessage()));
+        }
     }
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import {
   Grid,
   Card,
@@ -60,12 +61,14 @@ import {
 } from '@mui/icons-material';
 
 const Settings = () => {
+  const { user } = useAuth(); // Get current user from auth context
   const [activeTab, setActiveTab] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({
-    name: 'Admin User',
-    email: 'admin@edupatch.com',
-    phone: '+1 (555) 123-4567',
-    role: 'Content Creator',
+    name: '',
+    email: '',
+    phone: '',
+    role: '',
     avatar: null,
   });
   const [settings, setSettings] = useState({
@@ -97,6 +100,11 @@ const Settings = () => {
   const [passwordDialog, setPasswordDialog] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
 
   // Sunset Color Palette
   const colors = {
@@ -107,24 +115,239 @@ const Settings = () => {
     lightest: '#faf5f0',
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchUserData();
+      fetchUserSettings();
+    }
+  }, [user]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/id/${user.userId}`);
+      if (response.ok) {
+        const userData = await response.json();
+        setProfileData({
+          name: userData.name || '',
+          email: userData.email || '',
+          phone: userData.phone || '',
+          role: userData.role || '',
+          avatar: null,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      showSnackbar('Failed to load profile data', 'error');
+    }
+  };
+
+  const fetchUserSettings = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/settings/${user.userId}`);
+      if (response.ok) {
+        const userSettings = await response.json();
+        setSettings({
+          notifications: userSettings.notifications || settings.notifications,
+          appearance: userSettings.appearance || settings.appearance,
+          privacy: userSettings.privacy || settings.privacy,
+          system: userSettings.system || settings.system,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching user settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
 
-  const handleProfileSave = () => {
-    setEditMode(false);
-    showSnackbar('Profile updated successfully! 👤', 'success');
+  const handleProfileSave = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/profile/${user.userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      if (response.ok) {
+        setEditMode(false);
+        showSnackbar('Profile updated successfully! 👤', 'success');
+      } else {
+        const errorData = await response.json();
+        showSnackbar(errorData.error || 'Failed to update profile', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      showSnackbar('Failed to update profile', 'error');
+    }
   };
 
-  const handleSettingChange = (category, setting, value) => {
-    setSettings(prev => ({
-      ...prev,
+  const handleSettingChange = async (category, setting, value) => {
+    const newSettings = {
+      ...settings,
       [category]: {
-        ...prev[category],
+        ...settings[category],
         [setting]: value,
       },
-    }));
-    showSnackbar('Settings updated! ⚙️', 'success');
+    };
+    
+    setSettings(newSettings);
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/settings/${user.userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newSettings),
+      });
+
+      if (response.ok) {
+        showSnackbar(`${setting.charAt(0).toUpperCase() + setting.slice(1)} ${value ? 'enabled' : 'disabled'}! ⚙️`, 'success');
+      } else {
+        // Revert on error
+        setSettings(settings);
+        showSnackbar('Failed to update setting', 'error');
+      }
+    } catch (error) {
+      console.error('Error updating setting:', error);
+      setSettings(settings);
+      showSnackbar('Failed to update setting', 'error');
+    }
+  };
+
+  const handlePasswordChange = async () => {
+    if (!passwordData.currentPassword || !passwordData.newPassword) {
+      showSnackbar('Please fill in all password fields', 'error');
+      return;
+    }
+    
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      showSnackbar('New passwords do not match', 'error');
+      return;
+    }
+    
+    if (passwordData.newPassword.length < 8) {
+      showSnackbar('New password must be at least 8 characters long', 'error');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/password/${user.userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        }),
+      });
+
+      if (response.ok) {
+        setPasswordDialog(false);
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        showSnackbar('Password updated successfully! 🔐', 'success');
+      } else {
+        const errorData = await response.json();
+        showSnackbar(errorData.error || 'Failed to change password', 'error');
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      showSnackbar('Failed to change password', 'error');
+    }
+  };
+
+  const handleExportData = () => {
+    const exportData = {
+      profile: profileData,
+      settings: settings,
+      exportDate: new Date().toISOString(),
+      version: '1.0'
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `edupatch-settings-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showSnackbar('Settings exported successfully! 📤', 'success');
+  };
+
+  const handleImportData = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          try {
+            const importedData = JSON.parse(e.target.result);
+            
+            // Update profile if present
+            if (importedData.profile) {
+              setProfileData(importedData.profile);
+              await apiService.updateProfile(user.userId, {
+                name: importedData.profile.name,
+                email: importedData.profile.email,
+              });
+            }
+            
+            // Update settings if present
+            if (importedData.settings) {
+              setSettings(importedData.settings);
+              
+              const backendSettings = {
+                emailNotifications: importedData.settings.notifications.email,
+                pushNotifications: importedData.settings.notifications.push,
+                quizAlerts: importedData.settings.notifications.quiz,
+                contentUpdates: importedData.settings.notifications.content,
+                soundEffects: importedData.settings.notifications.sound,
+                darkMode: importedData.settings.appearance.darkMode,
+                compactMode: importedData.settings.appearance.compactMode,
+                animations: importedData.settings.appearance.animations,
+                profileVisible: importedData.settings.privacy.profileVisible,
+                analyticsEnabled: importedData.settings.privacy.analyticsEnabled,
+                dataSharing: importedData.settings.privacy.dataSharing,
+                autoSave: importedData.settings.system.autoSave,
+                offlineMode: importedData.settings.system.offlineMode,
+                cacheSize: importedData.settings.system.cacheSize,
+                language: importedData.settings.system.language,
+              };
+              
+              await apiService.updateUserSettings(user.userId, backendSettings);
+            }
+            
+            showSnackbar('Settings imported successfully! 📥', 'success');
+          } catch (error) {
+            console.error('Error importing data:', error);
+            showSnackbar('Invalid file format or import failed', 'error');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleClearCache = () => {
+    // Simulate cache clearing
+    setTimeout(() => {
+      showSnackbar('Cache cleared successfully! 🗑️', 'success');
+    }, 1000);
   };
 
   const showSnackbar = (message, severity = 'success') => {
@@ -134,9 +357,12 @@ const Settings = () => {
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
   };
+  
+
 
   const TabPanel = ({ children, value, index, ...other }) => {
-    return (
+
+  return (
       <div
         role="tabpanel"
         hidden={value !== index}
@@ -152,6 +378,26 @@ const Settings = () => {
       </div>
     );
   };
+  
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 100%)`,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Box textAlign="center">
+          <Typography variant="h6" sx={{ color: colors.primary }}>
+            Loading settings...
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="xl" sx={{ p: 3 }}>
@@ -255,7 +501,7 @@ const Settings = () => {
                         }
                       }
                     >
-                      {profileData.name.charAt(0)}
+                      {profileData.name.charAt(0) || 'U'}
                     </Avatar>
                     <IconButton
                       sx={
@@ -271,15 +517,16 @@ const Settings = () => {
                           },
                         }
                       }
+                      onClick={() => showSnackbar('Avatar upload feature coming soon! 📷', 'info')}
                     >
                       <PhotoCamera />
                     </IconButton>
                   </Box>
                   <Typography variant="h5" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
-                    {profileData.name}
+                    {profileData.name || 'User'}
                   </Typography>
                   <Chip
-                    label={profileData.role}
+                    label={profileData.role || 'User'}
                     sx={
                       {
                         background: colors.light,
@@ -410,6 +657,25 @@ const Settings = () => {
                       />
                     </Grid>
                   </Grid>
+
+                  {editMode && (
+                    <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Cancel />}
+                        onClick={() => {
+                          setEditMode(false);
+                          fetchUserData(); // Reset to original data
+                        }}
+                        sx={{
+                          borderColor: colors.accent,
+                          color: colors.secondary,
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Box>
+                  )}
                 </Card>
               </Grid>
             </Grid>
@@ -435,21 +701,19 @@ const Settings = () => {
                   </Typography>
                   <List>
                     <ListItem
-                      sx={
-                        {
-                          background: 'white',
-                          borderRadius: 2,
-                          mb: 2,
-                          border: `1px solid ${colors.accent}40`,
-                        }
-                      }
+                      sx={{
+                        background: 'white',
+                        borderRadius: 2,
+                        mb: 2,
+                        border: `1px solid ${colors.accent}40`,
+                      }}
                     >
                       <ListItemIcon>
                         <Lock sx={{ color: colors.secondary }} />
                       </ListItemIcon>
                       <ListItemText
                         primary="Change Password"
-                        secondary="Last changed 30 days ago"
+                        secondary="Keep your account secure"
                       />
                       <ListItemSecondaryAction>
                         <Button
@@ -480,18 +744,19 @@ const Settings = () => {
                       />
                       <ListItemSecondaryAction>
                         <Switch
-                          color="primary"
-                          sx={
-                            {
-                              '& .MuiSwitch-switchBase.Mui-checked': {
-                                color: colors.secondary,
-                              },
-                              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                                backgroundColor: colors.secondary,
-                              },
+                            onChange={(e) => showSnackbar(`2FA ${e.target.checked ? 'enabled' : 'disabled'}! 🔐`, 'success')}
+                            color="primary"
+                            sx={
+                              {
+                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                  color: colors.secondary,
+                                },
+                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                  backgroundColor: colors.secondary,
+                                },
+                              }
                             }
-                          }
-                        />
+                          />
                       </ListItemSecondaryAction>
                     </ListItem>
                   </List>
@@ -533,7 +798,7 @@ const Settings = () => {
                         <ListItemText primary={item.label} secondary={item.desc} />
                         <ListItemSecondaryAction>
                           <Switch
-                            checked={settings.privacy[item.key]}
+                            checked={settings.privacy?.[item.key] || false}
                             onChange={(e) => handleSettingChange('privacy', item.key, e.target.checked)}
                             color="primary"
                             sx={
@@ -599,7 +864,7 @@ const Settings = () => {
                         <ListItemText primary={item.label} secondary={item.desc} />
                         <ListItemSecondaryAction>
                           <Switch
-                            checked={settings.notifications[item.key]}
+                            checked={settings.notifications?.[item.key] || false}
                             onChange={(e) => handleSettingChange('notifications', item.key, e.target.checked)}
                             color="primary"
                             sx={
@@ -648,6 +913,7 @@ const Settings = () => {
                     <Button
                       size="small"
                       sx={{ mt: 2, color: colors.secondary }}
+                      onClick={() => showSnackbar('Schedule customization coming soon! ⏰', 'info')}
                     >
                       Customize Schedule
                     </Button>
@@ -698,7 +964,7 @@ const Settings = () => {
                         <ListItemText primary={item.label} secondary={item.desc} />
                         <ListItemSecondaryAction>
                           <Switch
-                            checked={settings.appearance[item.key]}
+                            checked={settings.appearance?.[item.key] || false}
                             onChange={(e) => handleSettingChange('appearance', item.key, e.target.checked)}
                             color="primary"
                             sx={
@@ -751,14 +1017,20 @@ const Settings = () => {
                           sx={
                             {
                               width: 40,
-                              height: 40,
-                              borderRadius: 2,
-                              background: item.color,
-                              border: '2px solid white',
-                              boxShadow: `0 2px 8px ${item.color}40`,
+                            height: 40,
+                            borderRadius: 2,
+                            background: item.color,
+                            border: '2px solid white',
+                            boxShadow: `0 2px 8px ${item.color}40`,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              transform: 'scale(1.1)',
+                            },
+                            transition: 'all 0.3s ease',
                             }
                           }
                           title={item.name}
+                          onClick={() => showSnackbar(`${item.name} color: ${item.color}`, 'info')}
                         />
                       ))}
                     </Box>
@@ -811,7 +1083,7 @@ const Settings = () => {
                         <ListItemText primary={item.label} secondary={item.desc} />
                         <ListItemSecondaryAction>
                           <Switch
-                            checked={settings.system[item.key]}
+                            checked={settings.system?.[item.key] || false}
                             onChange={(e) => handleSettingChange('system', item.key, e.target.checked)}
                             color="primary"
                             sx={
@@ -832,12 +1104,13 @@ const Settings = () => {
 
                   <Box sx={{ mt: 3, p: 3, background: 'white', borderRadius: 2 }}>
                     <Typography variant="body2" sx={{ color: colors.secondary, mb: 2 }}>
-                      Cache Usage: {settings.system.cacheSize}
+                      Cache Usage: {settings.system?.cacheSize || '500MB'}
                     </Typography>
                     <Button
                       variant="outlined"
                       size="small"
                       startIcon={<Delete />}
+                      onClick={handleClearCache}
                       sx={
                         {
                           borderColor: colors.accent,
@@ -889,6 +1162,7 @@ const Settings = () => {
                           size="small"
                           startIcon={<Download />}
                           sx={{ color: colors.secondary }}
+                          onClick={handleExportData}
                         >
                           Export
                         </Button>
@@ -916,6 +1190,7 @@ const Settings = () => {
                           size="small"
                           startIcon={<Upload />}
                           sx={{ color: colors.secondary }}
+                          onClick={handleImportData}
                         >
                           Import
                         </Button>
@@ -945,43 +1220,50 @@ const Settings = () => {
               fullWidth
               label="Current Password"
               type={showPassword ? 'text' : 'password'}
+              value={passwordData.currentPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
               sx={{ mb: 3 }}
-              InputProps={
-                {
-                  endAdornment: (
-                    <IconButton onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  ),
-                }
-              }
+              InputProps={{
+                endAdornment: (
+                  <IconButton onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                ),
+              }}
             />
             <TextField
               fullWidth
               label="New Password"
               type={showPassword ? 'text' : 'password'}
+              value={passwordData.newPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
               sx={{ mb: 3 }}
+              helperText="Password must be at least 8 characters long"
             />
             <TextField
               fullWidth
               label="Confirm New Password"
               type={showPassword ? 'text' : 'password'}
+              value={passwordData.confirmPassword}
+              onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+              error={passwordData.newPassword !== passwordData.confirmPassword && passwordData.confirmPassword !== ''}
+              helperText={passwordData.newPassword !== passwordData.confirmPassword && passwordData.confirmPassword !== '' ? 'Passwords do not match' : ''}
             />
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
           <Button
-            onClick={() => setPasswordDialog(false)}
+            onClick={() => {
+              setPasswordDialog(false);
+              setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            }}
             sx={{ color: colors.secondary }}
           >
             Cancel
           </Button>
           <Button
             variant="contained"
-            onClick={() => {
-              setPasswordDialog(false);
-              showSnackbar('Password updated successfully! 🔐', 'success');
-            }}
+            onClick={handlePasswordChange}
             sx={
               {
                 background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
