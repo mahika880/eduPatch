@@ -43,6 +43,7 @@ const QuizInterface = () => {
   const [showResults, setShowResults] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isOffline, setIsOffline] = useState(!navigator.onLine); // Add offline state
 
   // Sunset Color Palette
   const colors = {
@@ -54,15 +55,44 @@ const QuizInterface = () => {
   };
 
   useEffect(() => {
-    fetchQuizzes();
+    // Check if quiz data is cached offline first
+    const cachedQuizzes = localStorage.getItem(`quizzes_${pageId}`);
+    if (cachedQuizzes) {
+      setQuizzes(JSON.parse(cachedQuizzes));
+      setLoading(false);
+    } else {
+      fetchQuizzes();
+    }
+
+    // Listen for online/offline events
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
   }, [pageId]);
 
   const fetchQuizzes = async () => {
     try {
       const response = await apiService.getQuizzesByPage(pageId);
       setQuizzes(response.data);
+      
+      // Cache quiz data for offline access
+      localStorage.setItem(`quizzes_${pageId}`, JSON.stringify(response.data));
     } catch (error) {
-      setError('Failed to load quiz questions.');
+      // Check if we have cached data as fallback
+      const cachedQuizzes = localStorage.getItem(`quizzes_${pageId}`);
+      if (cachedQuizzes) {
+        setQuizzes(JSON.parse(cachedQuizzes));
+        setError(''); // Clear error if we have cached data
+      } else {
+        setError('Failed to load quiz questions.');
+      }
     } finally {
       setLoading(false);
     }
@@ -105,6 +135,7 @@ const QuizInterface = () => {
     setShowResults(false);
   };
 
+  // Add offline indicator in the header section
   if (loading) {
     return (
       <Box
@@ -124,6 +155,11 @@ const QuizInterface = () => {
           <Typography variant="h6" sx={{ color: colors.primary }}>
             Loading quiz questions...
           </Typography>
+          {isOffline && (
+            <Typography variant="body2" sx={{ color: colors.secondary, mt: 1 }}>
+              Checking offline cache...
+            </Typography>
+          )}
         </Box>
       </Box>
     );
@@ -149,6 +185,11 @@ const QuizInterface = () => {
             }}
           >
             {error || 'No quiz questions available for this page.'}
+            {isOffline && (
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                You're offline. Quiz questions need to be cached first by visiting this quiz while online.
+              </Typography>
+            )}
           </Alert>
           <Button 
             startIcon={<ArrowBack />} 
@@ -443,7 +484,7 @@ const QuizInterface = () => {
       }}
     >
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Header Section */}
+        {/* Header Section with offline indicator */}
         <Fade in={true} timeout={600}>
           <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
             <Button 
@@ -473,6 +514,22 @@ const QuizInterface = () => {
                 Question {currentQuiz + 1} of {quizzes.length}
               </Typography>
             </Box>
+            
+            {/* Add offline indicator */}
+            {isOffline && (
+              <Chip
+                icon={<WifiOff />}
+                label="Offline Mode"
+                sx={{
+                  background: `${colors.accent}30`,
+                  color: colors.secondary,
+                  border: `1px solid ${colors.accent}60`,
+                  mr: 1,
+                }}
+                size="small"
+              />
+            )}
+            
             <Chip
               icon={<Psychology />}
               label={`${Math.round(progress)}% Complete`}
