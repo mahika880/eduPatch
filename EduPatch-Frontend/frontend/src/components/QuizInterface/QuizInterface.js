@@ -30,6 +30,7 @@ import {
   Dashboard as DashboardIcon,
   Psychology,
   TrendingUp,
+  WifiOff, // Add this import
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
