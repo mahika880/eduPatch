@@ -20,6 +20,11 @@ public class UserSettingsService {
         return userSettingsRepository.save(settings);
     }
     
+    // Add this public method that was missing
+    public UserSettings createSettings(UserSettings settings) {
+        return userSettingsRepository.save(settings);
+    }
+    
     private UserSettings createDefaultSettings(String userId) {
         UserSettings settings = new UserSettings();
         settings.setUserId(userId);
