@@ -1030,200 +1030,72 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-// Mock data for charts
-const popularVaults = [
-  { 
-    id: 1, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-  { 
-    id: 2, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-  { 
-    id: 3, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-];
-
-// Vault performance data
-const vaultPerformance = [
-  { 
-    id: 1, 
-    name: 'UST/FRAX/USDT/USDC', 
-    platform: 'Fantom', 
-    curve: 'Curve', 
-    wallet: '$123k', 
-    deposited: '$7.5k', 
-    apy: '16.03%', 
-    daily: '0.0425%', 
-    safety: '10.0', 
-    tvl: '$213.7M',
-    chart: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-  },
-  { 
-    id: 2, 
-    name: 'BTC-ETH LP', 
-    platform: 'Chain', 
-    curve: 'Binswap', 
-    wallet: '$245k', 
-    deposited: '$4.33k', 
-    apy: '25.92%', 
-    daily: '0.0702%', 
-    safety: '9.5', 
-    tvl: '$759M',
-    chart: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-  },
-];
-
-// Sidebar items
-const sidebarItems = [
-  { text: 'Markets', icon: <Language />, path: '/admin/markets', active: location.pathname === '/admin/markets' },
-  { text: 'Trading', icon: <TrendingUp />, path: '/admin/trading', active: location.pathname === '/admin/trading' },
-  { text: 'Wallet', icon: <AccountBalanceWallet />, path: '/admin/wallet', active: location.pathname === '/admin/wallet' },
-  { text: 'Loans', icon: <AttachMoney />, path: '/admin/loans', active: location.pathname === '/admin/loans' },
-  { text: 'Vaults', icon: <Security />, path: '/admin/vaults', active: location.pathname === '/admin/vaults' || location.pathname === '/admin/dashboard' },
-  { text: 'Portfolio', icon: <PieChart />, path: '/admin/portfolio', active: location.pathname === '/admin/portfolio' },
-  { text: 'Liquidity pools', icon: <ShowChart />, path: '/admin/liquidity', active: location.pathname === '/admin/liquidity' },
-  { text: 'Swap', icon: <BarChart />, path: '/admin/swap', active: location.pathname === '/admin/swap' },
-];
-
-// Profile menu
-const profileMenu = (
-  <Menu
-    anchorEl={anchorEl}
-    open={Boolean(anchorEl)}
-    onClose={handleProfileMenuClose}
-    PaperProps={{
-      sx: {
-        mt: 1,
-        borderRadius: '12px',
-        background: colors.surface,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        minWidth: 200,
-      },
-    }}
-    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-  >
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Person fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="My Profile" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Settings fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="Account Settings" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-    <Divider sx={{ my: 1 }} />
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Logout fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="Logout" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-  </Menu>
-);
-
-// Notifications menu
-const notificationsMenu = (
-  <Menu
-    anchorEl={notificationAnchorEl}
-    open={Boolean(notificationAnchorEl)}
-    onClose={handleNotificationMenuClose}
-    PaperProps={{
-      sx: {
-        mt: 1,
-        borderRadius: '12px',
-        background: colors.surface,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        minWidth: 320,
-      },
-    }}
-    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-  >
-    <Box sx={{ p: 2 }}>
-      <Typography variant="subtitle1" fontWeight={600} color={colors.textPrimary}>
-        Notifications
-      </Typography>
-    </Box>
-    <Divider />
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <CheckCircle fontSize="small" sx={{ color: colors.success }} />
-      </ListItemIcon>
-      <ListItemText 
-        primary="Content created successfully" 
-        secondary="Introduction to AI" 
-        primaryTypographyProps={{ color: colors.textPrimary }}
-        secondaryTypographyProps={{ color: colors.textSecondary }}
-      />
-    </MenuItem>
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <AccessTime fontSize="small" sx={{ color: colors.info }} />
-      </ListItemIcon>
-      <ListItemText 
-        primary="Quiz completion reminder" 
-        secondary="Machine Learning Basics" 
-        primaryTypographyProps={{ color: colors.textPrimary }}
-        secondaryTypographyProps={{ color: colors.textSecondary }}
-      />
-    </MenuItem>
-    <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Button 
-        size="small" 
-        sx={{ 
-          color: colors.accent,
-          '&:hover': { backgroundColor: `${colors.secondary}` }
-        }}
-      >
-        View All Notifications
-      </Button>
-    </Box>
-  </Menu>
-);
-
-if (loading) {
-  return (
-    <Box 
-      display="flex" 
-      justifyContent="center" 
-      alignItems="center" 
-      minHeight="100vh"
-      sx={{ background: colors.primary }}
+  // Move the profileMenu inside the component function
+  const profileMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={handleProfileMenuClose}
+      PaperProps={{
+        sx: {
+          mt: 1,
+          borderRadius: '12px',
+          background: colors.surface,
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          minWidth: 200,
+        },
+      }}
+      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
     >
-      <Box textAlign="center">
-        <CircularProgress 
-          size={60} 
-          sx={{ color: colors.accent, mb: 2 }} 
-        />
-        <Typography variant="h6" sx={{ color: colors.textPrimary }}>
-          Loading your dashboard...
-        </Typography>
-      </Box>
-    </Box>
+      {/* ... existing menu items ... */}
+    </Menu>
   );
-}
+
+  // Move the notificationsMenu inside the component function
+  const notificationsMenu = (
+    <Menu
+      anchorEl={notificationAnchorEl}
+      open={Boolean(notificationAnchorEl)}
+      onClose={handleNotificationMenuClose}
+      PaperProps={{
+        sx: {
+          mt: 1,
+          borderRadius: '12px',
+          background: colors.surface,
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          minWidth: 320,
+        },
+      }}
+      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+    >
+      {/* ... existing menu items ... */}
+    </Menu>
+  );
+
+  // Move the loading check inside the component function
+  if (loading) {
+    return (
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        minHeight="100vh"
+        sx={{ background: colors.primary }}
+      >
+        <Box textAlign="center">
+          <CircularProgress 
+            size={60} 
+            sx={{ color: colors.accent, mb: 2 }} 
+          />
+          <Typography variant="h6" sx={{ color: colors.textPrimary }}>
+            Loading your dashboard...
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
 
 return (
   <Box sx={{ display: 'flex', minHeight: '100vh', background: colors.primary }}>
