@@ -56,6 +56,15 @@ import {
   Timeline,
   CheckCircle,
   AccessTime,
+  KeyboardArrowDown,
+  Language,
+  TrendingUp,
+  AccountBalanceWallet,
+  AttachMoney,
+  Security,
+  PieChart,
+  ShowChart,
+  BarChart,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
@@ -94,10 +103,21 @@ const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(true); // Default to dark mode for monochrome aesthetics
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [activeSection, setActiveSection] = useState('dashboard');
+  const [scrollY, setScrollY] = useState(0);
+  
+  // Refs for scroll animations
+  const heroRef = useRef(null);
+  const statsRef = useRef(null);
+  const activityRef = useRef(null);
+  
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
+  // Scroll animation hook
+  const { scrollYProgress } = useScroll();
 
   // Color Palette
   // Color Palette - Monochrome with subtle accents
@@ -286,13 +306,14 @@ const Dashboard = () => {
 
   // Sidebar items
   const sidebarItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard', active: location.pathname === '/admin/dashboard' },
-    { text: 'Create Content', icon: <Create />, path: '/admin/create', active: location.pathname === '/admin/create' },
-    { text: 'Manage Quizzes', icon: <Quiz />, path: '/admin/quizzes', active: location.pathname === '/admin/quizzes' },
-    { text: 'Offline Cache', icon: <CloudDownload />, path: '/admin/cache', active: location.pathname === '/admin/cache' },
-    { text: 'QR Code Generator', icon: <QrCode />, path: '/admin/qr-generator', active: location.pathname === '/admin/qr-generator' },
-    { text: 'Analytics', icon: <Analytics />, path: '/admin/analytics', active: location.pathname === '/admin/analytics' },
-    { text: 'Settings', icon: <Settings />, path: '/admin/settings', active: location.pathname === '/admin/settings' },
+    { text: 'Markets', icon: <Language />, path: '/admin/markets', active: location.pathname === '/admin/markets' },
+    { text: 'Trading', icon: <TrendingUp />, path: '/admin/trading', active: location.pathname === '/admin/trading' },
+    { text: 'Wallet', icon: <AccountBalanceWallet />, path: '/admin/wallet', active: location.pathname === '/admin/wallet' },
+    { text: 'Loans', icon: <AttachMoney />, path: '/admin/loans', active: location.pathname === '/admin/loans' },
+    { text: 'Vaults', icon: <Security />, path: '/admin/vaults', active: location.pathname === '/admin/vaults' || location.pathname === '/admin/dashboard' },
+    { text: 'Portfolio', icon: <PieChart />, path: '/admin/portfolio', active: location.pathname === '/admin/portfolio' },
+    { text: 'Liquidity pools', icon: <ShowChart />, path: '/admin/liquidity', active: location.pathname === '/admin/liquidity' },
+    { text: 'Swap', icon: <BarChart />, path: '/admin/swap', active: location.pathname === '/admin/swap' },
   ];
 
   // Profile menu
