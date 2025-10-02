@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Grid,
   Card,
@@ -59,7 +59,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import CountUp from 'react-countup';
 import { Line, Bar } from 'react-chartjs-2';
 import {
@@ -91,7 +91,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode for monochrome aesthetics
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
   const navigate = useNavigate();
@@ -100,37 +100,84 @@ const Dashboard = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   // Color Palette
+  // Color Palette - Monochrome with subtle accents
   const colors = {
-    primary: '#F0E6E0',
-    secondary: '#F3DBB2',
-    accent: '#754B2F',
-    surface: '#FFFFFF',
-    textPrimary: '#333333',
-    textSecondary: '#666666',
+    primary: '#121212',
+    secondary: '#1E1E1E',
+    accent: '#3D7EFF', // Subtle blue accent
+    accentSecondary: '#F5F5F7', // Light accent for contrast
+    surface: '#1A1A1A',
+    textPrimary: '#FFFFFF',
+    textSecondary: '#AAAAAA',
     dark: {
-      primary: '#1E1E1E',
-      surface: '#2A2A2A',
-      textPrimary: '#F0F0F0',
-      textSecondary: '#BBBBBB',
+      primary: '#121212',
+      surface: '#1A1A1A',
+      textPrimary: '#FFFFFF',
+      textSecondary: '#AAAAAA',
+    },
+    light: {
+      primary: '#F5F5F7',
+      surface: '#FFFFFF',
+      textPrimary: '#121212',
+      textSecondary: '#555555',
     }
   };
 
   // Apply theme based on dark mode
-  const currentTheme = {
-    primary: darkMode ? colors.dark.primary : colors.primary,
-    surface: darkMode ? colors.dark.surface : colors.surface,
-    textPrimary: darkMode ? colors.dark.textPrimary : colors.textPrimary,
-    textSecondary: darkMode ? colors.dark.textSecondary : colors.textSecondary,
-    // Keep accent colors consistent in both modes
+  const currentTheme = darkMode ? {
+    primary: colors.dark.primary,
+    surface: colors.dark.surface,
+    textPrimary: colors.dark.textPrimary,
+    textSecondary: colors.dark.textSecondary,
     accent: colors.accent,
-    secondary: colors.secondary,
+    accentSecondary: colors.accentSecondary,
+  } : {
+    primary: colors.light.primary,
+    surface: colors.light.surface,
+    textPrimary: colors.light.textPrimary,
+    textSecondary: colors.light.textSecondary,
+    accent: colors.accent,
+    accentSecondary: '#E0E0E0',
   };
 
   const sidebarWidth = 280;
   const miniSidebarWidth = 70;
 
+  // Handle scroll events for parallax and animations
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     fetchPages();
+    
+    // Initialize intersection observer for scroll animations
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    
+    // Observe elements
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+    
+    return () => {
+      document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        observer.unobserve(el);
+      });
+    };
   }, []);
 
   const fetchPages = async () => {
