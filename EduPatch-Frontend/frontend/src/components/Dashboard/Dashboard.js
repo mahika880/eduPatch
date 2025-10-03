@@ -30,6 +30,17 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import Person from '@mui/icons-material/Person';
+import Create from '@mui/icons-material/Create';
+import Quiz from '@mui/icons-material/Quiz';
+import QrCode from '@mui/icons-material/QrCode';
+import CloudDownload from '@mui/icons-material/CloudDownload';
+import Timeline from '@mui/lab/Timeline';
+import Avatar from '@mui/material/Avatar';
+import { Line, Bar } from 'react-chartjs-2';
+import CountUp from 'react-countup';
+import pages from './path/to/pages'; // Adjust the path as needed
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
