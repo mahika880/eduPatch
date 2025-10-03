@@ -6,110 +6,42 @@ import {
   Typography,
   Button,
   Box,
-  Chip,
-  CircularProgress,
   Container,
   Snackbar,
   Alert,
   IconButton,
+  AppBar,
+  Toolbar,
+  useTheme,
+  useMediaQuery,
   Drawer,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  AppBar,
-  Toolbar,
-  Avatar,
-  Badge,
-  TextField,
-  InputAdornment,
-  Paper,
-  Divider,
-  Menu,
-  MenuItem,
-  Switch,
-  useTheme,
-  useMediaQuery,
-  LinearProgress,
-  Tooltip,
 } from '@mui/material';
 import {
-  MenuBook,
-  Quiz,
-  QrCode,
-  Visibility,
-  AutoAwesome,
-  Create,
-  CloudDownload,
-  Dashboard as DashboardIcon,
-  Settings,
-  Notifications,
-  Search,
   Menu as MenuIcon,
   School,
-  Analytics,
-  Person,
-  Logout,
-  DarkMode,
-  LightMode,
-  ArrowForward,
-  Timeline,
-  CheckCircle,
-  AccessTime,
   KeyboardArrowDown,
-  Language,
-  TrendingUp,
-  AccountBalanceWallet,
-  AttachMoney,
-  Security,
-  PieChart,
-  ShowChart,
-  BarChart,
+  ArrowForward,
+  Close,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import CountUp from 'react-countup';
-import { Line, Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-} from 'chart.js';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  ChartTooltip,
-  Legend
-);
 
 const Dashboard = () => {
-  const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(true); // Default to dark mode for monochrome aesthetics
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
-  const [activeSection, setActiveSection] = useState('dashboard');
-  const [scrollY, setScrollY] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   
   // Refs for scroll animations
   const heroRef = useRef(null);
-  const statsRef = useRef(null);
-  const activityRef = useRef(null);
+  const featuresRef = useRef(null);
+  const testimonialsRef = useRef(null);
+  const pricingRef = useRef(null);
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -119,28 +51,15 @@ const Dashboard = () => {
   // Scroll animation hook
   const { scrollYProgress } = useScroll();
 
-  // Color Palette
-  // Color Palette - Monochrome with subtle accents
+  // Color Palette - Clean and subtle
   const colors = {
-    primary: '#121212',
-    secondary: '#1E1E1E',
-    accent: '#3D7EFF', // Subtle blue accent
-    accentSecondary: '#F5F5F7', // Light accent for contrast
-    surface: '#1A1A1A',
-    textPrimary: '#FFFFFF',
-    textSecondary: '#AAAAAA',
-    dark: {
-      primary: '#121212',
-      surface: '#1A1A1A',
-      textPrimary: '#FFFFFF',
-      textSecondary: '#AAAAAA',
-    },
-    light: {
-      primary: '#F5F5F7',
-      surface: '#FFFFFF',
-      textPrimary: '#121212',
-      textSecondary: '#555555',
-    }
+    primary: '#FFFFFF',
+    secondary: '#F5F7FA',
+    accent: '#0055FF',
+    accentLight: '#E6EEFF',
+    textPrimary: '#111827',
+    textSecondary: '#6B7280',
+    border: '#E5E7EB',
   };
 
   // Apply theme based on dark mode
@@ -1028,5 +947,5 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard;i clearly
 
