@@ -72,6 +72,10 @@ const Dashboard = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [pages, setPages] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [scrollY, setScrollY] = useState(0); // Add this line
   
   // Refs for scroll animations
   const heroRef = useRef(null);
