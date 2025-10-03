@@ -19,11 +19,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  MenuItem, // Move this from @mui/icons-material to here
-  Menu, // Move this from @mui/icons-material to here
-  Divider, // Move this from @mui/icons-material to here
-  TextField, // Move this from @mui/icons-material to here
-  InputAdornment, // Move this from @mui/icons-material to here
+  MenuItem,
+  Menu,
+  Divider,
+  TextField,
+  InputAdornment,
+  CircularProgress, // Move this from @mui/icons-material to here
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -49,7 +50,6 @@ import {
   Settings,
   Logout,
   Badge,
-  CircularProgress,
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
