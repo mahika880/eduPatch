@@ -19,6 +19,11 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  MenuItem, // Move this from @mui/icons-material to here
+  Menu, // Move this from @mui/icons-material to here
+  Divider, // Move this from @mui/icons-material to here
+  TextField, // Move this from @mui/icons-material to here
+  InputAdornment, // Move this from @mui/icons-material to here
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -26,21 +31,6 @@ import {
   KeyboardArrowDown,
   ArrowForward,
   Close,
-} from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { apiService } from '../../services/api';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import AutoAwesome from '@mui/icons-material/AutoAwesome';
-import Person from '@mui/icons-material/Person';
-import Create from '@mui/icons-material/Create';
-import Quiz from '@mui/icons-material/Quiz';
-import QrCode from '@mui/icons-material/QrCode';
-import CloudDownload from '@mui/icons-material/CloudDownload';
-import Timeline from '@mui/lab/Timeline';
-import Avatar from '@mui/material/Avatar';
-import { Line, Bar } from 'react-chartjs-2';
-import CountUp from 'react-countup';
-import {
   Language,
   TrendingUp,
   AccountBalanceWallet,
@@ -60,12 +50,20 @@ import {
   Logout,
   Badge,
   CircularProgress,
-  TextField,
-  InputAdornment,
-  Divider,
-  Menu,
-  MenuItem,
 } from '@mui/icons-material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { apiService } from '../../services/api';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import AutoAwesome from '@mui/icons-material/AutoAwesome';
+import Person from '@mui/icons-material/Person';
+import Create from '@mui/icons-material/Create';
+import Quiz from '@mui/icons-material/Quiz';
+import QrCode from '@mui/icons-material/QrCode';
+import CloudDownload from '@mui/icons-material/CloudDownload';
+import Timeline from '@mui/lab/Timeline';
+import Avatar from '@mui/material/Avatar';
+import { Line, Bar } from 'react-chartjs-2';
+import CountUp from 'react-countup';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
