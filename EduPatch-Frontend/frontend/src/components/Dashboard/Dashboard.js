@@ -40,13 +40,39 @@ import Timeline from '@mui/lab/Timeline';
 import Avatar from '@mui/material/Avatar';
 import { Line, Bar } from 'react-chartjs-2';
 import CountUp from 'react-countup';
-import pages from './path/to/pages'; // Adjust the path as needed
+import {
+  Language,
+  TrendingUp,
+  AccountBalanceWallet,
+  AttachMoney,
+  Security,
+  PieChart,
+  ShowChart,
+  BarChart,
+  Search,
+  LightMode,
+  DarkMode,
+  Notifications,
+  MenuBook,
+  CheckCircle,
+  AccessTime,
+  Settings,
+  Logout,
+  Badge,
+  CircularProgress,
+  TextField,
+  InputAdornment,
+  Divider,
+  Menu,
+  MenuItem,
+} from '@mui/icons-material';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [pages, setPages] = useState([]);
   
   // Refs for scroll animations
   const heroRef = useRef(null);
@@ -136,6 +162,7 @@ const Dashboard = () => {
       setPages(response.data);
     } catch (error) {
       console.error('Error fetching pages:', error);
+      setPages([]); // Set default empty array if API fails
     } finally {
       setLoading(false);
     }
