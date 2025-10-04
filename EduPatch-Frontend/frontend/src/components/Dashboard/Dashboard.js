@@ -13,7 +13,8 @@ import {
   MenuItem,
   Grid,
   TextField,
-  Paper
+  Paper,
+  Divider
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -26,9 +27,13 @@ import {
   Send,
   Email,
   Phone,
-  LocationOn
+  LocationOn,
+  LinkedIn,
+  Twitter,
+  Instagram,
+  GitHub
 } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 // Subtle color theme
@@ -86,6 +91,224 @@ const FeatureCard = ({ icon, title, description }) => (
   </motion.div>
 );
 
+const useScrollDirection = () => {
+  const [scrollDir, setScrollDir] = useState("up");
+
+  useEffect(() => {
+    let lastScroll = window.pageYOffset;
+
+    const updateScrollDir = () => {
+      const scrollY = window.pageYOffset;
+      setScrollDir(scrollY > lastScroll ? "down" : "up");
+      lastScroll = scrollY > 0 ? scrollY : 0;
+    };
+
+    window.addEventListener("scroll", updateScrollDir);
+    return () => window.removeEventListener("scroll", updateScrollDir);
+  }, []);
+
+  return scrollDir;
+};
+
+// Replace the existing Navbar with this enhanced version
+const Navbar = ({ isMobile, mobileMenuOpen, setMobileMenuOpen }) => {
+  const { scrollY } = useScroll();
+  const scrollDir = useScrollDirection();
+  
+  const navBackground = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(255, 255, 255, 0)", "rgba(255, 255, 255, 0.9)"]
+  );
+
+  const navY = useTransform(
+    scrollY,
+    [0, 100],
+    [0, scrollDir === "up" ? 0 : -100]
+  );
+
+  return (
+    <motion.div
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        background: navBackground,
+        y: navY,
+        backdropFilter: 'blur(10px)',
+      }}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+    >
+      <AppBar 
+        position="static" 
+        elevation={0}
+        sx={{ 
+          background: 'transparent',
+          borderBottom: `1px solid ${colors.subtle}`,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Toolbar sx={{ justifyContent: 'space-between', py: 2 }}>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Box display="flex" alignItems="center">
+                <School sx={{ color: colors.text, mr: 1 }} />
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
+                    color: colors.text,
+                    fontWeight: 600,
+                    letterSpacing: '-0.5px'
+                  }}
+                >
+                  EduPatch
+                </Typography>
+              </Box>
+            </motion.div>
+
+            {!isMobile && (
+              <Box sx={{ display: 'flex', gap: 4 }}>
+                {['Features', 'How it Works', 'Contact'].map((item) => (
+                  <motion.div
+                    key={item}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
+                  >
+                    <Button
+                      sx={{
+                        color: colors.text,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        '&:hover': {
+                          color: colors.accent,
+                          background: 'transparent',
+                        }
+                      }}
+                    >
+                      {item}
+                    </Button>
+                  </motion.div>
+                ))}
+              </Box>
+            )}
+
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: colors.text,
+                  color: 'white',
+                  textTransform: 'none',
+                  px: 3,
+                  py: 1,
+                  borderRadius: '50px',
+                  boxShadow: '0 4px 14px 0 rgba(0,0,0,0.1)',
+                  '&:hover': {
+                    bgcolor: colors.accent,
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 20px rgba(41,151,255,0.35)',
+                  },
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Get Started
+              </Button>
+            </motion.div>
+
+            {isMobile && (
+              <IconButton
+                onClick={() => setMobileMenuOpen(true)}
+                sx={{ color: colors.text }}
+              >
+                <MenuIcon />
+              </IconButton>
+            )}
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </motion.div>
+  );
+};
+
+// Add this new Footer component before the main return
+const Footer = () => (
+  <Box sx={{ background: colors.secondary, py: 10 }}>
+    <Container maxWidth="lg">
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={4}>
+          <Box display="flex" alignItems="center" mb={3}>
+            <School sx={{ color: colors.text, mr: 1 }} />
+            <Typography variant="h6" sx={{ color: colors.text, fontWeight: 600 }}>
+              EduPatch
+            </Typography>
+          </Box>
+          <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 3 }}>
+            Transforming education through AI-powered learning experiences.
+          </Typography>
+          <Box display="flex" gap={2}>
+            {[LinkedIn, Twitter, Instagram, GitHub].map((Icon, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <IconButton sx={{ color: colors.text }}>
+                  <Icon />
+                </IconButton>
+              </motion.div>
+            ))}
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Grid container spacing={4}>
+            {['Product', 'Company', 'Resources'].map((section, index) => (
+              <Grid item xs={12} sm={4} key={index}>
+                <Typography variant="subtitle1" sx={{ color: colors.text, fontWeight: 600, mb: 2 }}>
+                  {section}
+                </Typography>
+                <Box display="flex" flexDirection="column" gap={1}>
+                  {['Link 1', 'Link 2', 'Link 3'].map((link, i) => (
+                    <motion.div
+                      key={i}
+                      whileHover={{ x: 5 }}
+                    >
+                      <Button
+                        sx={{
+                          color: colors.textSecondary,
+                          textTransform: 'none',
+                          justifyContent: 'flex-start',
+                          p: 0
+                        }}
+                      >
+                        {link}
+                      </Button>
+                    </motion.div>
+                  ))}
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider sx={{ my: 4 }} />
+          <Typography variant="body2" align="center" sx={{ color: colors.textSecondary }}>
+            © 2023 EduPatch. All rights reserved.
+          </Typography>
+        </Grid>
+      </Grid>
+    </Container>
+  </Box>
+);
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -94,71 +317,12 @@ const LandingPage = () => {
 
   return (
     <Box sx={{ background: colors.primary, minHeight: '100vh' }}>
-      {/* Navbar */}
-      <AppBar 
-        position="fixed" 
-        elevation={0}
-        sx={{ 
-          background: 'rgba(255, 255, 255, 0.8)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${colors.subtle}`,
-        }}
-      >
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Box display="flex" alignItems="center">
-            <School sx={{ color: colors.text, mr: 1 }} />
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                color: colors.text,
-                fontWeight: 600,
-                letterSpacing: '-0.5px'
-              }}
-            >
-              EduPatch
-            </Typography>
-          </Box>
-
-          {/* Navigation Links - Desktop */}
-          {!isMobile && (
-            <Box sx={{ display: 'flex', gap: 4 }}>
-              {['Features', 'How it Works', 'Pricing', 'Contact'].map((item) => (
-                <Button
-                  key={item}
-                  sx={{
-                    color: colors.text,
-                    textTransform: 'none',
-                    fontSize: '1rem',
-                    '&:hover': {
-                      color: colors.accent,
-                      background: 'transparent',
-                    }
-                  }}
-                >
-                  {item}
-                </Button>
-              ))}
-            </Box>
-          )}
-
-          <Button
-            variant="contained"
-            sx={{
-              bgcolor: colors.text,
-              color: 'white',
-              textTransform: 'none',
-              px: 3,
-              py: 1,
-              borderRadius: '50px',
-              '&:hover': {
-                bgcolor: colors.accent,
-              }
-            }}
-          >
-            Get Started
-          </Button>
-        </Toolbar>
-      </AppBar>
+      {/* Update Navbar props */}
+      <Navbar 
+        isMobile={isMobile} 
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
 
       {/* Hero Section */}
       <Container maxWidth="lg" sx={{ pt: 15 }}>
@@ -559,17 +723,7 @@ const LandingPage = () => {
       </Container>
 
       {/* Footer */}
-      <Box sx={{ background: colors.secondary, py: 10 }}>
-        <Container maxWidth="lg">
-          <Typography
-            variant="body1"
-            align="center"
-            sx={{ color: colors.textSecondary }}
-          >
-            © 2023 EduPatch. All rights reserved.
-          </Typography>
-        </Container>
-      </Box>
+      <Footer />
     </Box>
   );
 };
