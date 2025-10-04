@@ -417,15 +417,19 @@ const LandingPage = () => {
             {/* Contact Information */}
             <Grid item xs={12} md={4}>
               <Box sx={{ mb: { xs: 4, md: 0 } }}>
-                {{
-                  icon: <Email />, text: 'hello@edupatch.com'
-                },
-                {
-                  icon: <Phone />, text: '+1 (555) 000-0000'
-                },
-                {
-                  icon: <LocationOn />, text: 'Mumbai, Maharashtra'
-                }
+                {[  // Fix starts here
+                  {
+                    icon: <Email />, 
+                    text: 'hello@edupatch.com'
+                  },
+                  {
+                    icon: <Phone />, 
+                    text: '+1 (555) 000-0000'
+                  },
+                  {
+                    icon: <LocationOn />, 
+                    text: 'Mumbai, Maharashtra'
+                  }
                 ].map((item, index) => (
                   <Box
                     key={index}
