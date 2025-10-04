@@ -31,10 +31,17 @@ import {
   LinkedIn,
   Twitter,
   Instagram,
-  GitHub
+  GitHub,
+  Dashboard,
+  Book,
+  People,
+  Assessment,
+  Settings,
+  Add,
 } from '@mui/icons-material';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 
 // Subtle color theme
 const colors = {
@@ -44,6 +51,11 @@ const colors = {
   textSecondary: '#86868B',
   accent: '#2997FF',
   subtle: '#E8E8E8',
+  navBackground: 'rgba(255, 255, 255, 0.8)',
+  sidebarBackground: '#FFFFFF',
+  hover: 'rgba(41, 151, 255, 0.1)',
+  activeLink: '#2997FF',
+  divider: 'rgba(0, 0, 0, 0.06)'
 };
 
 const FeatureCard = ({ icon, title, description }) => (
@@ -726,6 +738,177 @@ const LandingPage = () => {
       <Footer />
     </Box>
   );
+};
+
+// Add this styled component for the sidebar
+const StyledSidebar = styled(motion.div)(({ theme }) => ({
+  position: 'fixed',
+  left: 0,
+  top: 0,
+  bottom: 0,
+  width: 280,
+  background: colors.sidebarBackground,
+  borderRight: `1px solid ${colors.divider}`,
+  zIndex: 1200,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  backdropFilter: 'blur(20px)',
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.05)'
+}));
+
+// Add this component for sidebar items
+const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
+  <motion.div
+    whileHover={{ x: 4 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <Button
+      fullWidth
+      startIcon={<Icon />}
+      onClick={onClick}
+      sx={{
+        py: 2,
+        px: 3,
+        justifyContent: 'flex-start',
+        color: active ? colors.activeLink : colors.text,
+        bgcolor: active ? colors.hover : 'transparent',
+        '&:hover': {
+          bgcolor: colors.hover,
+        },
+        borderRadius: '12px',
+        mx: 1,
+        transition: 'all 0.3s ease'
+      }}
+    >
+      <Typography
+        sx={{
+          fontWeight: active ? 600 : 400,
+          fontSize: '0.95rem'
+        }}
+      >
+        {label}
+      </Typography>
+    </Button>
+  </motion.div>
+);
+
+// Modify your existing Sidebar component
+const Sidebar = ({ open, onClose }) => {
+  const sidebarVariants = {
+    open: { x: 0, opacity: 1 },
+    closed: { x: -280, opacity: 0 }
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <StyledSidebar
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={sidebarVariants}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <Box sx={{ p: 3, pb: 2 }}>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Box display="flex" alignItems="center" sx={{ mb: 4 }}>
+                  <School sx={{ color: colors.accent, mr: 1, fontSize: 28 }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600, color: colors.text }}>
+                    EduPatch
+                  </Typography>
+                </Box>
+              </motion.div>
+
+              <Box sx={{ mb: 4 }}>
+                {[  // Correct array syntax with square brackets
+                  {
+                    icon: Dashboard, 
+                    label: 'Overview', 
+                    active: true 
+                  },
+                  { 
+                    icon: Book, 
+                    label: 'Courses' 
+                  },
+                  { 
+                    icon: People, 
+                    label: 'Students' 
+                  },
+                  { 
+                    icon: Assessment, 
+                    label: 'Analytics' 
+                  },
+                  { 
+                    icon: Settings, 
+                    label: 'Settings' 
+                  }
+                ].map((item, index) => (
+                  <Box key={index} sx={{ mb: 1 }}>
+                    <SidebarItem {...item} />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+
+            <Box sx={{ mt: 'auto', p: 3 }}>
+              <motion.div whileHover={{ y: -2 }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  startIcon={<Add />}
+                  sx={{
+                    bgcolor: colors.text,
+                    color: 'white',
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: '12px',
+                    '&:hover': {
+                      bgcolor: colors.accent,
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  New Course
+                </Button>
+              </motion.div>
+            </Box>
+          </StyledSidebar>
+
+          {/* Backdrop for mobile */}
+          <Box
+            component={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              bgcolor: 'rgba(0,0,0,0.5)',
+              zIndex: 1100,
+              display: { md: 'none' }
+            }}
+          />
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// Update your navbar's background and blur effect
+const navbarStyles = {
+  background: colors.navBackground,
+  backdropFilter: 'blur(10px)',
+  borderBottom: `1px solid ${colors.divider}`,
+  transition: 'all 0.3s ease'
 };
 
 export default LandingPage;
