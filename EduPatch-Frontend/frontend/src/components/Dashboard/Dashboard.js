@@ -87,13 +87,16 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const [pages, setPages] = useState([]);
+  // State declarations
   const [loading, setLoading] = useState(true);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [pages, setPages] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [scrollY, setScrollY] = useState(0);
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
@@ -237,6 +240,67 @@ const Dashboard = () => {
     { id: 4, action: 'Updated content', page: 'Deep Learning', time: '2 days ago', icon: <AutoAwesome /> },
   ];
 
+  // Move these into the component scope
+  const popularVaults = [
+    { 
+      id: 1, 
+      name: 'Defiable Med/Small Cap', 
+      aum: '$0.25', 
+      change: '+0.93%', 
+      changeType: 'positive', 
+      logo: 'https://via.placeholder.com/40',
+      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
+    },
+    { 
+      id: 2, 
+      name: 'Defiable Med/Small Cap', 
+      aum: '$0.25', 
+      change: '+0.93%', 
+      changeType: 'positive', 
+      logo: 'https://via.placeholder.com/40',
+      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
+    },
+    { 
+      id: 3, 
+      name: 'Defiable Med/Small Cap', 
+      aum: '$0.25', 
+      change: '+0.93%', 
+      changeType: 'positive', 
+      logo: 'https://via.placeholder.com/40',
+      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
+    },
+  ];
+
+  // Vault performance data
+  const vaultPerformance = [
+    { 
+      id: 1, 
+      name: 'UST/FRAX/USDT/USDC', 
+      platform: 'Fantom', 
+      curve: 'Curve', 
+      wallet: '$123k', 
+      deposited: '$7.5k', 
+      apy: '16.03%', 
+      daily: '0.0425%', 
+      safety: '10.0', 
+      tvl: '$213.7M',
+      chart: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    },
+    { 
+      id: 2, 
+      name: 'BTC-ETH LP', 
+      platform: 'Chain', 
+      curve: 'Binswap', 
+      wallet: '$245k', 
+      deposited: '$4.33k', 
+      apy: '25.92%', 
+      daily: '0.0702%', 
+      safety: '9.5', 
+      tvl: '$759M',
+      chart: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+    },
+  ];
+
   // Sidebar items
   const sidebarItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard', active: location.pathname === '/admin/dashboard' },
@@ -352,6 +416,7 @@ const Dashboard = () => {
     </Menu>
   );
 
+  // Loading check inside the main return
   if (loading) {
     return (
       <Box 
@@ -374,6 +439,7 @@ const Dashboard = () => {
     );
   }
 
+  // Main return statement
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', background: currentTheme.primary }}>
       {/* Top Navigation Bar */}
@@ -961,719 +1027,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-// Mock data for charts
-const popularVaults = [
-  { 
-    id: 1, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-  { 
-    id: 2, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-  { 
-    id: 3, 
-    name: 'Defiable Med/Small Cap', 
-    aum: '$0.25', 
-    change: '+0.93%', 
-    changeType: 'positive', 
-    logo: 'https://via.placeholder.com/40',
-    chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-  },
-];
-
-// Vault performance data
-const vaultPerformance = [
-  { 
-    id: 1, 
-    name: 'UST/FRAX/USDT/USDC', 
-    platform: 'Fantom', 
-    curve: 'Curve', 
-    wallet: '$123k', 
-    deposited: '$7.5k', 
-    apy: '16.03%', 
-    daily: '0.0425%', 
-    safety: '10.0', 
-    tvl: '$213.7M',
-    chart: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-  },
-  { 
-    id: 2, 
-    name: 'BTC-ETH LP', 
-    platform: 'Chain', 
-    curve: 'Binswap', 
-    wallet: '$245k', 
-    deposited: '$4.33k', 
-    apy: '25.92%', 
-    daily: '0.0702%', 
-    safety: '9.5', 
-    tvl: '$759M',
-    chart: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-  },
-];
-
-// Sidebar items
-const sidebarItems = [
-  { text: 'Markets', icon: <Language />, path: '/admin/markets', active: location.pathname === '/admin/markets' },
-  { text: 'Trading', icon: <TrendingUp />, path: '/admin/trading', active: location.pathname === '/admin/trading' },
-  { text: 'Wallet', icon: <AccountBalanceWallet />, path: '/admin/wallet', active: location.pathname === '/admin/wallet' },
-  { text: 'Loans', icon: <AttachMoney />, path: '/admin/loans', active: location.pathname === '/admin/loans' },
-  { text: 'Vaults', icon: <Security />, path: '/admin/vaults', active: location.pathname === '/admin/vaults' || location.pathname === '/admin/dashboard' },
-  { text: 'Portfolio', icon: <PieChart />, path: '/admin/portfolio', active: location.pathname === '/admin/portfolio' },
-  { text: 'Liquidity pools', icon: <ShowChart />, path: '/admin/liquidity', active: location.pathname === '/admin/liquidity' },
-  { text: 'Swap', icon: <BarChart />, path: '/admin/swap', active: location.pathname === '/admin/swap' },
-];
-
-// Profile menu
-const profileMenu = (
-  <Menu
-    anchorEl={anchorEl}
-    open={Boolean(anchorEl)}
-    onClose={handleProfileMenuClose}
-    PaperProps={{
-      sx: {
-        mt: 1,
-        borderRadius: '12px',
-        background: colors.surface,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        minWidth: 200,
-      },
-    }}
-    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-  >
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Person fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="My Profile" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Settings fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="Account Settings" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-    <Divider sx={{ my: 1 }} />
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <Logout fontSize="small" sx={{ color: colors.accent }} />
-      </ListItemIcon>
-      <ListItemText primary="Logout" primaryTypographyProps={{ color: colors.textPrimary }} />
-    </MenuItem>
-  </Menu>
-);
-
-// Notifications menu
-const notificationsMenu = (
-  <Menu
-    anchorEl={notificationAnchorEl}
-    open={Boolean(notificationAnchorEl)}
-    onClose={handleNotificationMenuClose}
-    PaperProps={{
-      sx: {
-        mt: 1,
-        borderRadius: '12px',
-        background: colors.surface,
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-        minWidth: 320,
-      },
-    }}
-    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-  >
-    <Box sx={{ p: 2 }}>
-      <Typography variant="subtitle1" fontWeight={600} color={colors.textPrimary}>
-        Notifications
-      </Typography>
-    </Box>
-    <Divider />
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <CheckCircle fontSize="small" sx={{ color: colors.success }} />
-      </ListItemIcon>
-      <ListItemText 
-        primary="Content created successfully" 
-        secondary="Introduction to AI" 
-        primaryTypographyProps={{ color: colors.textPrimary }}
-        secondaryTypographyProps={{ color: colors.textSecondary }}
-      />
-    </MenuItem>
-    <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-      <ListItemIcon>
-        <AccessTime fontSize="small" sx={{ color: colors.info }} />
-      </ListItemIcon>
-      <ListItemText 
-        primary="Quiz completion reminder" 
-        secondary="Machine Learning Basics" 
-        primaryTypographyProps={{ color: colors.textPrimary }}
-        secondaryTypographyProps={{ color: colors.textSecondary }}
-      />
-    </MenuItem>
-    <Box sx={{ p: 2, textAlign: 'center' }}>
-      <Button 
-        size="small" 
-        sx={{ 
-          color: colors.accent,
-          '&:hover': { backgroundColor: `${colors.secondary}` }
-        }}
-      >
-        View All Notifications
-      </Button>
-    </Box>
-  </Menu>
-);
-
-if (loading) {
-  return (
-    <Box 
-      display="flex" 
-      justifyContent="center" 
-      alignItems="center" 
-      minHeight="100vh"
-      sx={{ background: colors.primary }}
-    >
-      <Box textAlign="center">
-        <CircularProgress 
-          size={60} 
-          sx={{ color: colors.accent, mb: 2 }} 
-        />
-        <Typography variant="h6" sx={{ color: colors.textPrimary }}>
-          Loading your dashboard...
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
-
-return (
-  <Box sx={{ display: 'flex', minHeight: '100vh', background: colors.primary }}>
-    {/* Top Navigation Bar */}
-    <AppBar 
-      position="fixed" 
-      sx={{ 
-        zIndex: (theme) => theme.zIndex.drawer + 1,
-        background: colors.surface,
-        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
-        color: colors.textPrimary,
-      }}
-      elevation={0}
-    >
-      <Toolbar>
-        {/* Menu Button */}
-        <IconButton
-          edge="start"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          sx={{ 
-            mr: 2, 
-            color: colors.textPrimary,
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        
-        {/* Logo */}
-        <Box display="flex" alignItems="center" sx={{ flexGrow: { xs: 1, md: 0 } }}>
-          <Typography variant="h6" sx={{ 
-            fontWeight: 700, 
-            color: colors.accent,
-            display: { xs: 'none', sm: 'block' }
-          }}>
-            Extej
-          </Typography>
-        </Box>
-
-        {/* Search Bar */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-          <TextField
-            placeholder="Search..."
-            size="small"
-            sx={{ 
-              width: '40%',
-              '& .MuiOutlinedInput-root': {
-                borderRadius: '8px',
-                background: colors.secondary,
-                '&:hover': {
-                  background: colors.secondary,
-                },
-              },
-              '& .MuiInputBase-input': {
-                color: colors.textPrimary,
-              }
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: colors.textSecondary, fontSize: '1.2rem' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-
-        {/* Right Icons */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* Notifications */}
-          <Tooltip title="Notifications">
-            <IconButton 
-              onClick={handleNotificationMenuOpen}
-              sx={{ 
-                mx: 1,
-                color: colors.textPrimary,
-              }}
-            >
-              <Badge badgeContent={3} color="error">
-                <Notifications />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-
-          {/* Profile Avatar */}
-          <Tooltip title="Account">
-            <IconButton
-              onClick={handleProfileMenuOpen}
-              sx={{ ml: 1 }}
-            >
-              <Avatar 
-                sx={{ 
-                  width: 36, 
-                  height: 36,
-                  background: `linear-gradient(45deg, ${colors.accent}, ${colors.secondary})`,
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  margin: '0 auto',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  borderRadius: '50%',
-                  display: 'flex'
