@@ -1,1029 +1,188 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Grid,
-  Card,
-  CardContent,
+  Box,
+  Container,
   Typography,
   Button,
-  Box,
-  Chip,
-  CircularProgress,
-  Container,
-  Snackbar,
-  Alert,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
   AppBar,
   Toolbar,
-  Avatar,
-  Badge,
-  TextField,
-  InputAdornment,
-  Paper,
-  Divider,
-  Menu,
-  MenuItem,
-  Switch,
+  IconButton,
   useTheme,
   useMediaQuery,
-  LinearProgress,
-  Tooltip,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
-  MenuBook,
-  Quiz,
-  QrCode,
-  Visibility,
-  AutoAwesome,
-  Create,
-  CloudDownload,
-  Dashboard as DashboardIcon,
-  Settings,
-  Notifications,
-  Search,
   Menu as MenuIcon,
   School,
-  Analytics,
-  Person,
-  Logout,
-  DarkMode,
-  LightMode,
   ArrowForward,
-  Timeline,
-  CheckCircle,
-  AccessTime,
 } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { apiService } from '../../services/api';
 import { motion } from 'framer-motion';
-import CountUp from 'react-countup';
-import { Line, Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip as ChartTooltip,
-  Legend,
-} from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  ChartTooltip,
-  Legend
-);
+// Subtle color theme
+const colors = {
+  primary: '#FFFFFF',
+  secondary: '#F5F5F7',
+  text: '#1D1D1F',
+  textSecondary: '#86868B',
+  accent: '#2997FF',
+  subtle: '#E8E8E8',
+};
 
-const Dashboard = () => {
-  // State declarations
-  const [loading, setLoading] = useState(true);
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
-  const [pages, setPages] = useState([]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
-  const [scrollY, setScrollY] = useState(0);
+const LandingPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Color Palette
-  const colors = {
-    primary: '#F0E6E0',
-    secondary: '#F3DBB2',
-    accent: '#754B2F',
-    surface: '#FFFFFF',
-    textPrimary: '#333333',
-    textSecondary: '#666666',
-    dark: {
-      primary: '#1E1E1E',
-      surface: '#2A2A2A',
-      textPrimary: '#F0F0F0',
-      textSecondary: '#BBBBBB',
-    }
-  };
-
-  // Apply theme based on dark mode
-  const currentTheme = {
-    primary: darkMode ? colors.dark.primary : colors.primary,
-    surface: darkMode ? colors.dark.surface : colors.surface,
-    textPrimary: darkMode ? colors.dark.textPrimary : colors.textPrimary,
-    textSecondary: darkMode ? colors.dark.textSecondary : colors.textSecondary,
-    // Keep accent colors consistent in both modes
-    accent: colors.accent,
-    secondary: colors.secondary,
-  };
-
-  const sidebarWidth = 280;
-  const miniSidebarWidth = 70;
-
-  useEffect(() => {
-    fetchPages();
-  }, []);
-
-  const fetchPages = async () => {
-    try {
-      const response = await apiService.getAllPages();
-      setPages(response.data);
-    } catch (error) {
-      console.error('Error fetching pages:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
-  };
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleNotificationMenuOpen = (event) => {
-    setNotificationAnchorEl(event.currentTarget);
-  };
-
-  const handleNotificationMenuClose = () => {
-    setNotificationAnchorEl(null);
-  };
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // Mock data for charts
-  const weeklyContentData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [
-      {
-        label: 'Content Created',
-        data: [3, 5, 2, 8, 6, 4, 7],
-        borderColor: colors.accent,
-        backgroundColor: `${colors.accent}40`,
-        fill: true,
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const quizCompletionData = {
-    labels: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4', 'Quiz 5'],
-    datasets: [
-      {
-        label: 'Completion Rate (%)',
-        data: [85, 92, 78, 95, 88],
-        backgroundColor: `${colors.secondary}`,
-        borderColor: colors.accent,
-        borderWidth: 1,
-        borderRadius: 5,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          color: currentTheme.textPrimary,
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        },
-        ticks: {
-          color: currentTheme.textSecondary,
-        },
-      },
-      x: {
-        grid: {
-          color: darkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        },
-        ticks: {
-          color: currentTheme.textSecondary,
-        },
-      },
-    },
-  };
-
-  // Recent activity data (mock)
-  const recentActivities = [
-    { id: 1, action: 'Created new content', page: 'Introduction to AI', time: '2 hours ago', icon: <Create /> },
-    { id: 2, action: 'Generated quiz', page: 'Machine Learning Basics', time: '5 hours ago', icon: <Quiz /> },
-    { id: 3, action: 'Downloaded QR code', page: 'Neural Networks', time: '1 day ago', icon: <QrCode /> },
-    { id: 4, action: 'Updated content', page: 'Deep Learning', time: '2 days ago', icon: <AutoAwesome /> },
-  ];
-
-  // Move these into the component scope
-  const popularVaults = [
-    { 
-      id: 1, 
-      name: 'Defiable Med/Small Cap', 
-      aum: '$0.25', 
-      change: '+0.93%', 
-      changeType: 'positive', 
-      logo: 'https://via.placeholder.com/40',
-      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-    },
-    { 
-      id: 2, 
-      name: 'Defiable Med/Small Cap', 
-      aum: '$0.25', 
-      change: '+0.93%', 
-      changeType: 'positive', 
-      logo: 'https://via.placeholder.com/40',
-      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-    },
-    { 
-      id: 3, 
-      name: 'Defiable Med/Small Cap', 
-      aum: '$0.25', 
-      change: '+0.93%', 
-      changeType: 'positive', 
-      logo: 'https://via.placeholder.com/40',
-      chart: [8, 9, 7, 8, 10, 9, 8, 10, 9, 11, 10, 12]
-    },
-  ];
-
-  // Vault performance data
-  const vaultPerformance = [
-    { 
-      id: 1, 
-      name: 'UST/FRAX/USDT/USDC', 
-      platform: 'Fantom', 
-      curve: 'Curve', 
-      wallet: '$123k', 
-      deposited: '$7.5k', 
-      apy: '16.03%', 
-      daily: '0.0425%', 
-      safety: '10.0', 
-      tvl: '$213.7M',
-      chart: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-    },
-    { 
-      id: 2, 
-      name: 'BTC-ETH LP', 
-      platform: 'Chain', 
-      curve: 'Binswap', 
-      wallet: '$245k', 
-      deposited: '$4.33k', 
-      apy: '25.92%', 
-      daily: '0.0702%', 
-      safety: '9.5', 
-      tvl: '$759M',
-      chart: [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
-    },
-  ];
-
-  // Sidebar items
-  const sidebarItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard', active: location.pathname === '/admin/dashboard' },
-    { text: 'Create Content', icon: <Create />, path: '/admin/create', active: location.pathname === '/admin/create' },
-    { text: 'Manage Quizzes', icon: <Quiz />, path: '/admin/quizzes', active: location.pathname === '/admin/quizzes' },
-    { text: 'Offline Cache', icon: <CloudDownload />, path: '/admin/cache', active: location.pathname === '/admin/cache' },
-    { text: 'QR Code Generator', icon: <QrCode />, path: '/admin/qr-generator', active: location.pathname === '/admin/qr-generator' },
-    { text: 'Analytics', icon: <Analytics />, path: '/admin/analytics', active: location.pathname === '/admin/analytics' },
-    { text: 'Settings', icon: <Settings />, path: '/admin/settings', active: location.pathname === '/admin/settings' },
-  ];
-
-  // Profile menu
-  const profileMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      open={Boolean(anchorEl)}
-      onClose={handleProfileMenuClose}
-      PaperProps={{
-        sx: {
-          mt: 1,
-          borderRadius: '12px',
-          background: currentTheme.surface,
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${colors.secondary}40`,
-          boxShadow: `0 8px 32px rgba(0, 0, 0, 0.1)`,
-          minWidth: 200,
-        },
-      }}
-      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-    >
-      <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-        <ListItemIcon>
-          <Person fontSize="small" sx={{ color: colors.accent }} />
-        </ListItemIcon>
-        <ListItemText primary="My Profile" primaryTypographyProps={{ color: currentTheme.textPrimary }} />
-      </MenuItem>
-      <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-        <ListItemIcon>
-          <Settings fontSize="small" sx={{ color: colors.accent }} />
-        </ListItemIcon>
-        <ListItemText primary="Account Settings" primaryTypographyProps={{ color: currentTheme.textPrimary }} />
-      </MenuItem>
-      <Divider sx={{ my: 1 }} />
-      <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-        <ListItemIcon>
-          <Logout fontSize="small" sx={{ color: colors.accent }} />
-        </ListItemIcon>
-        <ListItemText primary="Logout" primaryTypographyProps={{ color: currentTheme.textPrimary }} />
-      </MenuItem>
-    </Menu>
-  );
-
-  // Notifications menu
-  const notificationsMenu = (
-    <Menu
-      anchorEl={notificationAnchorEl}
-      open={Boolean(notificationAnchorEl)}
-      onClose={handleNotificationMenuClose}
-      PaperProps={{
-        sx: {
-          mt: 1,
-          borderRadius: '12px',
-          background: currentTheme.surface,
-          backdropFilter: 'blur(20px)',
-          border: `1px solid ${colors.secondary}40`,
-          boxShadow: `0 8px 32px rgba(0, 0, 0, 0.1)`,
-          minWidth: 320,
-        },
-      }}
-      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-    >
-      <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" fontWeight={600} color={currentTheme.textPrimary}>
-          Notifications
-        </Typography>
-      </Box>
-      <Divider />
-      <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-        <ListItemIcon>
-          <CheckCircle fontSize="small" sx={{ color: 'success.main' }} />
-        </ListItemIcon>
-        <ListItemText 
-          primary="Content created successfully" 
-          secondary="Introduction to AI" 
-          primaryTypographyProps={{ color: currentTheme.textPrimary }}
-          secondaryTypographyProps={{ color: currentTheme.textSecondary }}
-        />
-      </MenuItem>
-      <MenuItem sx={{ borderRadius: '8px', m: 1 }}>
-        <ListItemIcon>
-          <AccessTime fontSize="small" sx={{ color: 'info.main' }} />
-        </ListItemIcon>
-        <ListItemText 
-          primary="Quiz completion reminder" 
-          secondary="Machine Learning Basics" 
-          primaryTypographyProps={{ color: currentTheme.textPrimary }}
-          secondaryTypographyProps={{ color: currentTheme.textSecondary }}
-        />
-      </MenuItem>
-      <Box sx={{ p: 2, textAlign: 'center' }}>
-        <Button 
-          size="small" 
-          sx={{ 
-            color: colors.accent,
-            '&:hover': { backgroundColor: `${colors.secondary}30` }
-          }}
-        >
-          View All Notifications
-        </Button>
-      </Box>
-    </Menu>
-  );
-
-  // Loading check inside the main return
-  if (loading) {
-    return (
-      <Box 
-        display="flex" 
-        justifyContent="center" 
-        alignItems="center" 
-        minHeight="100vh"
-        sx={{ background: currentTheme.primary }}
-      >
-        <Box textAlign="center">
-          <CircularProgress 
-            size={60} 
-            sx={{ color: colors.accent, mb: 2 }} 
-          />
-          <Typography variant="h6" sx={{ color: currentTheme.textPrimary }}>
-            Loading your dashboard...
-          </Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-  // Main return statement
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', background: currentTheme.primary }}>
-      {/* Top Navigation Bar */}
+    <Box sx={{ background: colors.primary, minHeight: '100vh' }}>
+      {/* Navbar */}
       <AppBar 
         position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: currentTheme.surface,
-          backdropFilter: 'blur(20px)',
-          boxShadow: `0 4px 20px rgba(0, 0, 0, 0.05)`,
-          borderBottom: `1px solid ${colors.secondary}30`,
-          color: currentTheme.textPrimary,
-        }}
         elevation={0}
+        sx={{ 
+          background: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: `1px solid ${colors.subtle}`,
+        }}
       >
-        <Toolbar>
-          {/* Menu Button */}
-          <IconButton
-            edge="start"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ 
-              mr: 2, 
-              color: colors.accent,
-              '&:hover': {
-                backgroundColor: `${colors.secondary}40`,
-              },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          
-          {/* Logo */}
-          <Box display="flex" alignItems="center" sx={{ flexGrow: { xs: 1, md: 0 } }}>
-            <School sx={{ mr: 1, color: colors.accent, fontSize: 32 }} />
-            <Typography variant="h6" sx={{ 
-              fontWeight: 700, 
-              color: colors.accent,
-              display: { xs: 'none', sm: 'block' }
-            }}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Box display="flex" alignItems="center">
+            <School sx={{ color: colors.text, mr: 1 }} />
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: colors.text,
+                fontWeight: 600,
+                letterSpacing: '-0.5px'
+              }}
+            >
               EduPatch
             </Typography>
           </Box>
 
-          {/* Search Bar */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-            <TextField
-              placeholder="Search content, quizzes..."
-              size="small"
-              sx={{ 
-                width: '50%',
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '12px',
-                  background: darkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.03)',
-                  borderColor: `${colors.secondary}60`,
-                  '&:hover': {
-                    borderColor: colors.secondary,
-                  },
-                  '&.Mui-focused': {
-                    borderColor: colors.accent,
-                  }
-                },
-                '& .MuiInputBase-input': {
-                  color: currentTheme.textPrimary,
-                }
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ color: currentTheme.textSecondary }} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
-
-          {/* Right Icons */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* Dark/Light Mode Toggle */}
-            <Tooltip title={darkMode ? "Light Mode" : "Dark Mode"}>
-              <IconButton 
-                onClick={toggleDarkMode}
-                sx={{ 
-                  color: currentTheme.textPrimary,
-                  '&:hover': {
-                    backgroundColor: `${colors.secondary}40`,
-                  }
-                }}
-              >
-                {darkMode ? <LightMode /> : <DarkMode />}
-              </IconButton>
-            </Tooltip>
-
-            {/* Notifications */}
-            <Tooltip title="Notifications">
-              <IconButton 
-                onClick={handleNotificationMenuOpen}
-                sx={{ 
-                  mx: 1,
-                  color: currentTheme.textPrimary,
-                  '&:hover': {
-                    backgroundColor: `${colors.secondary}40`,
-                  }
-                }}
-              >
-                <Badge badgeContent={3} color="error">
-                  <Notifications />
-                </Badge>
-              </IconButton>
-            </Tooltip>
-
-            {/* Profile Avatar */}
-            <Tooltip title="Account">
-              <IconButton
-                onClick={handleProfileMenuOpen}
-                sx={{ 
-                  ml: 1,
-                  '&:hover': {
-                    backgroundColor: `${colors.secondary}40`,
-                  }
-                }}
-              >
-                <Avatar 
-                  sx={{ 
-                    width: 36, 
-                    height: 36,
-                    background: `linear-gradient(45deg, ${colors.accent}, ${colors.secondary})`,
+          {/* Navigation Links - Desktop */}
+          {!isMobile && (
+            <Box sx={{ display: 'flex', gap: 4 }}>
+              {['Features', 'How it Works', 'Pricing', 'Contact'].map((item) => (
+                <Button
+                  key={item}
+                  sx={{
+                    color: colors.text,
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                    '&:hover': {
+                      color: colors.accent,
+                      background: 'transparent',
+                    }
                   }}
                 >
-                  M
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-          </Box>
+                  {item}
+                </Button>
+              ))}
+            </Box>
+          )}
+
+          <Button
+            variant="contained"
+            sx={{
+              bgcolor: colors.text,
+              color: 'white',
+              textTransform: 'none',
+              px: 3,
+              py: 1,
+              borderRadius: '50px',
+              '&:hover': {
+                bgcolor: colors.accent,
+              }
+            }}
+          >
+            Get Started
+          </Button>
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar Navigation */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
-          flexShrink: 0,
-          transition: 'width 0.3s ease',
-          '& .MuiDrawer-paper': {
-            width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
-            boxSizing: 'border-box',
-            background: currentTheme.surface,
-            backdropFilter: 'blur(20px)',
-            borderRight: `1px solid ${colors.secondary}30`,
-            transition: 'width 0.3s ease',
-            overflowX: 'hidden',
-          },
-        }}
-      >
-        <Toolbar />
-        <Box sx={{ overflow: 'auto', mt: 2 }}>
-          <List>
-            {sidebarItems.map((item) => (
-              <ListItem
-                button
-                key={item.text}
-                onClick={() => navigate(item.path)}
-                sx={{
-                  borderRadius: '12px',
-                  mx: 1,
-                  mb: 1,
-                  px: 2,
-                  py: 1.5,
-                  background: item.active ? `${colors.secondary}40` : 'transparent',
-                  color: item.active ? colors.accent : currentTheme.textSecondary,
-                  '&:hover': {
-                    background: `${colors.secondary}30`,
-                    transform: 'translateX(4px)',
-                  },
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <ListItemIcon sx={{ 
-                  minWidth: 40, 
-                  color: item.active ? colors.accent : currentTheme.textSecondary 
-                }}>
-                  {item.icon}
-                </ListItemIcon>
-                {sidebarOpen && (
-                  <ListItemText 
-                    primary={item.text} 
-                    primaryTypographyProps={{ 
-                      fontWeight: item.active ? 600 : 400,
-                      fontSize: '0.95rem',
-                    }}
-                  />
-                )}
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Drawer>
-
-      {/* Main Content */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${sidebarOpen ? sidebarWidth : miniSidebarWidth}px)` },
-          ml: { sm: `${sidebarOpen ? sidebarWidth : miniSidebarWidth}px` },
-          transition: 'margin-left 0.3s ease',
-        }}
-      >
-        <Toolbar />
-        
-        <Container maxWidth="xl">
-          {/* Welcome Section with Lottie Animation */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Card 
-              sx={{
-                mb: 4,
-                borderRadius: '16px',
-                background: `linear-gradient(135deg, ${colors.accent}, ${colors.secondary})`,
-                color: 'white',
-                overflow: 'hidden',
-                position: 'relative',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+      {/* Hero Section */}
+      <Container maxWidth="lg" sx={{ pt: 15 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Box textAlign="center" sx={{ mb: 8 }}>
+            <Typography 
+              variant="h1" 
+              sx={{ 
+                fontSize: { xs: '2.5rem', md: '4.5rem' },
+                fontWeight: 700,
+                color: colors.text,
+                lineHeight: 1.1,
+                mb: 3,
+                letterSpacing: '-0.5px'
               }}
             >
-              <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
-                <Grid container spacing={3} alignItems="center">
-                  <Grid item xs={12} md={8}>
-                    <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
-                      Welcome back, Mahika! 👋
-                    </Typography>
-                    <Typography variant="h6" sx={{ opacity: 0.9, mb: 2 }}>
-                      Your AI-powered learning platform is ready
-                    </Typography>
-                    <Typography variant="body1" sx={{ opacity: 0.8 }}>
-                      {pages.length} content pieces created • {pages.length * 5} AI quizzes generated
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-                    {/* Lottie animation would go here */}
-                    <Box 
-                      sx={{ 
-                        width: 180, 
-                        height: 180, 
-                        margin: '0 auto',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <School sx={{ fontSize: 80, color: 'white' }} />
-                    </Box>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Stats Cards with Glassmorphism */}
-          <Typography 
-            variant="h5" 
-            sx={{ 
-              mb: 3, 
-              fontWeight: 600, 
-              color: currentTheme.textPrimary,
-              pl: 1
-            }}
-          >
-            Dashboard Overview
-          </Typography>
-          
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {[
-              { title: 'Total Pages', value: pages.length, icon: <MenuBook />, color: colors.accent },
-              { title: 'Quizzes Created', value: pages.length * 5, icon: <Quiz />, color: colors.secondary },
-              { title: 'AI Summaries', value: pages.length, icon: <AutoAwesome />, color: colors.accent },
-              { title: 'Active Users', value: 42, icon: <Person />, color: colors.secondary },
-            ].map((stat, index) => (
-              <Grid item xs={12} sm={6} md={3} key={stat.title}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card sx={{ 
-                    p: 3, 
-                    borderRadius: '16px', 
-                    background: `rgba(${darkMode ? '255, 255, 255, 0.05' : '255, 255, 255, 0.8'})`,
-                    backdropFilter: 'blur(20px)',
-                    border: `1px solid ${colors.secondary}30`,
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
-                    height: '100%',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: `0 12px 40px rgba(0, 0, 0, 0.1)`,
-                      border: `1px solid ${colors.secondary}60`,
-                    }
-                  }}>
-                    <Box sx={{ 
-                      color: stat.color, 
-                      mb: 2,
-                      p: 1.5,
-                      borderRadius: '12px',
-                      background: `${stat.color}20`,
-                      display: 'inline-flex',
-                    }}>
-                      {stat.icon}
-                    </Box>
-                    <Typography 
-                      variant="h4" 
-                      sx={{ 
-                        fontWeight: 700, 
-                        color: currentTheme.textPrimary, 
-                        mb: 1 
-                      }}
-                    >
-                      <CountUp end={stat.value} duration={2} />
-                    </Typography>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: currentTheme.textSecondary, 
-                        fontWeight: 500 
-                      }}
-                    >
-                      {stat.title}
-                    </Typography>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Quick Actions Row */}
-          <Typography 
-            variant="h5" 
-            sx={{ 
-              mb: 3, 
-              fontWeight: 600, 
-              color: currentTheme.textPrimary,
-              pl: 1
-            }}
-          >
-            Quick Actions
-          </Typography>
-          
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            {[
-              { title: 'Create Page', icon: <Create />, color: colors.accent, path: '/admin/create' },
-              { title: 'Generate Quiz', icon: <Quiz />, color: colors.secondary, path: '/admin/quizzes' },
-              { title: 'Test QR Code', icon: <QrCode />, color: colors.accent, path: '/admin/qr-generator' },
-              { title: 'Sync Offline', icon: <CloudDownload />, color: colors.secondary, path: '/admin/cache' },
-            ].map((action, index) => (
-              <Grid item xs={12} sm={6} md={3} key={action.title}>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                >
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    size="large"
-                    startIcon={action.icon}
-                    onClick={() => navigate(action.path)}
-                    sx={{
-                      py: 3,
-                      borderRadius: '16px',
-                      background: `linear-gradient(135deg, ${action.color}, ${action.color}90)`,
-                      color: 'white',
-                      fontWeight: 600,
-                      fontSize: '1rem',
-                      textTransform: 'none',
-                      boxShadow: `0 8px 25px ${action.color}40`,
-                      '&:hover': { 
-                        background: `linear-gradient(135deg, ${action.color}90, ${action.color})`,
-                        transform: 'translateY(-2px)',
-                        boxShadow: `0 12px 30px ${action.color}60`,
-                      },
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    {action.title}
-                  </Button>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-
-          {/* Recent Activity and Analytics */}
-          <Grid container spacing={4}>
-            {/* Recent Activity Timeline */}
-            <Grid item xs={12} md={5} lg={4}>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-              >
-                <Card sx={{ 
-                  borderRadius: '16px',
-                  background: `rgba(${darkMode ? '255, 255, 255, 0.05' : '255, 255, 255, 0.8'})`,
-                  backdropFilter: 'blur(20px)',
-                  border: `1px solid ${colors.secondary}30`,
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
-                  height: '100%',
-                }}>
-                  <CardContent>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        mb: 3, 
-                        fontWeight: 600, 
-                        color: currentTheme.textPrimary,
-                        display: 'flex',
-                        alignItems: 'center',
-                      }}
-                    >
-                      <Timeline sx={{ mr: 1, color: colors.accent }} />
-                      Recent Activity
-                    </Typography>
-                    
-                    <Box>
-                      {recentActivities.map((activity, index) => (
-                        <Box 
-                          key={activity.id}
-                          sx={{ 
-                            display: 'flex', 
-                            mb: index !== recentActivities.length - 1 ? 3 : 0,
-                            pb: index !== recentActivities.length - 1 ? 3 : 0,
-                            borderBottom: index !== recentActivities.length - 1 ? `1px solid ${colors.secondary}30` : 'none',
-                          }}
-                        >
-                          <Avatar 
-                            sx={{ 
-                              bgcolor: `${colors.secondary}30`,
-                              color: colors.accent,
-                              mr: 2,
-                            }}
-                          >
-                            {activity.icon}
-                          </Avatar>
-                          <Box>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: currentTheme.textPrimary }}>
-                              {activity.action}
-                            </Typography>
-                            <Typography variant="caption" sx={{ color: colors.accent }}>
-                              {activity.page}
-                            </Typography>
-                            <Typography 
-                              variant="caption" 
-                              display="block" 
-                              sx={{ color: currentTheme.textSecondary, mt: 0.5 }}
-                            >
-                              {activity.time}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </Grid>
-            
-            {/* Analytics Section */}
-            <Grid item xs={12} md={7} lg={8}>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-              >
-                <Grid container spacing={3}>
-                  {/* Weekly Content Chart */}
-                  <Grid item xs={12} lg={6}>
-                    <Card sx={{ 
-                      borderRadius: '16px',
-                      background: `rgba(${darkMode ? '255, 255, 255, 0.05' : '255, 255, 255, 0.8'})`,
-                      backdropFilter: 'blur(20px)',
-                      border: `1px solid ${colors.secondary}30`,
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
-                      height: '100%',
-                    }}>
-                      <CardContent>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            mb: 3, 
-                            fontWeight: 600, 
-                            color: currentTheme.textPrimary 
-                          }}
-                        >
-                          Content Created per Week
-                        </Typography>
-                        <Box sx={{ height: 250 }}>
-                          <Line data={weeklyContentData} options={chartOptions} />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                  
-                  {/* Quiz Completion Chart */}
-                  <Grid item xs={12} lg={6}>
-                    <Card sx={{ 
-                      borderRadius: '16px',
-                      background: `rgba(${darkMode ? '255, 255, 255, 0.05' : '255, 255, 255, 0.8'})`,
-                      backdropFilter: 'blur(20px)',
-                      border: `1px solid ${colors.secondary}30`,
-                      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)',
-                      height: '100%',
-                    }}>
-                      <CardContent>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            mb: 3, 
-                            fontWeight: 600, 
-                            color: currentTheme.textPrimary 
-                          }}
-                        >
-                          Quiz Completion Rate
-                        </Typography>
-                        <Box sx={{ height: 250 }}>
-                          <Bar data={quizCompletionData} options={chartOptions} />
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                </Grid>
-              </motion.div>
-            </Grid>
-          </Grid>
-          
-          {/* Footer */}
-          <Box 
-            sx={{ 
-              mt: 6, 
-              pt: 3, 
-              pb: 2,
-              borderTop: `1px solid ${colors.secondary}30`,
-              textAlign: 'center',
-            }}
-          >
-            <Typography variant="body2" sx={{ color: currentTheme.textSecondary }}>
-              EduPatch © 2025 | Built with ❤️ by Mahika & Team
+              Transform Learning<br />
+              with AI-Powered Education
             </Typography>
+            <Typography 
+              variant="h5" 
+              sx={{ 
+                color: colors.textSecondary,
+                mb: 4,
+                fontWeight: 400,
+                maxWidth: '700px',
+                mx: 'auto'
+              }}
+            >
+              Create interactive learning experiences with intelligent content generation 
+              and smart assessment tools.
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              endIcon={<ArrowForward />}
+              sx={{
+                bgcolor: colors.text,
+                color: 'white',
+                textTransform: 'none',
+                px: 4,
+                py: 2,
+                borderRadius: '50px',
+                fontSize: '1.1rem',
+                '&:hover': {
+                  bgcolor: colors.accent,
+                }
+              }}
+            >
+              Start Creating
+            </Button>
           </Box>
-        </Container>
-      </Box>
+        </motion.div>
 
-      {/* Profile Menu */}
-      {profileMenu}
-      
-      {/* Notifications Menu */}
-      {notificationsMenu}
-
-      {/* Success/Error Snackbar */}
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert 
-          onClose={handleCloseSnackbar} 
-          severity={snackbar.severity}
-          sx={{ 
-            borderRadius: '12px',
-            '& .MuiAlert-icon': {
-              fontSize: '1.5rem'
-            }
-          }}
+        {/* Hero Image/Animation */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
+          <Box
+            sx={{
+              width: '100%',
+              height: { xs: '300px', md: '500px' },
+              borderRadius: '24px',
+              overflow: 'hidden',
+              background: colors.secondary,
+              position: 'relative'
+            }}
+          >
+            {/* Add your hero image or animation here */}
+          </Box>
+        </motion.div>
+      </Container>
     </Box>
   );
 };
 
-export default Dashboard;
+export default LandingPage;
