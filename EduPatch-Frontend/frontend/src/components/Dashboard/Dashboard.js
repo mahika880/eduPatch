@@ -12,6 +12,8 @@ import {
   Menu,
   MenuItem,
   Grid,
+  TextField,
+  Paper
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -21,6 +23,10 @@ import {
   AutoAwesome,
   Psychology,
   Speed,
+  Send,
+  Email,
+  Phone,
+  LocationOn
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -391,42 +397,160 @@ const LandingPage = () => {
               mb: 4
             }}
           >
-            Ready to Transform Your Teaching?
+            Get in Touch
           </Typography>
           <Typography
             variant="h6"
             align="center"
             sx={{
               color: colors.textSecondary,
-              mb: 4,
+              mb: 8,
               fontWeight: 400,
               maxWidth: '600px',
               mx: 'auto'
             }}
           >
-            Join hundreds of educators using EduPatch to enhance their teaching and engage students like never before.
+            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
           </Typography>
-          <Box textAlign="center">
-            <Button
-              variant="contained"
-              size="large"
-              endIcon={<ArrowForward />}
-              sx={{
-                bgcolor: colors.text,
-                color: 'white',
-                textTransform: 'none',
-                px: 4,
-                py: 2,
-                borderRadius: '50px',
-                fontSize: '1.1rem',
-                '&:hover': {
-                  bgcolor: colors.accent,
+
+          <Grid container spacing={6}>
+            {/* Contact Information */}
+            <Grid item xs={12} md={4}>
+              <Box sx={{ mb: { xs: 4, md: 0 } }}>
+                {{
+                  icon: <Email />, text: 'hello@edupatch.com'
+                },
+                {
+                  icon: <Phone />, text: '+1 (555) 000-0000'
+                },
+                {
+                  icon: <LocationOn />, text: 'Mumbai, Maharashtra'
                 }
-              }}
-            >
-              Contact Sales
-            </Button>
-          </Box>
+                ].map((item, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      mb: 3
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        mr: 2,
+                        width: 45,
+                        height: 45,
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        bgcolor: colors.subtle,
+                        color: colors.accent
+                      }}
+                    >
+                      {item.icon}
+                    </Box>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: colors.text }}
+                    >
+                      {item.text}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+
+            {/* Contact Form */}
+            <Grid item xs={12} md={8}>
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 4,
+                  borderRadius: '24px',
+                  bgcolor: colors.secondary
+                }}
+              >
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="First Name"
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '12px',
+                          bgcolor: 'white'
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Last Name"
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '12px',
+                          bgcolor: 'white'
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Email"
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '12px',
+                          bgcolor: 'white'
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Message"
+                      multiline
+                      rows={4}
+                      variant="outlined"
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '12px',
+                          bgcolor: 'white'
+                        }
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      endIcon={<Send />}
+                      fullWidth
+                      sx={{
+                        bgcolor: colors.text,
+                        color: 'white',
+                        textTransform: 'none',
+                        py: 2,
+                        borderRadius: '12px',
+                        fontSize: '1.1rem',
+                        '&:hover': {
+                          bgcolor: colors.accent,
+                        }
+                      }}
+                    >
+                      Send Message
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+          </Grid>
         </motion.div>
       </Container>
 
