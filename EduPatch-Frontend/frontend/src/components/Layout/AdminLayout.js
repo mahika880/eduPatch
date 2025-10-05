@@ -95,11 +95,11 @@ const AdminLayout = ({ children }) => {
               >
                 <Box
                   component="img"
-                  src="frontend/public/images/FullLogo.png"  // Adjust this path to match your logo's filename
+                  src="/images/FullLogo.png"  // Updated path
                   alt="EduPatch Logo"
                   onClick={() => navigate('/admin/dashboard')}
                   sx={{ 
-                    height: '32px',  // Adjust height to match your navbar
+                    height: '32px',
                     cursor: 'pointer',
                     objectFit: 'contain'
                   }}
