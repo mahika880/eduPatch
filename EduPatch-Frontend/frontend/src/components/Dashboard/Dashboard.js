@@ -42,6 +42,7 @@ import {
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 // Subtle color theme
 const colors = {
@@ -335,27 +336,7 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <Container maxWidth="lg" sx={{ pt: 15 }}>
-        
-
-        {/* Hero Image/Animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: { xs: '300px', md: '500px' },
-              borderRadius: '24px',
-              overflow: 'hidden',
-              background: colors.secondary,
-              position: 'relative'
-            }}
-          >
-            {/* Add your hero image or animation here */}
-          </Box>
-        </motion.div>
+        <Hero />
       </Container>
 
       {/* Features Section */}
