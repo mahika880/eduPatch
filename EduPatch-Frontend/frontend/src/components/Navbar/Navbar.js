@@ -9,33 +9,31 @@ import {
   Menu,
   MenuItem,
   Avatar,
-  Chip,
+  InputBase,
+  Badge,
+  Container,
 } from '@mui/material';
 import {
-  Home,
-  Create,
-  School,
-  AccountCircle,
+  Search,
+  Notifications,
+  Settings,
+  Person,
   Logout,
-  Dashboard,
-  NotificationsNone,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
-// Export colors for use in other components
+// Updated color theme to match dashboard
 export const colors = {
   primary: '#FFFFFF',
   secondary: '#F5F5F7',
   text: '#1D1D1F',
   textSecondary: '#86868B',
-  accent: '#2997FF',
+  accent: '#833AB4', // Purple accent to match theme
   subtle: '#E8E8E8',
   navBackground: 'rgba(255, 255, 255, 0.8)',
   glassBg: 'rgba(255, 255, 255, 0.7)',
-  light: '#64B5F6',
-  lightest: '#90CAF9'
 };
 
 const Navbar = () => {
@@ -47,7 +45,7 @@ const Navbar = () => {
   const navBackground = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(255, 255, 255, 0)", colors.navBackground]
+    ["rgba(255, 255, 255, 0.5)", colors.navBackground]
   );
 
   const handleMenu = (event) => {
@@ -70,159 +68,128 @@ const Navbar = () => {
         position="fixed" 
         elevation={0}
         sx={{
-          background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-          backdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${colors.accent}40`,
-          boxShadow: `0 4px 20px ${colors.primary}20`,
+          background: 'transparent',
+          borderBottom: `1px solid ${colors.subtle}`,
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <Toolbar sx={{ py: 1 }}>
-          {/* Logo Section */}
-          <Box 
-            component={motion.div}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            display="flex" 
-            alignItems="center" 
-            sx={{ cursor: 'pointer' }}
-            onClick={() => navigate('/admin/dashboard')}
-          >
+        <Container maxWidth="xl">
+          <Toolbar sx={{ py: 1, px: '24px' }}>
+            {/* Search Bar */}
             <Box
               sx={{
-                width: 40,
-                height: 40,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                mr: 2,
-                boxShadow: `0 4px 15px ${colors.accent}40`,
+                bgcolor: 'rgba(255, 255, 255, 0.8)',
+                borderRadius: '12px',
+                px: 2,
+                width: '300px',
+                height: '40px',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
               }}
             >
-              <School sx={{ fontSize: 24, color: colors.primary }} />
+              <Search sx={{ color: colors.textSecondary, mr: 1 }} />
+              <InputBase
+                placeholder="Search content, quizzes..."
+                sx={{ 
+                  color: colors.text,
+                  '& input::placeholder': {
+                    color: colors.textSecondary,
+                    fontSize: '0.875rem',
+                  }
+                }}
+              />
             </Box>
-            <Typography 
-              variant="h6" 
-              sx={{ 
-                fontWeight: 700,
-                color: colors.text,
-                letterSpacing: '0.5px',
-              }}
-            >
-              EduPatch AI
-            </Typography>
-          </Box>
 
-          <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ flexGrow: 1 }} />
 
-          {/* Navigation Buttons */}
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mr: 2 }}>
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button
-                color="inherit"
-                startIcon={<Dashboard />}
-                onClick={() => navigate('/admin/dashboard')}
-                sx={{
-                  color: colors.text,
-                  fontWeight: 600,
-                  borderRadius: 2,
-                  px: 2,
-                  py: 1,
-                  textTransform: 'none',
-                  '&:hover': {
-                    background: `${colors.accent}20`,
-                  },
-                }}
-              >
-                Dashboard
-              </Button>
-            </motion.div>
-            
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Button
-                color="inherit"
-                startIcon={<Create />}
-                onClick={() => navigate('/admin/create')}
-                sx={{
-                  color: colors.text,
-                  fontWeight: 600,
-                  borderRadius: 2,
-                  px: 2,
-                  py: 1,
-                  textTransform: 'none',
-                  '&:hover': {
-                    background: `${colors.accent}20`,
-                  },
-                }}
-              >
-                Create Content
-              </Button>
-            </motion.div>
-          </Box>
+            {/* Right side icons */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+                <IconButton
+                  size="small"
+                  sx={{
+                    bgcolor: 'rgba(131, 58, 180, 0.05)',
+                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.1)' },
+                  }}
+                >
+                  <Badge badgeContent={3} color="error">
+                    <Notifications sx={{ color: colors.text }} />
+                  </Badge>
+                </IconButton>
+              </motion.div>
 
-          {/* User Section */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-              <IconButton
-                size="medium"
-                sx={{
-                  color: colors.text,
-                  '&:hover': {
-                    background: `${colors.accent}20`,
-                  },
-                }}
-              >
-                <NotificationsNone />
-              </IconButton>
-            </motion.div>
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+                <IconButton
+                  size="small"
+                  sx={{
+                    bgcolor: 'rgba(131, 58, 180, 0.05)',
+                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.1)' },
+                  }}
+                >
+                  <Settings sx={{ color: colors.text }} />
+                </IconButton>
+              </motion.div>
 
-            <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-              <Chip
-                avatar={
-                  <Avatar 
-                    sx={{ 
-                      background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
-                      color: colors.primary,
-                      fontWeight: 700,
+              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
+                <Box
+                  onClick={handleMenu}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    cursor: 'pointer',
+                    py: 1,
+                    px: 1,
+                    borderRadius: '12px',
+                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.05)' },
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      bgcolor: colors.accent,
+                      fontSize: '0.875rem',
                     }}
                   >
                     {(user?.name || user?.email || 'A').charAt(0).toUpperCase()}
                   </Avatar>
-                }
-                label={user?.name || user?.email || 'Admin'}
-                onClick={handleMenu}
-                sx={{
-                  background: `${colors.accent}10`,
-                  color: colors.text,
-                  fontWeight: 600,
-                  '&:hover': {
-                    background: `${colors.accent}20`,
-                  },
-                }}
-              />
-            </motion.div>
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      color: colors.text,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {user?.name || user?.email || 'Admin'}
+                  </Typography>
+                </Box>
+              </motion.div>
 
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              PaperProps={{
-                sx: {
-                  mt: 1,
-                  borderRadius: 2,
-                  background: colors.primary,
-                  boxShadow: `0 4px 20px ${colors.accent}20`,
-                }
-              }}
-            >
-              <MenuItem onClick={handleLogout}>
-                <Logout sx={{ mr: 1 }} />
-                Logout
-              </MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                    border: `1px solid ${colors.subtle}`,
+                  }
+                }}
+                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              >
+                <MenuItem onClick={handleLogout} sx={{ gap: 1 }}>
+                  <Logout fontSize="small" />
+                  <Typography variant="body2">Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          </Toolbar>
+        </Container>
       </AppBar>
     </motion.div>
   );
