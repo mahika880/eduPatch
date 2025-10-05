@@ -95,7 +95,7 @@ const AdminLayout = ({ children }) => {
               >
                 <Box
                   component="img"
-                  src="C:\Users\comp\Downloads\EduPatch\EduPatch-Frontend\frontend\public\images\FullLogo.png"  // Adjust this path to match your logo's filename
+                  src="frontend/public/images/FullLogo.png"  // Adjust this path to match your logo's filename
                   alt="EduPatch Logo"
                   onClick={() => navigate('/admin/dashboard')}
                   sx={{ 
