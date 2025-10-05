@@ -23,6 +23,8 @@ import {
   Notifications,
   Search,
   KeyboardArrowDown,
+  ShoppingBagOutlined,
+  AccountCircle,
 } from '@mui/icons-material';
 
 // Updated Modern Color Palette
@@ -51,10 +53,11 @@ const AdminLayout = ({ children }) => {
   );
 
   const navItems = [
-    { text: 'Create Content', icon: <Create />, path: '/admin/create' },
-    { text: 'Quizzes', icon: <Quiz />, path: '/admin/quizzes' },
-    { text: 'QR Scanner', icon: <QrCode />, path: '/admin/qr-scanner' },
-    { text: 'Downloads', icon: <CloudDownload />, path: '/admin/cache' },
+    { text: 'Store', path: '/store' },
+    { text: 'Create Content', path: '/admin/create' },
+    { text: 'Quizzes', path: '/admin/quizzes' },
+    { text: 'Resources', path: '/resources' },
+    { text: 'Support', path: '/support' },
   ];
 
   return (
@@ -71,20 +74,27 @@ const AdminLayout = ({ children }) => {
           }}
         >
           <Container maxWidth="xl">
-            <Toolbar sx={{ py: 1.5, gap: 4 }}>
+            <Toolbar sx={{ py: 1, gap: 2, minHeight: '44px' }}>
               {/* Logo */}
-              <Typography 
-                variant="h5" 
-                sx={{ 
-                  fontWeight: 600,
-                  letterSpacing: '-0.5px',
-                  color: colors.text,
-                }}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                EduPatch
-              </Typography>
+                <Typography 
+                  variant="h6" 
+                  onClick={() => navigate('/admin/dashboard')}
+                  sx={{ 
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    color: colors.text,
+                    letterSpacing: '-0.5px'
+                  }}
+                >
+                  EduPatch
+                </Typography>
+              </motion.div>
 
-              {/* Centered Nav Items */}
+              {/* Main Navigation */}
               <Box sx={{ 
                 display: 'flex', 
                 gap: 4, 
@@ -98,13 +108,14 @@ const AdminLayout = ({ children }) => {
                     whileTap={{ y: 0 }}
                   >
                     <Button
+                      onClick={() => navigate(item.path)}
                       sx={{
                         color: location.pathname === item.path ? colors.accent : colors.textSecondary,
                         textTransform: 'none',
                         fontSize: '0.9rem',
-                        fontWeight: 500,
-                        minWidth: 'auto',
-                        p: 1,
+                        fontWeight: 400,
+                        minWidth: 0,
+                        p: 0,
                         '&:hover': {
                           background: 'transparent',
                           color: colors.text,
@@ -117,39 +128,41 @@ const AdminLayout = ({ children }) => {
                 ))}
               </Box>
 
-              {/* Right Section */}
+              {/* Right Side Actions */}
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                {/* Search */}
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <Button
-                    startIcon={<Search sx={{ fontSize: 20 }} />}
+                  <IconButton
+                    size="small"
+                    sx={{ color: colors.textSecondary }}
+                  >
+                    <Search fontSize="small" />
+                  </IconButton>
+                </motion.div>
+
+                {/* Cart/Bag */}
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <IconButton
+                    size="small"
+                    sx={{ color: colors.textSecondary }}
+                  >
+                    <ShoppingBagOutlined fontSize="small" />
+                  </IconButton>
+                </motion.div>
+
+                {/* Profile */}
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <IconButton
+                    onClick={(e) => setAnchorEl(e.currentTarget)}
+                    size="small"
                     sx={{
                       color: colors.textSecondary,
-                      minWidth: 'auto',
-                      p: 1,
-                      '&:hover': { color: colors.text }
-                    }}
-                  />
-                </motion.div>
-                
-                <motion.div whileHover={{ scale: 1.02 }}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      bgcolor: colors.text,
-                      color: colors.primary,
-                      textTransform: 'none',
-                      fontSize: '0.9rem',
-                      fontWeight: 500,
-                      px: 3,
-                      py: 1,
-                      borderRadius: '50px',
-                      '&:hover': {
-                        bgcolor: colors.accent,
-                      }
+                      width: 24,
+                      height: 24
                     }}
                   >
-                    Start Creating
-                  </Button>
+                    <AccountCircle fontSize="small" />
+                  </IconButton>
                 </motion.div>
               </Box>
             </Toolbar>
