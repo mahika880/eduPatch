@@ -319,18 +319,19 @@ const Footer = () => (
   </Box>
 );
 
+// Update the Hero component with this enhanced version
 const Hero = () => {
   return (
     <Box
       sx={{
         position: 'relative',
-        overflow: 'hidden',
-        minHeight: '90vh',
+        minHeight: '92vh',
         display: 'flex',
         alignItems: 'center',
+        overflow: 'hidden'
       }}
     >
-      {/* Background gradient animation */}
+      {/* Gradient Orbs Animation */}
       <Box
         component={motion.div}
         animate={{
@@ -349,14 +350,30 @@ const Hero = () => {
           width: '600px',
           height: '600px',
           borderRadius: '50%',
-          background: `radial-gradient(circle, ${colors.accent}20 0%, transparent 70%)`,
-          filter: 'blur(40px)',
+          background: `radial-gradient(circle, ${colors.accent}15 0%, transparent 70%)`,
+          filter: 'blur(60px)',
+          zIndex: 0
+        }}
+      />
+
+      {/* Diagonal Lines Background */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.4,
+          backgroundImage: `linear-gradient(45deg, ${colors.subtle} 1%, transparent 1%)`,
+          backgroundSize: '30px 30px',
           zIndex: 0
         }}
       />
 
       <Container maxWidth="xl">
         <Grid container spacing={4} alignItems="center">
+          {/* Text Content */}
           <Grid item xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -430,6 +447,7 @@ const Hero = () => {
             </motion.div>
           </Grid>
 
+          {/* Hero Image/Visual */}
           <Grid item xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -439,22 +457,92 @@ const Hero = () => {
               <Box
                 sx={{
                   position: 'relative',
-                  '&:before': {
-                    content: '""',
-                    position: 'absolute',
-                    inset: '-20%',
-                    background: `radial-gradient(circle, ${colors.accent}10 0%, transparent 70%)`,
-                    borderRadius: '50%',
-                    filter: 'blur(40px)',
-                  }
+                  height: '500px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
-                <Player
-                  autoplay
-                  loop
-                  src="https://assets6.lottiefiles.com/packages/lf20_rqfijjcz.json"
-                  style={{ width: '100%', maxWidth: '600px' }}
+                {/* Main Image */}
+                <Box
+                  component="img"
+                  src="/images/FullLogo.png" // Your QR code image
+                  sx={{
+                    width: '60%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.1))',
+                    transform: 'perspective(1000px) rotateY(-15deg)',
+                    transition: 'all 0.6s ease',
+                    '&:hover': {
+                      transform: 'perspective(1000px) rotateY(0deg)',
+                    }
+                  }}
                 />
+
+                {/* Floating Elements */}
+                <motion.div
+                  animate={{
+                    y: [-10, 10, -10],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  style={{
+                    position: 'absolute',
+                    right: '15%',
+                    top: '20%'
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${colors.subtle}`,
+                    }}
+                  >
+                    <Typography variant="body2">
+                      AI-Powered Learning
+                    </Typography>
+                  </Paper>
+                </motion.div>
+
+                <motion.div
+                  animate={{
+                    y: [10, -10, 10],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5
+                  }}
+                  style={{
+                    position: 'absolute',
+                    left: '10%',
+                    bottom: '30%'
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 2,
+                      borderRadius: 2,
+                      bgcolor: 'rgba(255,255,255,0.9)',
+                      backdropFilter: 'blur(10px)',
+                      border: `1px solid ${colors.subtle}`,
+                    }}
+                  >
+                    <Typography variant="body2">
+                      Smart Assessment
+                    </Typography>
+                  </Paper>
+                </motion.div>
               </Box>
             </motion.div>
           </Grid>
