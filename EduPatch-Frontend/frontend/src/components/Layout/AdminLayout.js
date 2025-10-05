@@ -1,366 +1,217 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-  Box,
   AppBar,
   Toolbar,
+  Box,
   IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
-  Badge,
-  TextField,
-  InputAdornment,
-  Tooltip,
   Typography,
+  Button,
+  Container,
+  Avatar,
+  Menu,
+  MenuItem,
+  Tooltip,
 } from '@mui/material';
 import {
-  MenuBook,
+  Create,
   Quiz,
   QrCode,
-  Dashboard as DashboardIcon,
-  Create,
+  CloudDownload,
   Settings,
   Notifications,
   Search,
-  Menu,
-  School,
-  CloudDownload,
+  KeyboardArrowDown,
 } from '@mui/icons-material';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { apiService } from '../../services/api';
 
-// Sunset Color Palette
+// Modern Color Palette
 const colors = {
-  primary: '#493129',
-  secondary: '#8b597b',
-  accent: '#e1c3d0',
-  light: '#f5e6d3',
-  lightest: '#faf5f0',
+  primary: '#FFFFFF',
+  secondary: '#F5F5F7',
+  text: '#1D1D1F',
+  textSecondary: '#86868B',
+  accent: '#2997FF',
+  subtle: '#E8E8E8',
+  navBackground: 'rgba(255, 255, 255, 0.8)',
+  glassBg: 'rgba(255, 255, 255, 0.7)',
 };
 
 const AdminLayout = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [pages, setPages] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationEl, setNotificationEl] = useState(null);
+  const { scrollY } = useScroll();
 
-  const sidebarWidth = 280;
-  const miniSidebarWidth = 70;
+  const navBackground = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(255, 255, 255, 0)", colors.navBackground]
+  );
 
-  useEffect(() => {
-    fetchPages();
-  }, []);
-
-  const fetchPages = async () => {
-    try {
-      const response = await apiService.getAllPages();
-      setPages(response.data);
-    } catch (error) {
-      console.error('Error fetching pages:', error);
-    }
-  };
-
-  const sidebarItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/admin/dashboard' },
+  const navItems = [
     { text: 'Create Content', icon: <Create />, path: '/admin/create' },
-    { text: 'Manage Quizzes', icon: <Quiz />, path: '/admin/quizzes' },
+    { text: 'Quizzes', icon: <Quiz />, path: '/admin/quizzes' },
     { text: 'QR Scanner', icon: <QrCode />, path: '/admin/qr-scanner' },
-    { text: 'Offline Cache', icon: <CloudDownload />, path: '/admin/cache' },
-    { text: 'Settings', icon: <Settings />, path: '/admin/settings' },
+    { text: 'Downloads', icon: <CloudDownload />, path: '/admin/cache' },
   ];
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Top Navigation Bar */}
-      <AppBar 
-        position="fixed" 
-        sx={{ 
-          zIndex: (theme) => theme.zIndex.drawer + 1,
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          boxShadow: `0 4px 20px ${colors.primary}10`,
-          borderBottom: `1px solid ${colors.light}`,
-          color: colors.primary,
-        }}
-      >
-        <Toolbar>
-          {/* Menu Button */}
-          <IconButton
-            edge="start"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            sx={{ 
-              mr: 2, 
-              color: colors.primary,
-              '&:hover': {
-                backgroundColor: `${colors.accent}40`,
-                transform: 'scale(1.1)',
-              },
-              transition: 'all 0.3s ease',
-            }}
-          >
-            <Menu />
-          </IconButton>
-          
-          {/* Logo */}
-          <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
-            <School sx={{ mr: 1, color: colors.secondary, fontSize: 32 }} />
-            <Typography variant="h6" sx={{ 
-              fontWeight: 700, 
-              background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-            }}>
-              EduPatch AI
-            </Typography>
-          </Box>
-
-          {/* Search Bar */}
-          <TextField
-            placeholder="Search content, quizzes..."
-            size="small"
-            sx={{ 
-              mr: 2, 
-              minWidth: 300,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 3,
-                background: colors.lightest,
-                borderColor: colors.light,
-                '&:hover': {
-                  borderColor: colors.accent,
-                },
-                '&.Mui-focused': {
-                  borderColor: colors.secondary,
-                }
-              }
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search sx={{ color: colors.secondary }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          {/* Notifications */}
-          <IconButton sx={{ 
-            mr: 2, 
-            color: colors.primary,
-            '&:hover': {
-              backgroundColor: `${colors.accent}40`,
-            }
-          }}>
-            <Badge badgeContent={3} color="error">
-              <Notifications />
-            </Badge>
-          </IconButton>
-
-          {/* Profile Avatar */}
-          <Avatar sx={{ 
-            background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-            cursor: 'pointer',
-            '&:hover': {
-              transform: 'scale(1.05)',
-            },
-            transition: 'all 0.3s ease',
-          }}>
-            A
-          </Avatar>
-        </Toolbar>
-      </AppBar>
-
-      {/* Foldable Left Sidebar */}
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
-          flexShrink: 0,
-          transition: 'width 0.3s ease',
-          '& .MuiDrawer-paper': {
-            width: sidebarOpen ? sidebarWidth : miniSidebarWidth,
-            boxSizing: 'border-box',
-            background: 'rgba(255, 255, 255, 0.95)',
+    <Box sx={{ minHeight: '100vh', bgcolor: colors.primary }}>
+      <motion.div style={{ background: navBackground }}>
+        <AppBar 
+          position="fixed" 
+          elevation={0}
+          sx={{
+            background: 'transparent',
             backdropFilter: 'blur(20px)',
-            borderRight: `1px solid ${colors.light}`,
-            transition: 'width 0.3s ease',
-            overflowX: 'hidden',
-          },
-        }}
-      >
-        <Toolbar />
-        
-        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          {/* User Profile Section - Only show when expanded */}
-          {sidebarOpen && (
-            <Box sx={{ 
-              p: 3, 
-              borderBottom: `1px solid ${colors.light}`,
-              background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light}40 100%)`,
-            }}>
-              <Box sx={{ 
-                textAlign: 'center',
-                p: 2,
-                borderRadius: 3,
-                background: 'rgba(255, 255, 255, 0.7)',
-              }}>
-                <Avatar sx={{ 
-                  width: 50, 
-                  height: 50, 
-                  mx: 'auto', 
-                  mb: 1,
-                  background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-                }}>
-                  A
-                </Avatar>
-                <Typography variant="subtitle1" sx={{ color: colors.primary, fontWeight: 600 }}>
-                  Admin User
+            borderBottom: `1px solid ${colors.subtle}`,
+          }}
+        >
+          <Container maxWidth="xl">
+            <Toolbar sx={{ py: 1, gap: 2 }}>
+              {/* Logo */}
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Typography 
+                  variant="h5" 
+                  onClick={() => navigate('/admin/dashboard')}
+                  sx={{ 
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    color: colors.text,
+                    letterSpacing: '-0.5px'
+                  }}
+                >
+                  EduPatch
                 </Typography>
-                <Typography variant="caption" sx={{ color: colors.secondary }}>
-                  Content Creator
-                </Typography>
-              </Box>
-            </Box>
-          )}
+              </motion.div>
 
-          {/* Mini User Avatar - Only show when collapsed */}
-          {!sidebarOpen && (
-            <Box sx={{ 
-              display: 'flex',
-              justifyContent: 'center',
-              p: 1,
-              borderBottom: `1px solid ${colors.light}`,
-            }}>
-              <Tooltip title="Admin User" placement="right">
-                <Avatar sx={{ 
-                  width: 40, 
-                  height: 40,
-                  background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-                }}>
-                  A
-                </Avatar>
-              </Tooltip>
-            </Box>
-          )}
-
-          {/* Navigation Menu */}
-          <Box sx={{ flexGrow: 1, p: sidebarOpen ? 2 : 1 }}>
-            {sidebarOpen && (
-              <Typography variant="overline" sx={{ 
-                color: colors.secondary, 
-                fontWeight: 600,
-                px: 2,
-                mb: 1,
-                display: 'block'
-              }}>
-                Navigation
-              </Typography>
-            )}
-            
-            <List sx={{ p: 0 }}>
-              {sidebarItems.map((item, index) => {
-                const isActive = location.pathname === item.path;
-                return (
-                  <Tooltip 
-                    key={item.text}
-                    title={!sidebarOpen ? item.text : ''} 
-                    placement="right"
-                    arrow
+              {/* Navigation Links */}
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                {navItems.map((item) => (
+                  <motion.div
+                    key={item.path}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
                   >
-                    <ListItem 
-                      button 
+                    <Button
+                      startIcon={item.icon}
                       onClick={() => navigate(item.path)}
                       sx={{
-                        borderRadius: 2,
-                        mb: 1,
-                        minHeight: 48,
-                        justifyContent: sidebarOpen ? 'initial' : 'center',
-                        px: sidebarOpen ? 2 : 1.5,
-                        background: isActive ? `${colors.accent}40` : 'transparent',
-                        color: isActive ? colors.primary : colors.secondary,
+                        color: location.pathname === item.path ? colors.accent : colors.text,
+                        textTransform: 'none',
+                        fontSize: '0.95rem',
+                        fontWeight: 500,
                         '&:hover': {
-                          background: `${colors.accent}60`,
-                          color: colors.primary,
-                          transform: sidebarOpen ? 'translateX(4px)' : 'scale(1.1)',
-                        },
-                        transition: 'all 0.3s ease',
+                          background: 'transparent',
+                          color: colors.accent,
+                        }
                       }}
                     >
-                      <ListItemIcon sx={{ 
-                        color: 'inherit',
-                        minWidth: sidebarOpen ? 40 : 'auto',
-                        mr: sidebarOpen ? 2 : 0,
-                        justifyContent: 'center',
-                      }}>
-                        {item.icon}
-                      </ListItemIcon>
-                      {sidebarOpen && (
-                        <ListItemText 
-                          primary={item.text}
-                          primaryTypographyProps={{
-                            fontWeight: isActive ? 600 : 500,
-                            fontSize: '0.95rem'
-                          }}
-                        />
-                      )}
-                    </ListItem>
-                  </Tooltip>
-                );
-              })}
-            </List>
-          </Box>
-
-          {/* Quick Stats - Only show when expanded */}
-          {sidebarOpen && (
-            <Box sx={{ 
-              p: 2,
-              borderTop: `1px solid ${colors.light}`,
-            }}>
-              <Box sx={{ 
-                p: 2, 
-                borderRadius: 3,
-                background: `linear-gradient(135deg, ${colors.primary}10 0%, ${colors.secondary}10 100%)`,
-              }}>
-                <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
-                  📊 Quick Stats
-                </Typography>
-                <Box display="flex" justifyContent="space-between" mb={1}>
-                  <Typography variant="caption" sx={{ color: colors.secondary }}>
-                    Content Created
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
-                    {pages.length}
-                  </Typography>
-                </Box>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="caption" sx={{ color: colors.secondary }}>
-                    AI Quizzes
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600 }}>
-                    {pages.length * 5}
-                  </Typography>
-                </Box>
+                      {item.text}
+                    </Button>
+                  </motion.div>
+                ))}
               </Box>
-            </Box>
-          )}
-        </Box>
-      </Drawer>
+
+              <Box sx={{ flexGrow: 1 }} />
+
+              {/* Search */}
+              <motion.div whileHover={{ scale: 1.02 }}>
+                <Button
+                  startIcon={<Search />}
+                  sx={{
+                    color: colors.textSecondary,
+                    textTransform: 'none',
+                    bgcolor: colors.secondary,
+                    px: 2,
+                    py: 1,
+                    borderRadius: '50px',
+                    '&:hover': {
+                      bgcolor: colors.subtle,
+                    }
+                  }}
+                >
+                  Search
+                </Button>
+              </motion.div>
+
+              {/* Notifications */}
+              <Tooltip title="Notifications">
+                <IconButton
+                  onClick={(e) => setNotificationEl(e.currentTarget)}
+                  sx={{ color: colors.text }}
+                >
+                  <Notifications />
+                </IconButton>
+              </Tooltip>
+
+              {/* Settings */}
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Button
+                  endIcon={<KeyboardArrowDown />}
+                  onClick={(e) => setAnchorEl(e.currentTarget)}
+                  sx={{
+                    textTransform: 'none',
+                    color: colors.text,
+                    gap: 1
+                  }}
+                >
+                  <Avatar 
+                    sx={{ 
+                      width: 32, 
+                      height: 32,
+                      bgcolor: colors.accent 
+                    }}
+                  >
+                    A
+                  </Avatar>
+                </Button>
+              </motion.div>
+            </Toolbar>
+          </Container>
+        </AppBar>
+      </motion.div>
 
       {/* Main Content */}
       <Box
-        component="main"
+        component={motion.div}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
         sx={{
-          flexGrow: 1,
-          background: `linear-gradient(135deg, ${colors.light} 0%, ${colors.lightest} 100%)`,
-          minHeight: '100vh',
-          transition: 'margin-left 0.3s ease',
+          pt: '84px',
+          minHeight: 'calc(100vh - 84px)',
         }}
       >
-        <Toolbar /> {/* Spacer for top navbar */}
         {children}
       </Box>
+
+      {/* Menus */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        PaperProps={{
+          sx: {
+            mt: 2,
+            minWidth: 200,
+            borderRadius: 2,
+            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+          }
+        }}
+      >
+        <MenuItem onClick={() => navigate('/admin/settings')}>
+          <Settings sx={{ mr: 1 }} /> Settings
+        </MenuItem>
+        <MenuItem onClick={() => navigate('/admin/logout')}>
+          Logout
+        </MenuItem>
+      </Menu>
     </Box>
   );
 };
