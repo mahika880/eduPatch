@@ -340,41 +340,7 @@ const LandingPage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Box textAlign="center" sx={{ mb: 8 }}>
-            
-            <Typography 
-              variant="h5" 
-              sx={{ 
-                color: colors.textSecondary,
-                mb: 4,
-                fontWeight: 400,
-                maxWidth: '700px',
-                mx: 'auto'
-              }}
-            >
-              Create interactive learning experiences with intelligent content generation 
-              and smart assessment tools.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              endIcon={<ArrowForward />}
-              sx={{
-                bgcolor: colors.text,
-                color: 'white',
-                textTransform: 'none',
-                px: 4,
-                py: 2,
-                borderRadius: '50px',
-                fontSize: '1.1rem',
-                '&:hover': {
-                  bgcolor: colors.accent,
-                }
-              }}
-            >
-              Start Creating
-            </Button>
-          </Box>
+          
         </motion.div>
 
         {/* Hero Image/Animation */}
