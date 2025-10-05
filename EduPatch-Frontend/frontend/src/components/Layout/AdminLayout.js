@@ -37,21 +37,18 @@ const AdminLayout = ({ children }) => {
 
   // Update the navItems array
   const navItems = [
+    
     { 
-      text: 'About', 
-      path: '/about',
-      description: 'Learn about our AI-powered educational platform'
+      text: 'Create Content', 
+      path: '/admin/create',
+      description: 'Generate AI-powered educational content'
     },
     { 
       text: 'Features', 
       path: '/features',
       description: 'Explore our innovative learning tools'
     },
-    { 
-      text: 'Create Content', 
-      path: '/admin/create',
-      description: 'Generate AI-powered educational content'
-    },
+    
     { 
       text: 'Assessments', 
       path: '/admin/quizzes',
@@ -66,6 +63,11 @@ const AdminLayout = ({ children }) => {
       text: 'Community', 
       path: '/community',
       description: 'Connect with other educators'
+    },
+    { 
+      text: 'About', 
+      path: '/about',
+      description: 'Learn about our AI-powered educational platform'
     }
   ];
 
