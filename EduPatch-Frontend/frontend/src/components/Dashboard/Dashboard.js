@@ -251,7 +251,7 @@ const Navbar = ({ isMobile, mobileMenuOpen, setMobileMenuOpen }) => {
   );
 };
 
-// Add this new Footer component before the main return
+// Modify the Footer component to remove the duplicate text
 const Footer = () => (
   <Box sx={{ background: colors.secondary, py: 10 }}>
     <Container maxWidth="lg">
@@ -263,9 +263,6 @@ const Footer = () => (
               EduPatch
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 3 }}>
-            Transforming education through AI-powered learning experiences.
-          </Typography>
           <Box display="flex" gap={2}>
             {[LinkedIn, Twitter, Instagram, GitHub].map((Icon, index) => (
               <motion.div
