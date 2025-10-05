@@ -496,18 +496,7 @@ const Hero = () => {
                     top: '20%'
                   }}
                 >
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: 'rgba(255,255,255,0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${colors.subtle}`,
-                    }}
-                  >
-                    
-                  </Paper>
+                 
                 </motion.div>
 
                 <motion.div
@@ -526,18 +515,7 @@ const Hero = () => {
                     bottom: '30%'
                   }}
                 >
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 2,
-                      borderRadius: 2,
-                      bgcolor: 'rgba(255,255,255,0.9)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${colors.subtle}`,
-                    }}
-                  >
-                    
-                  </Paper>
+                  
                 </motion.div>
               </Box>
             </motion.div>
