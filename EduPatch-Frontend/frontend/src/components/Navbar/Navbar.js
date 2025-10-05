@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -8,29 +8,30 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Avatar,
-  InputBase,
-  Badge,
   Container,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import {
-  Search,
-  Notifications,
-  Settings,
-  Person,
-  Logout,
+  Menu as MenuIcon,
+  Close,
+  ArrowForward,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// Updated color theme to match dashboard
+// Updated modern color theme
 export const colors = {
   primary: '#FFFFFF',
   secondary: '#F5F5F7',
   text: '#1D1D1F',
   textSecondary: '#86868B',
-  accent: '#833AB4', // Purple accent to match theme
+  accent: '#833AB4',
   subtle: '#E8E8E8',
   navBackground: 'rgba(255, 255, 255, 0.8)',
   glassBg: 'rgba(255, 255, 255, 0.7)',
@@ -39,159 +40,201 @@ export const colors = {
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const { scrollY } = useScroll();
-  
-  const navBackground = useTransform(
-    scrollY,
-    [0, 100],
-    ["rgba(255, 255, 255, 0.5)", colors.navBackground]
-  );
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    logout();
-    handleClose();
-    navigate('/admin/login');
-  };
+  const navItems = [
+    { label: 'Features', path: '/features' },
+    { label: 'Solutions', path: '/solutions' },
+    { label: 'Pricing', path: '/pricing' },
+    { label: 'Resources', path: '/resources' },
+  ];
 
   return (
-    <motion.div style={{ background: navBackground }}>
+    <>
       <AppBar 
         position="fixed" 
         elevation={0}
         sx={{
-          background: 'transparent',
-          borderBottom: `1px solid ${colors.subtle}`,
+          background: colors.glassBg,
           backdropFilter: 'blur(10px)',
+          borderBottom: `1px solid ${colors.subtle}`,
         }}
       >
         <Container maxWidth="xl">
-          <Toolbar sx={{ py: 1, px: '24px' }}>
-            {/* Search Bar */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                bgcolor: 'rgba(255, 255, 255, 0.8)',
-                borderRadius: '12px',
-                px: 2,
-                width: '300px',
-                height: '40px',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.05)',
-              }}
+          <Toolbar sx={{ py: 2, px: { xs: 2, md: 4 } }}>
+            {/* Logo */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Search sx={{ color: colors.textSecondary, mr: 1 }} />
-              <InputBase
-                placeholder="Search content, quizzes..."
-                sx={{ 
+              <Typography
+                variant="h5"
+                onClick={() => navigate('/')}
+                sx={{
+                  fontWeight: 700,
                   color: colors.text,
-                  '& input::placeholder': {
-                    color: colors.textSecondary,
-                    fontSize: '0.875rem',
-                  }
+                  cursor: 'pointer',
+                  letterSpacing: '-0.5px',
                 }}
-              />
-            </Box>
-
-            <Box sx={{ flexGrow: 1 }} />
-
-            {/* Right side icons */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: 'rgba(131, 58, 180, 0.05)',
-                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.1)' },
-                  }}
-                >
-                  <Badge badgeContent={3} color="error">
-                    <Notifications sx={{ color: colors.text }} />
-                  </Badge>
-                </IconButton>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                <IconButton
-                  size="small"
-                  sx={{
-                    bgcolor: 'rgba(131, 58, 180, 0.05)',
-                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.1)' },
-                  }}
-                >
-                  <Settings sx={{ color: colors.text }} />
-                </IconButton>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -2 }} whileTap={{ y: 0 }}>
-                <Box
-                  onClick={handleMenu}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                    cursor: 'pointer',
-                    py: 1,
-                    px: 1,
-                    borderRadius: '12px',
-                    '&:hover': { bgcolor: 'rgba(131, 58, 180, 0.05)' },
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      bgcolor: colors.accent,
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {(user?.name || user?.email || 'A').charAt(0).toUpperCase()}
-                  </Avatar>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      color: colors.text,
-                      fontWeight: 500,
-                    }}
-                  >
-                    {user?.name || user?.email || 'Admin'}
-                  </Typography>
-                </Box>
-              </motion.div>
-
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                PaperProps={{
-                  sx: {
-                    mt: 1,
-                    borderRadius: '12px',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                    border: `1px solid ${colors.subtle}`,
-                  }
-                }}
-                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
               >
-                <MenuItem onClick={handleLogout} sx={{ gap: 1 }}>
-                  <Logout fontSize="small" />
-                  <Typography variant="body2">Logout</Typography>
-                </MenuItem>
-              </Menu>
+                EduPatch
+              </Typography>
+            </motion.div>
+
+            {/* Desktop Navigation */}
+            {!isMobile && (
+              <Box sx={{ mx: 'auto', display: 'flex', gap: 4 }}>
+                {navItems.map((item) => (
+                  <motion.div
+                    key={item.label}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
+                  >
+                    <Button
+                      onClick={() => navigate(item.path)}
+                      sx={{
+                        color: colors.text,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        fontWeight: 500,
+                        '&:hover': {
+                          background: 'transparent',
+                          color: colors.accent,
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  </motion.div>
+                ))}
+              </Box>
+            )}
+
+            {/* CTA and Mobile Menu */}
+            <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
+              {!isMobile && (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="contained"
+                    endIcon={<ArrowForward />}
+                    onClick={() => navigate('/get-started')}
+                    sx={{
+                      bgcolor: colors.accent,
+                      color: 'white',
+                      textTransform: 'none',
+                      px: 3,
+                      py: 1,
+                      borderRadius: '50px',
+                      fontSize: '0.95rem',
+                      fontWeight: 500,
+                      '&:hover': {
+                        bgcolor: colors.text,
+                      },
+                    }}
+                  >
+                    Get Started
+                  </Button>
+                </motion.div>
+              )}
+
+              {isMobile && (
+                <IconButton
+                  onClick={() => setMobileMenuOpen(true)}
+                  sx={{ color: colors.text }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              )}
             </Box>
           </Toolbar>
         </Container>
       </AppBar>
-    </motion.div>
+
+      {/* Mobile Menu Drawer */}
+      <Drawer
+        anchor="right"
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        PaperProps={{
+          sx: {
+            width: '100%',
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+          }
+        }}
+      >
+        <Box sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
+            <Typography variant="h5" sx={{ fontWeight: 700 }}>
+              EduPatch
+            </Typography>
+            <IconButton onClick={() => setMobileMenuOpen(false)}>
+              <Close />
+            </IconButton>
+          </Box>
+
+          <List>
+            {navItems.map((item) => (
+              <ListItem 
+                key={item.label}
+                onClick={() => {
+                  navigate(item.path);
+                  setMobileMenuOpen(false);
+                }}
+                sx={{ py: 2 }}
+              >
+                <motion.div
+                  whileHover={{ x: 4 }}
+                  style={{ width: '100%' }}
+                >
+                  <ListItemText 
+                    primary={item.label}
+                    sx={{
+                      '& .MuiListItemText-primary': {
+                        fontSize: '1.5rem',
+                        fontWeight: 600,
+                        color: colors.text,
+                      }
+                    }}
+                  />
+                </motion.div>
+              </ListItem>
+            ))}
+          </List>
+
+          <Box sx={{ mt: 4 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              endIcon={<ArrowForward />}
+              onClick={() => {
+                navigate('/get-started');
+                setMobileMenuOpen(false);
+              }}
+              sx={{
+                bgcolor: colors.accent,
+                color: 'white',
+                textTransform: 'none',
+                py: 2,
+                borderRadius: '50px',
+                fontSize: '1rem',
+                fontWeight: 500,
+                '&:hover': {
+                  bgcolor: colors.text,
+                },
+              }}
+            >
+              Get Started
+            </Button>
+          </Box>
+        </Box>
+      </Drawer>
+    </>
   );
 };
 
