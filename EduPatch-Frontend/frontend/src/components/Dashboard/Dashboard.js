@@ -341,20 +341,7 @@ const LandingPage = () => {
           transition={{ duration: 0.8 }}
         >
           <Box textAlign="center" sx={{ mb: 8 }}>
-            <Typography 
-              variant="h1" 
-              sx={{ 
-                fontSize: { xs: '2.5rem', md: '4.5rem' },
-                fontWeight: 700,
-                color: colors.text,
-                lineHeight: 1.1,
-                mb: 3,
-                letterSpacing: '-0.5px'
-              }}
-            >
-              Transform Learning<br />
-              with AI-Powered Education
-            </Typography>
+            
             <Typography 
               variant="h5" 
               sx={{ 
