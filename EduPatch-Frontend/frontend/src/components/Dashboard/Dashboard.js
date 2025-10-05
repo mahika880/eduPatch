@@ -466,7 +466,7 @@ const Hero = () => {
                 {/* Main Image */}
                 <Box
                   component="img"
-                  src="/images/FullLogo.png" // Your QR code image
+                  src="/images/HeroImage.png" // Your QR code image
                   sx={{
                     width: '60%',
                     height: 'auto',
@@ -506,9 +506,7 @@ const Hero = () => {
                       border: `1px solid ${colors.subtle}`,
                     }}
                   >
-                    <Typography variant="body2">
-                      AI-Powered Learning
-                    </Typography>
+                    
                   </Paper>
                 </motion.div>
 
@@ -538,9 +536,7 @@ const Hero = () => {
                       border: `1px solid ${colors.subtle}`,
                     }}
                   >
-                    <Typography variant="body2">
-                      Smart Assessment
-                    </Typography>
+                    
                   </Paper>
                 </motion.div>
               </Box>
