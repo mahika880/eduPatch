@@ -25,7 +25,7 @@ import {
   KeyboardArrowDown,
 } from '@mui/icons-material';
 
-// Modern Color Palette
+// Updated Modern Color Palette
 const colors = {
   primary: '#FFFFFF',
   secondary: '#F5F5F7',
@@ -59,6 +59,7 @@ const AdminLayout = ({ children }) => {
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: colors.primary }}>
+      {/* Enhanced Navbar */}
       <motion.div style={{ background: navBackground }}>
         <AppBar 
           position="fixed" 
@@ -70,28 +71,26 @@ const AdminLayout = ({ children }) => {
           }}
         >
           <Container maxWidth="xl">
-            <Toolbar sx={{ py: 1, gap: 2 }}>
+            <Toolbar sx={{ py: 1.5, gap: 4 }}>
               {/* Logo */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  fontWeight: 600,
+                  letterSpacing: '-0.5px',
+                  color: colors.text,
+                }}
               >
-                <Typography 
-                  variant="h5" 
-                  onClick={() => navigate('/admin/dashboard')}
-                  sx={{ 
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    color: colors.text,
-                    letterSpacing: '-0.5px'
-                  }}
-                >
-                  EduPatch
-                </Typography>
-              </motion.div>
+                EduPatch
+              </Typography>
 
-              {/* Navigation Links */}
-              <Box sx={{ display: 'flex', gap: 3 }}>
+              {/* Centered Nav Items */}
+              <Box sx={{ 
+                display: 'flex', 
+                gap: 4, 
+                alignItems: 'center',
+                mx: 'auto'
+              }}>
                 {navItems.map((item) => (
                   <motion.div
                     key={item.path}
@@ -99,16 +98,16 @@ const AdminLayout = ({ children }) => {
                     whileTap={{ y: 0 }}
                   >
                     <Button
-                      startIcon={item.icon}
-                      onClick={() => navigate(item.path)}
                       sx={{
-                        color: location.pathname === item.path ? colors.accent : colors.text,
+                        color: location.pathname === item.path ? colors.accent : colors.textSecondary,
                         textTransform: 'none',
-                        fontSize: '0.95rem',
+                        fontSize: '0.9rem',
                         fontWeight: 500,
+                        minWidth: 'auto',
+                        p: 1,
                         '&:hover': {
                           background: 'transparent',
-                          color: colors.accent,
+                          color: colors.text,
                         }
                       }}
                     >
@@ -118,100 +117,133 @@ const AdminLayout = ({ children }) => {
                 ))}
               </Box>
 
-              <Box sx={{ flexGrow: 1 }} />
-
-              {/* Search */}
-              <motion.div whileHover={{ scale: 1.02 }}>
-                <Button
-                  startIcon={<Search />}
-                  sx={{
-                    color: colors.textSecondary,
-                    textTransform: 'none',
-                    bgcolor: colors.secondary,
-                    px: 2,
-                    py: 1,
-                    borderRadius: '50px',
-                    '&:hover': {
-                      bgcolor: colors.subtle,
-                    }
-                  }}
-                >
-                  Search
-                </Button>
-              </motion.div>
-
-              {/* Notifications */}
-              <Tooltip title="Notifications">
-                <IconButton
-                  onClick={(e) => setNotificationEl(e.currentTarget)}
-                  sx={{ color: colors.text }}
-                >
-                  <Notifications />
-                </IconButton>
-              </Tooltip>
-
-              {/* Settings */}
-              <motion.div whileHover={{ scale: 1.05 }}>
-                <Button
-                  endIcon={<KeyboardArrowDown />}
-                  onClick={(e) => setAnchorEl(e.currentTarget)}
-                  sx={{
-                    textTransform: 'none',
-                    color: colors.text,
-                    gap: 1
-                  }}
-                >
-                  <Avatar 
-                    sx={{ 
-                      width: 32, 
-                      height: 32,
-                      bgcolor: colors.accent 
+              {/* Right Section */}
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <Button
+                    startIcon={<Search sx={{ fontSize: 20 }} />}
+                    sx={{
+                      color: colors.textSecondary,
+                      minWidth: 'auto',
+                      p: 1,
+                      '&:hover': { color: colors.text }
+                    }}
+                  />
+                </motion.div>
+                
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      bgcolor: colors.text,
+                      color: colors.primary,
+                      textTransform: 'none',
+                      fontSize: '0.9rem',
+                      fontWeight: 500,
+                      px: 3,
+                      py: 1,
+                      borderRadius: '50px',
+                      '&:hover': {
+                        bgcolor: colors.accent,
+                      }
                     }}
                   >
-                    A
-                  </Avatar>
-                </Button>
-              </motion.div>
+                    Start Creating
+                  </Button>
+                </motion.div>
+              </Box>
             </Toolbar>
           </Container>
         </AppBar>
       </motion.div>
 
-      {/* Main Content */}
-      <Box
+      {/* Hero Section */}
+      <Box 
         component={motion.div}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        sx={{
-          pt: '84px',
-          minHeight: 'calc(100vh - 84px)',
+        sx={{ 
+          pt: '120px',
+          textAlign: 'center',
+          px: 3
         }}
       >
-        {children}
+        <Container maxWidth="md">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Typography 
+              variant="h1"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4.5rem' },
+                fontWeight: 700,
+                letterSpacing: '-0.02em',
+                color: colors.text,
+                mb: 3,
+                lineHeight: 1.1
+              }}
+            >
+              Transform Learning with{' '}
+              <Box 
+                component="span" 
+                sx={{ 
+                  color: colors.accent,
+                  background: `linear-gradient(135deg, ${colors.accent}, #64B5F6)`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                AI-Powered
+              </Box>{' '}
+              Education
+            </Typography>
+
+            <Typography 
+              variant="h5"
+              sx={{
+                color: colors.textSecondary,
+                fontWeight: 400,
+                maxWidth: '600px',
+                mx: 'auto',
+                mb: 5,
+                lineHeight: 1.5
+              }}
+            >
+              Create interactive learning experiences with intelligent content generation and smart assessment tools.
+            </Typography>
+
+            <motion.div whileHover={{ y: -2 }}>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  bgcolor: colors.text,
+                  color: colors.primary,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  fontWeight: 500,
+                  px: 6,
+                  py: 1.5,
+                  borderRadius: '50px',
+                  '&:hover': {
+                    bgcolor: colors.accent,
+                    transform: 'translateY(-2px)',
+                    boxShadow: `0 20px 40px ${colors.accent}20`,
+                  },
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                Start Creating
+              </Button>
+            </motion.div>
+          </motion.div>
+        </Container>
       </Box>
 
-      {/* Menus */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-        PaperProps={{
-          sx: {
-            mt: 2,
-            minWidth: 200,
-            borderRadius: 2,
-            boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
-          }
-        }}
-      >
-        <MenuItem onClick={() => navigate('/admin/settings')}>
-          <Settings sx={{ mr: 1 }} /> Settings
-        </MenuItem>
-        <MenuItem onClick={() => navigate('/admin/logout')}>
-          Logout
-        </MenuItem>
-      </Menu>
+      {/* Main Content */}
+      {children}
     </Box>
   );
 };
