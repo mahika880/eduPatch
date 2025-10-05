@@ -319,6 +319,151 @@ const Footer = () => (
   </Box>
 );
 
+const Hero = () => {
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        minHeight: '90vh',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      {/* Background gradient animation */}
+      <Box
+        component={motion.div}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          repeatType: "reverse"
+        }}
+        sx={{
+          position: 'absolute',
+          top: '-20%',
+          right: '-10%',
+          width: '600px',
+          height: '600px',
+          borderRadius: '50%',
+          background: `radial-gradient(circle, ${colors.accent}20 0%, transparent 70%)`,
+          filter: 'blur(40px)',
+          zIndex: 0
+        }}
+      />
+
+      <Container maxWidth="xl">
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={6}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Typography 
+                variant="h1"
+                sx={{
+                  fontSize: { xs: '2.5rem', md: '4.5rem' },
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: colors.text,
+                  mb: 3,
+                  lineHeight: 1.1
+                }}
+              >
+                Transform Learning with{' '}
+                <Box 
+                  component="span" 
+                  sx={{ 
+                    color: colors.accent,
+                    background: `linear-gradient(135deg, ${colors.accent}, #64B5F6)`, // Fixed missing closing quote
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                >
+                  AI-Powered
+                </Box>{' '}
+                Education
+              </Typography>
+
+              <Typography 
+                variant="h5"
+                sx={{
+                  color: colors.textSecondary,
+                  fontWeight: 400,
+                  maxWidth: '600px',
+                  mb: 5,
+                  lineHeight: 1.5
+                }}
+              >
+                Create interactive learning experiences with intelligent content generation and smart assessment tools.
+              </Typography>
+
+              <motion.div whileHover={{ y: -2 }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  endIcon={<ArrowForward />}
+                  sx={{
+                    bgcolor: colors.text,
+                    color: colors.primary,
+                    textTransform: 'none',
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    px: 6,
+                    py: 1.5,
+                    borderRadius: '50px',
+                    '&:hover': {
+                      bgcolor: colors.accent,
+                      transform: 'translateY(-2px)',
+                      boxShadow: `0 20px 40px ${colors.accent}20`,
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Start Creating
+                </Button>
+              </motion.div>
+            </motion.div>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  '&:before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: '-20%',
+                    background: `radial-gradient(circle, ${colors.accent}10 0%, transparent 70%)`,
+                    borderRadius: '50%',
+                    filter: 'blur(40px)',
+                  }
+                }}
+              >
+                <Player
+                  autoplay
+                  loop
+                  src="https://assets6.lottiefiles.com/packages/lf20_rqfijjcz.json"
+                  style={{ width: '100%', maxWidth: '600px' }}
+                />
+              </Box>
+            </motion.div>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
 const LandingPage = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
