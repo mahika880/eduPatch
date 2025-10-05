@@ -19,32 +19,39 @@ import {
   Logout,
   Dashboard,
   NotificationsNone,
+  Book,         // Add these
+  People,       // new icon
+  Assessment,   // imports
+  Settings,     // here
+  Add,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { styled } from '@mui/system';
 
+// Move colors object to be accessible by both Navbar and Sidebar components
+export const colors = {
+  primary: '#FFFFFF',
+  secondary: '#F5F5F7',
+  text: '#1D1D1F',
+  textSecondary: '#86868B',
+  accent: '#2997FF',
+  subtle: '#E8E8E8',
+  navBackground: 'rgba(255, 255, 255, 0.8)',
+  sidebarBackground: 'rgba(255, 255, 255, 0.8)',
+  hover: 'rgba(41, 151, 255, 0.08)',
+  activeLink: '#2997FF',
+  divider: 'rgba(0, 0, 0, 0.06)',
+  glassBg: 'rgba(255, 255, 255, 0.7)',
+  light: '#64B5F6',  // Add this if missing
+  lightest: '#90CAF9' // Add this if missing
+};
+
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  // Sunset Color Palette
-  const colors = {
-    primary: '#FFFFFF',
-    secondary: '#F5F5F7',
-    text: '#1D1D1F',
-    textSecondary: '#86868B',
-    accent: '#2997FF',
-    subtle: '#E8E8E8',
-    navBackground: 'rgba(255, 255, 255, 0.8)',
-    sidebarBackground: 'rgba(255, 255, 255, 0.8)',
-    hover: 'rgba(41, 151, 255, 0.08)',
-    activeLink: '#2997FF',
-    divider: 'rgba(0, 0, 0, 0.06)',
-    glassBg: 'rgba(255, 255, 255, 0.7)'
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
