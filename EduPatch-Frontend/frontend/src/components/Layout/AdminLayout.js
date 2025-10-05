@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   AppBar,
   Toolbar,
-  Box,
-  IconButton,
   Typography,
   Button,
+  Box,
+  IconButton,
   Container,
-  Avatar,
-  Menu,
-  MenuItem,
   Tooltip,
 } from '@mui/material';
 import {
-  Create,
-  Quiz,
-  QrCode,
-  CloudDownload,
-  Settings,
-  Notifications,
   Search,
-  KeyboardArrowDown,
-  ShoppingBagOutlined,
   AccountCircle,
+  NotificationsNone,  // Add this import
 } from '@mui/icons-material';
 
 // Updated Modern Color Palette
@@ -44,26 +34,45 @@ const AdminLayout = ({ children }) => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
-  const { scrollY } = useScroll();
 
-  const navBackground = useTransform(
-    scrollY,
-    [0, 100],
-    ["rgba(255, 255, 255, 0)", colors.navBackground]
-  );
-
+  // Update the navItems array
   const navItems = [
-    { text: 'Store', path: '/store' },
-    { text: 'Create Content', path: '/admin/create' },
-    { text: 'Quizzes', path: '/admin/quizzes' },
-    { text: 'Resources', path: '/resources' },
-    { text: 'Support', path: '/support' },
+    { 
+      text: 'About', 
+      path: '/about',
+      description: 'Learn about our AI-powered educational platform'
+    },
+    { 
+      text: 'Features', 
+      path: '/features',
+      description: 'Explore our innovative learning tools'
+    },
+    { 
+      text: 'Create Content', 
+      path: '/admin/create',
+      description: 'Generate AI-powered educational content'
+    },
+    { 
+      text: 'Assessments', 
+      path: '/admin/quizzes',
+      description: 'Create and manage smart assessments'
+    },
+    { 
+      text: 'Resources', 
+      path: '/resources',
+      description: 'Educational materials and guides'
+    },
+    { 
+      text: 'Community', 
+      path: '/community',
+      description: 'Connect with other educators'
+    }
   ];
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: colors.primary }}>
       {/* Enhanced Navbar */}
-      <motion.div style={{ background: navBackground }}>
+      <motion.div>
         <AppBar 
           position="fixed" 
           elevation={0}
@@ -132,37 +141,44 @@ const AdminLayout = ({ children }) => {
               <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                 {/* Search */}
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <IconButton
-                    size="small"
-                    sx={{ color: colors.textSecondary }}
-                  >
-                    <Search fontSize="small" />
-                  </IconButton>
+                  <Tooltip title="Search content">
+                    <IconButton
+                      size="small"
+                      sx={{ color: colors.textSecondary }}
+                    >
+                      <Search fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </motion.div>
 
-                {/* Cart/Bag */}
+                {/* Notifications */}
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <IconButton
-                    size="small"
-                    sx={{ color: colors.textSecondary }}
-                  >
-                    <ShoppingBagOutlined fontSize="small" />
-                  </IconButton>
+                  <Tooltip title="Notifications">
+                    <IconButton
+                      size="small"
+                      sx={{ color: colors.textSecondary }}
+                      onClick={(e) => setNotificationEl(e.currentTarget)}
+                    >
+                      <NotificationsNone fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </motion.div>
 
                 {/* Profile */}
                 <motion.div whileHover={{ scale: 1.02 }}>
-                  <IconButton
-                    onClick={(e) => setAnchorEl(e.currentTarget)}
-                    size="small"
-                    sx={{
-                      color: colors.textSecondary,
-                      width: 24,
-                      height: 24
-                    }}
-                  >
-                    <AccountCircle fontSize="small" />
-                  </IconButton>
+                  <Tooltip title="Account & Settings">
+                    <IconButton
+                      onClick={(e) => setAnchorEl(e.currentTarget)}
+                      size="small"
+                      sx={{
+                        color: colors.textSecondary,
+                        width: 24,
+                        height: 24
+                      }}
+                    >
+                      <AccountCircle fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
                 </motion.div>
               </Box>
             </Toolbar>
