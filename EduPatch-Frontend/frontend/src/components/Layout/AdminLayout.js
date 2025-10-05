@@ -4,17 +4,19 @@ import { motion } from 'framer-motion';
 import {
   AppBar,
   Toolbar,
-  Typography,
+  Typography,  // Add this import
   Button,
   Box,
   IconButton,
   Container,
   Tooltip,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
   Search,
   AccountCircle,
-  NotificationsNone,  // Add this import
+  NotificationsNone,
 } from '@mui/icons-material';
 
 // Updated Modern Color Palette
@@ -91,18 +93,17 @@ const AdminLayout = ({ children }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Typography 
-                  variant="h6" 
+                <Box
+                  component="img"
+                  src="C:\Users\comp\Downloads\EduPatch\EduPatch-Frontend\frontend\public\images\FullLogo.png"  // Adjust this path to match your logo's filename
+                  alt="EduPatch Logo"
                   onClick={() => navigate('/admin/dashboard')}
                   sx={{ 
-                    fontWeight: 600,
+                    height: '32px',  // Adjust height to match your navbar
                     cursor: 'pointer',
-                    color: colors.text,
-                    letterSpacing: '-0.5px'
+                    objectFit: 'contain'
                   }}
-                >
-                  EduPatch
-                </Typography>
+                />
               </motion.div>
 
               {/* Main Navigation */}
