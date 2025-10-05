@@ -32,20 +32,20 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { apiService } from '../../services/api';
 
+// Sunset Color Palette
+const colors = {
+  primary: '#493129',
+  secondary: '#8b597b',
+  accent: '#e1c3d0',
+  light: '#f5e6d3',
+  lightest: '#faf5f0',
+};
+
 const AdminLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [pages, setPages] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Sunset Color Palette
-  const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
-  };
 
   const sidebarWidth = 280;
   const miniSidebarWidth = 70;
