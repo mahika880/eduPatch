@@ -87,31 +87,41 @@ const AdminLayout = ({ children }) => {
           }}
         >
           <Container maxWidth="xl">
-            <Toolbar sx={{ py: 1, gap: 2, minHeight: '44px' }}>
-              {/* Logo */}
+            <Toolbar 
+              sx={{ 
+                py: 1.5,  // Increased padding
+                gap: 4,   // Increased gap between items
+                minHeight: '64px', // Increased height
+                justifyContent: 'space-between', // Better spacing
+                mx: 2 // Margin on sides
+              }}
+            >
+              {/* Logo Section */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 <Box
                   component="img"
-                  src="/images/FullLogo.png"  // Updated path
+                  src="/images/FullLogo.png"
                   alt="EduPatch Logo"
                   onClick={() => navigate('/admin/dashboard')}
                   sx={{ 
-                    height: '32px',
+                    height: '40px',  // Increased logo height
                     cursor: 'pointer',
-                    objectFit: 'contain'
+                    objectFit: 'contain',
+                    mr: 4 // Margin right to separate from nav items
                   }}
                 />
               </motion.div>
 
-              {/* Main Navigation */}
+              {/* Navigation Items with better spacing */}
               <Box sx={{ 
                 display: 'flex', 
-                gap: 4, 
+                gap: 6,  // Increased gap between nav items
                 alignItems: 'center',
-                mx: 'auto'
+                flex: 1,
+                justifyContent: 'center'
               }}>
                 {navItems.map((item) => (
                   <motion.div
@@ -124,10 +134,9 @@ const AdminLayout = ({ children }) => {
                       sx={{
                         color: location.pathname === item.path ? colors.accent : colors.textSecondary,
                         textTransform: 'none',
-                        fontSize: '0.9rem',
-                        fontWeight: 400,
-                        minWidth: 0,
-                        p: 0,
+                        fontSize: '1rem', // Slightly larger font
+                        fontWeight: 500,
+                        padding: '8px 16px', // Added padding
                         '&:hover': {
                           background: 'transparent',
                           color: colors.text,
@@ -140,8 +149,13 @@ const AdminLayout = ({ children }) => {
                 ))}
               </Box>
 
-              {/* Right Side Actions */}
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              {/* Right side actions with better spacing */}
+              <Box sx={{ 
+                display: 'flex', 
+                gap: 3,  // Increased gap
+                alignItems: 'center',
+                ml: 4 // Margin left to separate from nav items
+              }}>
                 {/* Search */}
                 <motion.div whileHover={{ scale: 1.02 }}>
                   <Tooltip title="Search content">
