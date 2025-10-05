@@ -22,6 +22,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { styled } from '@mui/system';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -30,11 +32,18 @@ const Navbar = () => {
 
   // Sunset Color Palette
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#FFFFFF',
+    secondary: '#F5F5F7',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    subtle: '#E8E8E8',
+    navBackground: 'rgba(255, 255, 255, 0.8)',
+    sidebarBackground: 'rgba(255, 255, 255, 0.8)',
+    hover: 'rgba(41, 151, 255, 0.08)',
+    activeLink: '#2997FF',
+    divider: 'rgba(0, 0, 0, 0.06)',
+    glassBg: 'rgba(255, 255, 255, 0.7)'
   };
 
   const handleMenu = (event) => {
@@ -56,6 +65,7 @@ const Navbar = () => {
       position="static" 
       elevation={0}
       sx={{
+        ...navbarStyles,
         background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
         backdropFilter: 'blur(20px)',
         borderBottom: `1px solid ${colors.accent}40`,
@@ -298,6 +308,207 @@ const Navbar = () => {
       </Toolbar>
     </AppBar>
   );
+};
+
+// Add this styled component for the enhanced sidebar
+const StyledSidebar = styled(motion.div)(({ theme }) => ({
+  position: 'fixed',
+  left: 0,
+  top: 0,
+  bottom: 0,
+  width: 280,
+  background: colors.glassBg,
+  backdropFilter: 'blur(20px)',
+  borderRight: `1px solid ${colors.divider}`,
+  zIndex: 1200,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.03)'
+}));
+
+// Enhanced SidebarItem component
+const SidebarItem = ({ icon: Icon, label, active, onClick }) => (
+  <motion.div
+    whileHover={{ x: 4 }}
+    whileTap={{ scale: 0.98 }}
+  >
+    <Button
+      fullWidth
+      startIcon={
+        <Box sx={{ 
+          color: active ? colors.accent : colors.textSecondary,
+          transition: 'all 0.3s ease'
+        }}>
+          <Icon />
+        </Box>
+      }
+      onClick={onClick}
+      sx={{
+        py: 1.5,
+        px: 2,
+        justifyContent: 'flex-start',
+        color: active ? colors.accent : colors.text,
+        bgcolor: active ? colors.hover : 'transparent',
+        '&:hover': {
+          bgcolor: colors.hover,
+          '& .MuiTypography-root': {
+            color: colors.accent
+          }
+        },
+        borderRadius: '12px',
+        mx: 1,
+        transition: 'all 0.3s ease'
+      }}
+    >
+      <Typography
+        sx={{
+          fontWeight: active ? 600 : 500,
+          fontSize: '0.95rem',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        {label}
+      </Typography>
+    </Button>
+  </motion.div>
+);
+
+// Enhanced Sidebar component
+const Sidebar = ({ open, onClose }) => {
+  const sidebarVariants = {
+    open: { x: 0, opacity: 1 },
+    closed: { x: -280, opacity: 0 }
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <StyledSidebar
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={sidebarVariants}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <Box sx={{ p: 3 }}>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Box 
+                  display="flex" 
+                  alignItems="center" 
+                  sx={{ 
+                    mb: 4,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '12px',
+                      bgcolor: colors.hover,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mr: 2
+                    }}
+                  >
+                    <School sx={{ color: colors.accent, fontSize: 24 }} />
+                  </Box>
+                  <Typography variant="h6" sx={{ 
+                    fontWeight: 600, 
+                    color: colors.text,
+                    letterSpacing: '-0.5px'
+                  }}>
+                    EduPatch
+                  </Typography>
+                </Box>
+              </motion.div>
+
+              <Box sx={{ mb: 4 }}>
+                {[
+                  { icon: Dashboard, label: 'Overview', active: true },
+                  { icon: Book, label: 'Courses' },
+                  { icon: People, label: 'Students' },
+                  { icon: Assessment, label: 'Analytics' },
+                  { icon: Settings, label: 'Settings' }
+                ].map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Box sx={{ mb: 1 }}>
+                      <SidebarItem {...item} />
+                    </Box>
+                  </motion.div>
+                ))}
+              </Box>
+            </Box>
+
+            <Box sx={{ mt: 'auto', p: 3 }}>
+              <motion.div whileHover={{ y: -2 }}>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  startIcon={<Add />}
+                  sx={{
+                    bgcolor: colors.accent,
+                    color: 'white',
+                    textTransform: 'none',
+                    py: 1.5,
+                    borderRadius: '12px',
+                    boxShadow: '0 4px 14px 0 rgba(41, 151, 255, 0.25)',
+                    '&:hover': {
+                      bgcolor: colors.text,
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.15)',
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  New Course
+                </Button>
+              </motion.div>
+            </Box>
+          </StyledSidebar>
+
+          <Box
+            component={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              bgcolor: 'rgba(0,0,0,0.4)',
+              backdropFilter: 'blur(4px)',
+              zIndex: 1100,
+              display: { md: 'none' }
+            }}
+          />
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
+
+// Update the existing navbar styles
+const navbarStyles = {
+  background: colors.glassBg,
+  backdropFilter: 'blur(10px)',
+  borderBottom: `1px solid ${colors.divider}`,
+  boxShadow: '0 4px 30px rgba(0, 0, 0, 0.03)',
+  transition: 'all 0.3s ease'
 };
 
 export default Navbar;
