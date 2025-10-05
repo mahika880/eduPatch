@@ -335,13 +335,7 @@ const LandingPage = () => {
 
       {/* Hero Section */}
       <Container maxWidth="lg" sx={{ pt: 15 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          
-        </motion.div>
+        
 
         {/* Hero Image/Animation */}
         <motion.div
