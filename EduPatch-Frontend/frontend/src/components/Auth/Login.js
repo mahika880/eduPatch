@@ -136,7 +136,7 @@ const Login = ({ onSwitchToRegister }) => {
                       boxShadow: `0 20px 40px ${colors.accent}30`,
                     }}
                   >
-                    <School sx={{ fontSize: 40, color: 'white' }} />
+                    
                   </Box>
                 </motion.div>
 
@@ -163,7 +163,7 @@ const Login = ({ onSwitchToRegister }) => {
                     lineHeight: 1.5,
                   }}
                 >
-                  Sign in to access your EduPatch dashboard and continue creating amazing learning experiences.
+                  Sign in to access your EduPatch dashboard 
                 </Typography>
               </Box>
             </motion.div>
