@@ -27,6 +27,7 @@ import {
   Assessment,
   AutoAwesome,
   FilterList,
+  QrCode,
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
@@ -656,7 +657,7 @@ const ContentLibrary = () => {
                         )}
 
                         {/* Content Stats */}
-                        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+                        <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
                           <Chip
                             label="AI Generated"
                             size="small"
@@ -679,6 +680,20 @@ const ContentLibrary = () => {
                               }}
                             />
                           )}
+                          <Chip
+                            icon={<QrCode sx={{ fontSize: '0.9rem !important' }} />}
+                            label="QR Code"
+                            size="small"
+                            sx={{
+                              background: colors.accent + '20',
+                              color: colors.accent,
+                              fontSize: '0.7rem',
+                              height: 24,
+                              '& .MuiChip-icon': {
+                                color: colors.accent,
+                              },
+                            }}
+                          />
                         </Box>
                       </CardContent>
 
