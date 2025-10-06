@@ -372,8 +372,8 @@ const Hero = () => {
       />
 
       <Container maxWidth="xl">
-        <Grid container spacing={4} alignItems="center">
-          {/* Text Content */}
+        <Grid container spacing={8} alignItems="center" sx={{ minHeight: '80vh' }}>
+          {/* Text Content - Left Side */}
           <Grid item xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -447,7 +447,7 @@ const Hero = () => {
             </motion.div>
           </Grid>
 
-          {/* Hero Image/Visual */}
+          {/* Hero Image - Right Side */}
           <Grid item xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -457,7 +457,8 @@ const Hero = () => {
               <Box
                 sx={{
                   position: 'relative',
-                  height: '500px',
+                  width: '100%',
+                  height: { xs: '300px', md: '400px' },
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
@@ -466,9 +467,9 @@ const Hero = () => {
                 {/* Main Image */}
                 <Box
                   component="img"
-                  src="/images/HeroImage.png" // Your QR code image
+                  src="/images/HeroImage.png"
                   sx={{
-                    width: '60%',
+                    width: { xs: '80%', md: '70%' },
                     height: 'auto',
                     objectFit: 'contain',
                     filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.1))',
@@ -479,44 +480,6 @@ const Hero = () => {
                     }
                   }}
                 />
-
-                {/* Floating Elements */}
-                <motion.div
-                  animate={{
-                    y: [-10, 10, -10],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  style={{
-                    position: 'absolute',
-                    right: '15%',
-                    top: '20%'
-                  }}
-                >
-                 
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    y: [10, -10, 10],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5
-                  }}
-                  style={{
-                    position: 'absolute',
-                    left: '10%',
-                    bottom: '30%'
-                  }}
-                >
-                  
-                </motion.div>
               </Box>
             </motion.div>
           </Grid>
