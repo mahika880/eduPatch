@@ -17,7 +17,12 @@ import {
   Search,
   AccountCircle,
   NotificationsNone,
+  Logout,
+  Person,
+  Settings,
+  Dashboard,
 } from '@mui/icons-material';
+import { useAuth } from '../../context/AuthContext';
 
 // Updated Modern Color Palette
 const colors = {
@@ -34,8 +39,23 @@ const colors = {
 const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const [notificationEl, setNotificationEl] = useState(null);
+
+  const handleProfileMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleProfileMenuClose();
+    navigate('/admin/login');
+  };
+
+  const handleNotificationMenuClose = () => {
+    setNotificationEl(null);
+  };
 
   // Update the navItems array
   const navItems = [
@@ -198,6 +218,75 @@ const AdminLayout = ({ children }) => {
                   </Tooltip>
                 </motion.div>
               </Box>
+
+              {/* Notification Menu */}
+              <Menu
+                anchorEl={notificationEl}
+                open={Boolean(notificationEl)}
+                onClose={handleNotificationMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    minWidth: 300,
+                    borderRadius: 2,
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  }
+                }}
+              >
+                <MenuItem disabled sx={{ opacity: 0.6 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    No new notifications
+                  </Typography>
+                </MenuItem>
+              </Menu>
+
+              {/* Profile Menu */}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleProfileMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    mt: 1,
+                    minWidth: 180,
+                    borderRadius: 2,
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+                  }
+                }}
+              >
+                <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/dashboard'); }}>
+                  <Dashboard sx={{ mr: 1, fontSize: 18 }} />
+                  Dashboard
+                </MenuItem>
+                <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/settings'); }}>
+                  <Person sx={{ mr: 1, fontSize: 18 }} />
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/settings'); }}>
+                  <Settings sx={{ mr: 1, fontSize: 18 }} />
+                  Settings
+                </MenuItem>
+                <MenuItem onClick={handleLogout} sx={{ color: '#d32f2f' }}>
+                  <Logout sx={{ mr: 1, fontSize: 18 }} />
+                  Logout
+                </MenuItem>
+              </Menu>
             </Toolbar>
           </Container>
         </AppBar>
