@@ -39,19 +39,20 @@ const ContentCreator = () => {
   const y2 = useTransform(scrollY, [0, 300], [0, -100]);
   const opacity = useTransform(scrollY, [0, 200], [1, 0.8]);
 
-  // Premium EduPatch Color Palette
+  // Landing Page Consistent Color Palette
   const colors = {
     primary: '#FFFFFF',
-    secondary: '#F5F5F7',
+    secondary: '#FAFAFA',
     text: '#1D1D1F',
     textSecondary: '#86868B',
     accent: '#2997FF',
-    accentSecondary: '#6366F1',
-    subtle: '#E8E8E8',
-    glassBg: 'rgba(255, 255, 255, 0.1)',
+    accentSecondary: '#4F46E5',
+    subtle: '#F1F5F9',
+    glassBg: 'rgba(255, 255, 255, 0.8)',
     hover: 'rgba(41, 151, 255, 0.08)',
-    gradient: 'linear-gradient(135deg, #2997FF 0%, #6366F1 100%)',
-    glow: '0 0 30px rgba(41, 151, 255, 0.3)',
+    shadow: 'rgba(0, 0, 0, 0.1)',
+    buttonBg: '#000000',
+    buttonText: '#FFFFFF',
   };
 
   const handleInputChange = (e) => {
@@ -121,68 +122,40 @@ const ContentCreator = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0F0F23 0%, #1A1A2E 50%, #16213E 100%)',
+        background: colors.primary,
         position: 'relative',
         overflow: 'hidden',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '600px',
+          height: '600px',
+          background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+          borderRadius: '50%',
+          opacity: 0.6,
+          pointerEvents: 'none',
+        },
       }}
     >
-      {/* Animated Background Elements */}
-      <motion.div style={{ y: y1, opacity }}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '10%',
-            left: '10%',
-            width: '300px',
-            height: '300px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(41, 151, 255, 0.1) 0%, transparent 70%)',
-            filter: 'blur(40px)',
-          }}
-        />
-      </motion.div>
-
-      <motion.div style={{ y: y2, opacity }}>
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: '20%',
-            right: '15%',
-            width: '400px',
-            height: '400px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%)',
-            filter: 'blur(50px)',
-          }}
-        />
-      </motion.div>
-
-      {/* Floating Particles */}
-      {[...Array(6)].map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0],
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-          }}
-          transition={{
-            duration: 8 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 5,
-          }}
-          style={{
-            position: 'absolute',
-            width: '4px',
-            height: '4px',
-            borderRadius: '50%',
-            background: colors.accent,
-            boxShadow: `0 0 10px ${colors.accent}`,
-          }}
-        />
-      ))}
+      {/* Subtle Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
+            radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+          `,
+          backgroundSize: '100px 100px',
+          opacity: 0.3,
+          pointerEvents: 'none',
+        }}
+      />
 
       <Box
         sx={{
@@ -229,8 +202,9 @@ const ContentCreator = () => {
                     width: '350px',
                     height: '350px',
                     borderRadius: '50%',
-                    border: `2px solid ${colors.accent}20`,
+                    border: `2px solid ${colors.accent}15`,
                     position: 'absolute',
+                    boxShadow: `0 0 40px ${colors.hover}`,
                   }}
                 />
               </motion.div>
@@ -245,7 +219,7 @@ const ContentCreator = () => {
                     width: '280px',
                     height: '280px',
                     borderRadius: '50%',
-                    border: `1px solid ${colors.accentSecondary}30`,
+                    border: `1px solid ${colors.accentSecondary}20`,
                     position: 'absolute',
                   }}
                 />
@@ -261,15 +235,15 @@ const ContentCreator = () => {
                     width: '120px',
                     height: '120px',
                     borderRadius: '50%',
-                    background: colors.gradient,
+                    background: colors.buttonBg,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    boxShadow: colors.glow,
-                    backdropFilter: 'blur(20px)',
+                    boxShadow: `0 20px 40px ${colors.shadow}`,
+                    border: `2px solid ${colors.subtle}`,
                   }}
                 >
-                  <Psychology sx={{ fontSize: 60, color: 'white' }} />
+                  <Psychology sx={{ fontSize: 60, color: colors.buttonText }} />
                 </Box>
               </motion.div>
 
@@ -283,7 +257,7 @@ const ContentCreator = () => {
                   key={index}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{
-                    opacity: [0.3, 1, 0.3],
+                    opacity: [0.4, 1, 0.4],
                     scale: [0.8, 1, 0.8],
                     y: [item.y, item.y - 10, item.y],
                   }}
@@ -305,13 +279,14 @@ const ContentCreator = () => {
                       width: '50px',
                       height: '50px',
                       borderRadius: '50%',
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${colors.accent}30`,
+                      background: colors.glassBg,
+                      backdropFilter: 'blur(20px)',
+                      border: `1px solid ${colors.subtle}`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: colors.accent,
+                      boxShadow: `0 8px 24px ${colors.shadow}`,
                     }}
                   >
                     {item.icon}
@@ -328,7 +303,7 @@ const ContentCreator = () => {
               <Typography
                 variant="h4"
                 sx={{
-                  color: 'white',
+                  color: colors.text,
                   fontWeight: 600,
                   textAlign: 'center',
                   mt: 4,
@@ -346,7 +321,6 @@ const ContentCreator = () => {
                   textAlign: 'center',
                   maxWidth: '300px',
                   lineHeight: 1.6,
-                  opacity: 0.8,
                 }}
               >
                 Transform static content into dynamic, interactive learning experiences with intelligent AI processing.
@@ -379,7 +353,7 @@ const ContentCreator = () => {
                 sx={{
                   fontSize: { xs: '3rem', md: '4rem', lg: '5rem' },
                   fontWeight: 700,
-                  color: 'white',
+                  color: colors.text,
                   mb: 3,
                   letterSpacing: '-0.04em',
                   lineHeight: 1,
@@ -400,7 +374,6 @@ const ContentCreator = () => {
                   mb: 6,
                   fontSize: '1.2rem',
                   lineHeight: 1.5,
-                  opacity: 0.9,
                 }}
               >
                 Transform your educational content into immersive learning experiences with AI-powered intelligence.
@@ -445,7 +418,7 @@ const ContentCreator = () => {
                         },
                       },
                       '& .MuiInput-input': {
-                        color: 'white',
+                        color: colors.text,
                         fontSize: '1.2rem',
                         padding: '12px 0',
                       },
@@ -497,7 +470,7 @@ const ContentCreator = () => {
                         },
                       },
                       '& .MuiInput-input': {
-                        color: 'white',
+                        color: colors.text,
                         fontSize: '1.2rem',
                         padding: '12px 0',
                       },
@@ -544,7 +517,7 @@ const ContentCreator = () => {
                         },
                       },
                       '& .MuiInput-input': {
-                        color: 'white',
+                        color: colors.text,
                         fontSize: '1rem',
                         lineHeight: 1.6,
                         padding: '12px 0',
@@ -599,23 +572,25 @@ const ContentCreator = () => {
                         py: 2.5,
                         px: 4,
                         borderRadius: 2,
-                        background: colors.gradient,
-                        color: 'white',
+                        background: colors.buttonBg,
+                        color: colors.buttonText,
                         fontSize: '1.2rem',
                         fontWeight: 600,
                         textTransform: 'none',
-                        boxShadow: '0 8px 32px rgba(41, 151, 255, 0.3)',
+                        boxShadow: `0 8px 32px ${colors.shadow}`,
                         border: 'none',
                         position: 'relative',
                         overflow: 'hidden',
                         '&:hover': {
-                          background: colors.gradient,
-                          boxShadow: '0 12px 40px rgba(41, 151, 255, 0.5)',
+                          background: colors.buttonBg,
+                          boxShadow: `0 12px 40px ${colors.shadow}`,
+                          transform: 'translateY(-2px)',
                         },
                         '&:disabled': {
                           background: colors.textSecondary,
                           color: colors.text,
                           boxShadow: 'none',
+                          transform: 'none',
                         },
                         '&::before': {
                           content: '""',
@@ -624,12 +599,13 @@ const ContentCreator = () => {
                           left: '-100%',
                           width: '100%',
                           height: '100%',
-                          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                          background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
                           transition: 'left 0.5s',
                         },
                         '&:hover::before': {
                           left: '100%',
                         },
+                        transition: 'all 0.3s ease',
                       }}
                       endIcon={
                         <motion.div
@@ -637,7 +613,7 @@ const ContentCreator = () => {
                           transition={{ duration: 0.3 }}
                         >
                           {loading ? (
-                            <CircularProgress size={20} sx={{ color: 'white' }} />
+                            <CircularProgress size={20} sx={{ color: colors.buttonText }} />
                           ) : (
                             <ArrowForward />
                           )}
@@ -667,13 +643,13 @@ const ContentCreator = () => {
                         width: '120px',
                         height: '120px',
                         borderRadius: '50%',
-                        background: colors.gradient,
+                        background: colors.buttonBg,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         mx: 'auto',
                         mb: 4,
-                        boxShadow: colors.glow,
+                        boxShadow: `0 20px 40px ${colors.shadow}`,
                         position: 'relative',
                       }}
                     >
@@ -687,7 +663,7 @@ const ContentCreator = () => {
                           repeat: Infinity,
                         }}
                       >
-                        <AutoAwesome sx={{ fontSize: 50, color: 'white' }} />
+                        <AutoAwesome sx={{ fontSize: 50, color: colors.buttonText }} />
                       </motion.div>
 
                       {/* Success particles */}
@@ -726,7 +702,7 @@ const ContentCreator = () => {
                     <Typography
                       variant="h3"
                       sx={{
-                        color: 'white',
+                        color: colors.text,
                         fontWeight: 700,
                         mb: 3,
                         fontSize: '2.5rem',
@@ -741,7 +717,6 @@ const ContentCreator = () => {
                         color: colors.textSecondary,
                         mb: 4,
                         lineHeight: 1.6,
-                        opacity: 0.9,
                       }}
                     >
                       Your content has been transformed into interactive learning materials with AI-generated summaries, detailed explanations, and assessment quizzes.
@@ -780,18 +755,21 @@ const ContentCreator = () => {
                           onClick={handleCreateNew}
                           sx={{
                             borderColor: colors.accent,
-                            color: 'white',
+                            color: colors.text,
                             borderRadius: 2,
                             px: 4,
                             py: 1.5,
                             textTransform: 'none',
                             fontWeight: 600,
                             fontSize: '1rem',
+                            boxShadow: `0 4px 16px ${colors.shadow}`,
                             '&:hover': {
                               borderColor: colors.accent,
-                              background: 'rgba(41, 151, 255, 0.1)',
-                              boxShadow: `0 0 20px ${colors.accent}50`,
+                              background: colors.hover,
+                              boxShadow: `0 8px 24px ${colors.shadow}`,
+                              transform: 'translateY(-2px)',
                             },
+                            transition: 'all 0.3s ease',
                           }}
                         >
                           Create New Content
@@ -805,18 +783,21 @@ const ContentCreator = () => {
                           startIcon={<Send />}
                           onClick={handleViewContent}
                           sx={{
-                            background: colors.gradient,
+                            background: colors.buttonBg,
+                            color: colors.buttonText,
                             borderRadius: 2,
                             px: 4,
                             py: 1.5,
                             textTransform: 'none',
                             fontWeight: 600,
                             fontSize: '1rem',
-                            boxShadow: colors.glow,
+                            boxShadow: `0 8px 32px ${colors.shadow}`,
                             '&:hover': {
-                              background: colors.gradient,
-                              boxShadow: '0 0 40px rgba(41, 151, 255, 0.6)',
+                              background: colors.buttonBg,
+                              boxShadow: `0 12px 40px ${colors.shadow}`,
+                              transform: 'translateY(-2px)',
                             },
+                            transition: 'all 0.3s ease',
                           }}
                         >
                           View Content
