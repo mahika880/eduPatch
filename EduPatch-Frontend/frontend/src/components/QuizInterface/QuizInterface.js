@@ -326,10 +326,18 @@ const QuizInterface = () => {
     const score = calculateScore();
     const percentage = Math.round((score / quizzes.length) * 100);
     const getPerformanceColor = () => {
-      if (percentage >= 80) return '#4caf50';
-      if (percentage >= 60) return colors.accent;
-      return '#f44336';
+      if (percentage >= 80) return '#10b981'; // Emerald
+      if (percentage >= 60) return colors.accent; // Blue
+      return '#f59e0b'; // Amber
     };
+
+    const getPerformanceMessage = () => {
+      if (percentage >= 80) return { title: 'Outstanding!', subtitle: 'Excellent work! You\'ve mastered this material.' };
+      if (percentage >= 60) return { title: 'Well Done!', subtitle: 'Good job! Keep up the great work.' };
+      return { title: 'Keep Learning!', subtitle: 'Great effort! Review the material and try again.' };
+    };
+
+    const performance = getPerformanceMessage();
 
     return (
       <Box
@@ -338,11 +346,24 @@ const QuizInterface = () => {
           background: colors.primary,
           position: 'relative',
           py: 4,
+          overflow: 'hidden',
           '&::before': {
             content: '""',
             position: 'absolute',
             top: 0,
             right: 0,
+            width: '800px',
+            height: '800px',
+            background: `radial-gradient(circle, ${getPerformanceColor()}15 0%, transparent 70%)`,
+            borderRadius: '50%',
+            opacity: 0.8,
+            pointerEvents: 'none',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
             width: '600px',
             height: '600px',
             background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
@@ -352,7 +373,7 @@ const QuizInterface = () => {
           },
         }}
       >
-        {/* Subtle Background Pattern */}
+        {/* Animated Background Particles */}
         <Box
           sx={{
             position: 'absolute',
@@ -361,292 +382,489 @@ const QuizInterface = () => {
             right: 0,
             bottom: 0,
             backgroundImage: `
-              radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
-              radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+              radial-gradient(circle at 20% 80%, ${getPerformanceColor()}10 2px, transparent 2px),
+              radial-gradient(circle at 80% 20%, ${colors.hover} 2px, transparent 2px),
+              radial-gradient(circle at 40% 40%, ${getPerformanceColor()}08 1px, transparent 1px)
             `,
-            backgroundSize: '100px 100px',
-            opacity: 0.3,
+            backgroundSize: '120px 120px, 80px 80px, 60px 60px',
+            opacity: 0.4,
             pointerEvents: 'none',
+            animation: 'float 20s ease-in-out infinite',
+            '@keyframes float': {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
           }}
         />
 
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <Card
-              elevation={0}
-              sx={{
-                background: colors.glassBg,
-                backdropFilter: 'blur(20px)',
-                border: `1px solid ${colors.subtle}`,
-                borderRadius: 4,
-                boxShadow: `0 20px 40px ${colors.shadow}`,
+            {/* Hero Section */}
+            <Box textAlign="center" mb={8}>
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{
+                  delay: 0.3,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 140,
+                    height: 140,
+                    borderRadius: '50%',
+                    background: `linear-gradient(135deg, ${getPerformanceColor()}, ${colors.buttonBg})`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
+                    mb: 4,
+                    boxShadow: `0 25px 50px ${getPerformanceColor()}30`,
+                    position: 'relative',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: -10,
+                      left: -10,
+                      right: -10,
+                      bottom: -10,
+                      borderRadius: '50%',
+                      background: `linear-gradient(45deg, ${getPerformanceColor()}20, transparent)`,
+                      animation: 'pulse 2s ease-in-out infinite',
+                    },
+                  }}
+                >
+                  <EmojiEvents sx={{ fontSize: 70, color: 'white' }} />
+                </Box>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    color: colors.text,
+                    fontWeight: 800,
+                    mb: 2,
+                    fontSize: { xs: '2.5rem', md: '3.5rem' },
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  {performance.title}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    color: colors.textSecondary,
+                    mb: 6,
+                    fontSize: '1.25rem',
+                    fontWeight: 400,
+                    maxWidth: '500px',
+                    mx: 'auto',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {performance.subtitle}
+                </Typography>
+              </motion.div>
+            </Box>
+
+            {/* Score Display */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{
+                delay: 0.8,
+                duration: 0.8,
+                type: "spring",
+                stiffness: 100
               }}
             >
-              <CardContent sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
-                {/* Results Header */}
-                <Box mb={5}>
+              <Box
+                sx={{
+                  background: `linear-gradient(135deg, ${colors.secondary} 0%, ${colors.glassBg} 100%)`,
+                  border: `2px solid ${getPerformanceColor()}30`,
+                  borderRadius: 6,
+                  p: 6,
+                  mb: 8,
+                  boxShadow: `0 25px 50px ${getPerformanceColor()}15`,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: `linear-gradient(45deg, ${getPerformanceColor()}05, transparent 50%)`,
+                    borderRadius: 6,
+                  },
+                }}
+              >
+                <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                  >
-                    <Avatar
-                      sx={{
-                        width: 100,
-                        height: 100,
-                        background: colors.buttonBg,
-                        mx: 'auto',
-                        mb: 4,
-                        boxShadow: `0 20px 40px ${colors.shadow}`,
-                      }}
-                    >
-                      <EmojiEvents sx={{ fontSize: 50, color: colors.buttonText }} />
-                    </Avatar>
-                  </motion.div>
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      color: colors.text,
-                      fontWeight: 700,
-                      mb: 3,
-                      fontSize: { xs: '2rem', md: '2.5rem' },
-                    }}
-                  >
-                    Quiz Complete! 🎉
-                  </Typography>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: colors.textSecondary,
-                      mb: 4,
-                      fontSize: '1.2rem',
-                    }}
-                  >
-                    Great job on completing the assessment!
-                  </Typography>
-                </Box>
-
-                {/* Score Display */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <Paper
-                    elevation={0}
-                    sx={{
-                      p: 5,
-                      mb: 5,
-                      background: colors.secondary,
-                      border: `1px solid ${colors.subtle}`,
-                      borderRadius: 4,
-                      boxShadow: `0 12px 30px ${colors.shadow}`,
+                    transition={{
+                      delay: 1.2,
+                      type: "spring",
+                      stiffness: 200,
+                      damping: 15
                     }}
                   >
                     <Typography
                       variant="h1"
                       sx={{
                         color: getPerformanceColor(),
-                        fontWeight: 800,
+                        fontWeight: 900,
+                        fontSize: { xs: '4rem', md: '5rem' },
+                        lineHeight: 1,
                         mb: 2,
-                        fontSize: { xs: '3rem', md: '4rem' },
+                        textShadow: `0 4px 20px ${getPerformanceColor()}40`,
                       }}
                     >
-                      {score}/{quizzes.length}
+                      {score}
+                      <Typography
+                        component="span"
+                        sx={{
+                          fontSize: { xs: '2rem', md: '2.5rem' },
+                          color: colors.textSecondary,
+                          fontWeight: 600,
+                          ml: 1,
+                        }}
+                      >
+                        /{quizzes.length}
+                      </Typography>
                     </Typography>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.4, duration: 0.6 }}
+                  >
                     <Typography
-                      variant="h4"
+                      variant="h3"
                       sx={{
                         color: colors.text,
-                        fontWeight: 600,
+                        fontWeight: 700,
                         mb: 3,
-                        fontSize: '1.5rem',
+                        fontSize: { xs: '2rem', md: '2.5rem' },
                       }}
                     >
                       {percentage}% Correct
                     </Typography>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.6, duration: 0.5 }}
+                  >
                     <Chip
                       icon={<TrendingUp />}
                       label={
-                        percentage >= 80 ? 'Excellent!' :
-                        percentage >= 60 ? 'Good Job!' : 'Keep Practicing!'
+                        percentage >= 80 ? 'Outstanding!' :
+                        percentage >= 60 ? 'Well Done!' : 'Keep Learning!'
                       }
                       sx={{
                         background: getPerformanceColor(),
                         color: 'white',
-                        fontWeight: 600,
-                        fontSize: '1rem',
-                        px: 3,
-                        py: 1,
+                        fontWeight: 700,
+                        fontSize: '1.1rem',
+                        px: 4,
+                        py: 2,
+                        boxShadow: `0 8px 20px ${getPerformanceColor()}40`,
+                        '& .MuiChip-icon': {
+                          color: 'white',
+                        },
                       }}
                     />
-                  </Paper>
-                </motion.div>
+                  </motion.div>
+                </Box>
+              </Box>
+            </motion.div>
 
-                {/* Question Review */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
+            {/* Question Review */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.8 }}
+            >
+              <Box sx={{ mb: 8 }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    color: colors.text,
+                    fontWeight: 700,
+                    mb: 6,
+                    fontSize: { xs: '1.8rem', md: '2.2rem' },
+                    textAlign: 'center',
+                  }}
                 >
-                  <Box sx={{ mb: 5 }}>
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        color: colors.text,
-                        fontWeight: 600,
-                        mb: 4,
-                        fontSize: '1.5rem',
-                      }}
-                    >
-                      Question Review
-                    </Typography>
-                    {quizzes.map((quiz, index) => {
-                      const userAnswer = answers[quiz.quizId];
-                      const isCorrect = userAnswer === quiz.answer;
-                      return (
-                        <motion.div
-                          key={quiz.quizId}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.4, delay: 0.1 * index }}
+                  Detailed Review
+                </Typography>
+
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {quizzes.map((quiz, index) => {
+                    const userAnswer = answers[quiz.quizId];
+                    const isCorrect = userAnswer === quiz.answer;
+                    return (
+                      <motion.div
+                        key={quiz.quizId}
+                        initial={{ opacity: 0, x: -30, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        transition={{
+                          duration: 0.6,
+                          delay: 2 + (index * 0.1),
+                          type: "spring",
+                          stiffness: 100
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            background: colors.secondary,
+                            border: `2px solid ${isCorrect ? getPerformanceColor() : '#f44336'}20`,
+                            borderRadius: 4,
+                            p: 5,
+                            boxShadow: `0 12px 30px ${isCorrect ? getPerformanceColor() : '#f44336'}10`,
+                            position: 'relative',
+                            overflow: 'hidden',
+                            '&::before': {
+                              content: '""',
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '4px',
+                              height: '100%',
+                              background: isCorrect ? getPerformanceColor() : '#f44336',
+                            },
+                          }}
                         >
-                          <Paper
-                            elevation={0}
-                            sx={{
-                              mb: 3,
-                              p: 4,
-                              background: colors.secondary,
-                              border: `1px solid ${isCorrect ? colors.accent : '#f44336'}30`,
-                              borderRadius: 3,
-                              boxShadow: `0 8px 24px ${colors.shadow}`,
-                            }}
-                          >
+                          <Box sx={{ ml: 3 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                              <Box
+                                sx={{
+                                  width: 40,
+                                  height: 40,
+                                  borderRadius: '50%',
+                                  background: isCorrect ? getPerformanceColor() : '#f44336',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  mr: 3,
+                                  boxShadow: `0 8px 20px ${isCorrect ? getPerformanceColor() : '#f44336'}30`,
+                                }}
+                              >
+                                {isCorrect ? (
+                                  <CheckCircle sx={{ color: 'white', fontSize: '1.5rem' }} />
+                                ) : (
+                                  <Cancel sx={{ color: 'white', fontSize: '1.5rem' }} />
+                                )}
+                              </Box>
+                              <Typography
+                                variant="h6"
+                                sx={{
+                                  color: colors.text,
+                                  fontWeight: 600,
+                                  fontSize: '1.2rem',
+                                  flex: 1,
+                                }}
+                              >
+                                Question {index + 1}
+                              </Typography>
+                            </Box>
+
                             <Typography
-                              variant="h6"
+                              variant="body1"
                               sx={{
-                                fontWeight: 600,
                                 color: colors.text,
-                                mb: 3,
                                 fontSize: '1.1rem',
+                                mb: 4,
+                                lineHeight: 1.6,
+                                fontWeight: 500,
                               }}
                             >
-                              Q{index + 1}: {quiz.question}
+                              {quiz.question}
                             </Typography>
-                            <Box display="flex" alignItems="center" gap={2}>
-                              {isCorrect ? (
-                                <CheckCircle sx={{ color: '#4caf50', fontSize: '1.5rem' }} />
-                              ) : (
-                                <Cancel sx={{ color: '#f44336', fontSize: '1.5rem' }} />
-                              )}
-                              <Box>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <Typography
-                                  variant="body1"
-                                  sx={{ color: colors.textSecondary, mb: 1 }}
+                                  variant="body2"
+                                  sx={{
+                                    color: colors.textSecondary,
+                                    fontWeight: 600,
+                                    minWidth: '120px',
+                                  }}
                                 >
-                                  Your answer: <strong style={{ color: colors.text }}>{userAnswer}</strong>
+                                  Your Answer:
                                 </Typography>
                                 <Typography
                                   variant="body1"
-                                  sx={{ color: colors.textSecondary }}
+                                  sx={{
+                                    color: isCorrect ? getPerformanceColor() : '#f44336',
+                                    fontWeight: 600,
+                                    background: isCorrect ? `${getPerformanceColor()}10` : '#f4433610',
+                                    px: 2,
+                                    py: 0.5,
+                                    borderRadius: 2,
+                                  }}
                                 >
-                                  Correct answer: <strong style={{ color: colors.text }}>{quiz.answer}</strong>
+                                  {userAnswer}
                                 </Typography>
                               </Box>
+
+                              {!isCorrect && (
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                  <Typography
+                                    variant="body2"
+                                    sx={{
+                                      color: colors.textSecondary,
+                                      fontWeight: 600,
+                                      minWidth: '120px',
+                                    }}
+                                  >
+                                    Correct Answer:
+                                  </Typography>
+                                  <Typography
+                                    variant="body1"
+                                    sx={{
+                                      color: getPerformanceColor(),
+                                      fontWeight: 600,
+                                      background: `${getPerformanceColor()}10`,
+                                      px: 2,
+                                      py: 0.5,
+                                      borderRadius: 2,
+                                    }}
+                                  >
+                                    {quiz.answer}
+                                  </Typography>
+                                </Box>
+                              )}
                             </Box>
-                          </Paper>
-                        </motion.div>
-                      );
-                    })}
-                  </Box>
+                          </Box>
+                        </Box>
+                      </motion.div>
+                    );
+                  })}
+                </Box>
+              </Box>
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2.5 }}
+            >
+              <Box sx={{ display: 'flex', gap: 4, justifyContent: 'center', flexWrap: 'wrap', px: 2 }}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<Refresh />}
+                    onClick={resetQuiz}
+                    sx={{
+                      borderColor: colors.accent,
+                      color: colors.text,
+                      borderRadius: 4,
+                      px: 6,
+                      py: 2,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      border: `2px solid ${colors.accent}`,
+                      boxShadow: `0 4px 15px ${colors.accent}20`,
+                      '&:hover': {
+                        borderColor: colors.accent,
+                        background: colors.hover,
+                        transform: 'translateY(-3px)',
+                        boxShadow: `0 12px 30px ${colors.accent}30`,
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    Retake Quiz
+                  </Button>
                 </motion.div>
 
-                {/* Action Buttons */}
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <Button
-                      variant="outlined"
-                      startIcon={<Refresh />}
-                      onClick={resetQuiz}
-                      sx={{
-                        borderColor: colors.accent,
-                        color: colors.text,
-                        borderRadius: 3,
-                        px: 4,
-                        py: 1.5,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        border: `1px solid ${colors.accent}`,
-                        '&:hover': {
-                          borderColor: colors.accent,
-                          background: colors.hover,
-                          transform: 'translateY(-2px)',
-                          boxShadow: `0 8px 24px ${colors.shadow}`,
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Retake Quiz
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<ArrowBack />}
-                      onClick={() => navigate(`/page/${pageId}`)}
-                      sx={{
+                  <Button
+                    variant="contained"
+                    startIcon={<ArrowBack />}
+                    onClick={() => navigate(`/page/${pageId}`)}
+                    sx={{
+                      background: colors.buttonBg,
+                      color: colors.buttonText,
+                      borderRadius: 4,
+                      px: 6,
+                      py: 2,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      boxShadow: `0 8px 32px ${colors.shadow}`,
+                      '&:hover': {
                         background: colors.buttonBg,
-                        color: colors.buttonText,
-                        borderRadius: 3,
-                        px: 4,
-                        py: 1.5,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        boxShadow: `0 8px 32px ${colors.shadow}`,
-                        '&:hover': {
-                          background: colors.buttonBg,
-                          transform: 'translateY(-2px)',
-                          boxShadow: `0 12px 40px ${colors.shadow}`,
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Back to Content
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      startIcon={<DashboardIcon />}
-                      onClick={() => navigate('/admin/dashboard')}
-                      sx={{
-                        borderColor: colors.accent,
-                        color: colors.text,
-                        borderRadius: 3,
-                        px: 4,
-                        py: 1.5,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        border: `1px solid ${colors.accent}`,
-                        '&:hover': {
-                          borderColor: colors.accent,
-                          background: colors.hover,
-                          transform: 'translateY(-2px)',
-                          boxShadow: `0 8px 24px ${colors.shadow}`,
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                  </Box>
+                        transform: 'translateY(-3px)',
+                        boxShadow: `0 15px 40px ${colors.shadow}`,
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    Back to Content
+                  </Button>
                 </motion.div>
-              </CardContent>
-            </Card>
+
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<DashboardIcon />}
+                    onClick={() => navigate('/admin/dashboard')}
+                    sx={{
+                      borderColor: colors.accent,
+                      color: colors.text,
+                      borderRadius: 4,
+                      px: 6,
+                      py: 2,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      border: `2px solid ${colors.accent}`,
+                      boxShadow: `0 4px 15px ${colors.accent}20`,
+                      '&:hover': {
+                        borderColor: colors.accent,
+                        background: colors.hover,
+                        transform: 'translateY(-3px)',
+                        boxShadow: `0 12px 30px ${colors.accent}30`,
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    Dashboard
+                  </Button>
+                </motion.div>
+              </Box>
+            </motion.div>
           </motion.div>
         </Container>
       </Box>
