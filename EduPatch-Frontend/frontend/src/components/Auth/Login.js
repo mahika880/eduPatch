@@ -123,21 +123,7 @@ const Login = ({ onSwitchToRegister }) => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <Box
-                    sx={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: '24px',
-                      background: `linear-gradient(135deg, ${colors.accent}, #64B5F6)`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      margin: '0 auto 24px',
-                      boxShadow: `0 20px 40px ${colors.accent}30`,
-                    }}
-                  >
-                    
-                  </Box>
+                  
                 </motion.div>
 
                 <Typography
