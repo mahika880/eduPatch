@@ -467,11 +467,12 @@ const Hero = () => {
                 sx={{
                   position: 'relative',
                   width: '100%',
-                  height: { xs: '300px', md: '500px' }, // Increased height
+                  height: { xs: '300px', md: '500px' },
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mt: { xs: 6, md: 0 } // Add margin top on mobile
+                  mt: { xs: 6, md: 12 },  // Increased margin top to shift image down
+                  transform: 'translateY(50px)'  // Added transform to shift down by 50px
                 }}
               >
                 {/* Main Image */}
