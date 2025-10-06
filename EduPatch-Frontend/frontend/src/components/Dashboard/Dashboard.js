@@ -319,7 +319,7 @@ const Footer = () => (
   </Box>
 );
 
-// Update the Hero component with this enhanced version
+// Update the Hero section container spacing
 const Hero = () => {
   return (
     <Box
@@ -328,7 +328,8 @@ const Hero = () => {
         minHeight: '92vh',
         display: 'flex',
         alignItems: 'center',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        pt: { xs: 12, md: 16 } // Add top padding to prevent overlap
       }}
     >
       {/* Gradient Orbs Animation */}
@@ -372,7 +373,15 @@ const Hero = () => {
       />
 
       <Container maxWidth="xl">
-        <Grid container spacing={8} alignItems="center" sx={{ minHeight: '80vh' }}>
+        <Grid 
+          container 
+          spacing={8} 
+          alignItems="center" 
+          sx={{ 
+            minHeight: '80vh',
+            pt: { xs: 4, md: 8 } // Add padding top to Grid container
+          }}
+        >
           {/* Text Content - Left Side */}
           <Grid item xs={12} md={6}>
             <motion.div
@@ -458,10 +467,11 @@ const Hero = () => {
                 sx={{
                   position: 'relative',
                   width: '100%',
-                  height: { xs: '300px', md: '400px' },
+                  height: { xs: '300px', md: '500px' }, // Increased height
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  mt: { xs: 4, md: 0 } // Add margin top on mobile
                 }}
               >
                 {/* Main Image */}
@@ -505,7 +515,7 @@ const LandingPage = () => {
       />
 
       {/* Hero Section */}
-      <Container maxWidth="lg" sx={{ pt: 15 }}>
+      <Container maxWidth="lg" sx={{ pt: { xs: 8, md: 0 } }}> {/* Reduced top padding */}
         <Hero />
       </Container>
 
