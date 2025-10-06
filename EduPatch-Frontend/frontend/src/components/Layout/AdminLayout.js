@@ -59,35 +59,40 @@ const AdminLayout = ({ children }) => {
 
   // Update the navItems array
   const navItems = [
-    
-    { 
-      text: 'Create Content', 
+
+    {
+      text: 'Create Content',
       path: '/admin/create',
       description: 'Generate AI-powered educational content'
     },
-    { 
-      text: 'Features', 
+    {
+      text: 'Content Library',
+      path: '/admin/content',
+      description: 'View and manage all your created content'
+    },
+    {
+      text: 'Features',
       path: '/features',
       description: 'Explore our innovative learning tools'
     },
-    
-    { 
-      text: 'Assessments', 
+
+    {
+      text: 'Assessments',
       path: '/admin/quizzes',
       description: 'Create and manage smart assessments'
     },
-    { 
-      text: 'Resources', 
+    {
+      text: 'Resources',
       path: '/resources',
       description: 'Educational materials and guides'
     },
-    { 
-      text: 'Community', 
+    {
+      text: 'Community',
       path: '/community',
       description: 'Connect with other educators'
     },
-    { 
-      text: 'About', 
+    {
+      text: 'About',
       path: '/about',
       description: 'Learn about our AI-powered educational platform'
     }

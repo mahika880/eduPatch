@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import TextbookViewer from './components/TextbookViewer/TextbookViewer';
 import QuizInterface from './components/QuizInterface/QuizInterface';
 import ContentCreator from './components/ContentCreator/ContentCreator';
+import ContentLibrary from './components/ContentLibrary/ContentLibrary';
 import QuizManagement from './components/QuizManagement/QuizManagement';
 import QRScanner from './components/QRScanner/QRScanner';
 import Settings from './components/Settings/Settings'; // Add this import
@@ -49,6 +50,7 @@ const AppContent = () => {
                 <Routes>
                   <Route path="dashboard" element={<Dashboard />} />
                   <Route path="create" element={<ContentCreator />} />
+                  <Route path="content" element={<ContentLibrary />} />
                   <Route path="quizzes" element={<QuizManagement />} />
                   <Route path="qr-scanner" element={<QRScanner />} />
                   <Route path="cache" element={<div>Offline Cache Page (Coming Soon)</div>} />
