@@ -329,7 +329,7 @@ const Hero = () => {
         display: 'flex',
         alignItems: 'center',
         overflow: 'hidden',
-        pt: { xs: 12, md: 16 } // Add top padding to prevent overlap
+        pt: { xs: 14, md: 18 } // Add top padding to prevent overlap
       }}
     >
       {/* Gradient Orbs Animation */}
@@ -375,7 +375,7 @@ const Hero = () => {
       <Container maxWidth="xl">
         <Grid 
           container 
-          spacing={8} 
+          spacing={{ xs: 4, md: 8 }} 
           alignItems="center" 
           sx={{ 
             minHeight: '80vh',
@@ -471,7 +471,7 @@ const Hero = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  mt: { xs: 4, md: 0 } // Add margin top on mobile
+                  mt: { xs: 6, md: 0 } // Add margin top on mobile
                 }}
               >
                 {/* Main Image */}
