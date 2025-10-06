@@ -119,11 +119,23 @@ const Login = ({ onSwitchToRegister }) => {
               transition={{ duration: 0.8 }}
             >
               <Box textAlign="center" mb={6}>
+                {/* Logo */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
+                  style={{ marginBottom: '32px' }}
                 >
-                  
+                  <Box
+                    component="img"
+                    src="/images/FullLogo.png"
+                    alt="EduPatch Logo"
+                    sx={{
+                      height: '60px',
+                      width: 'auto',
+                      objectFit: 'contain',
+                      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.1))',
+                    }}
+                  />
                 </motion.div>
 
                 <Typography
