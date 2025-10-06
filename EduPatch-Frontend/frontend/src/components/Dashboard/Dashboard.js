@@ -38,11 +38,15 @@ import {
   Assessment,
   Settings,
   Add,
+  AccountCircle,
+  Logout,
+  Login,
 } from '@mui/icons-material';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Player } from '@lottiefiles/react-lottie-player';
+import { useAuth } from '../../context/AuthContext';
 
 // Subtle color theme
 const colors = {
@@ -127,7 +131,10 @@ const useScrollDirection = () => {
 const Navbar = ({ isMobile, mobileMenuOpen, setMobileMenuOpen }) => {
   const { scrollY } = useScroll();
   const scrollDir = useScrollDirection();
-  
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [profileMenuAnchor, setProfileMenuAnchor] = useState(null);
+
   const navBackground = useTransform(
     scrollY,
     [0, 100],
@@ -139,6 +146,24 @@ const Navbar = ({ isMobile, mobileMenuOpen, setMobileMenuOpen }) => {
     [0, 100],
     [0, scrollDir === "up" ? 0 : -100]
   );
+
+  const handleProfileMenuOpen = (event) => {
+    setProfileMenuAnchor(event.currentTarget);
+  };
+
+  const handleProfileMenuClose = () => {
+    setProfileMenuAnchor(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleProfileMenuClose();
+    navigate('/');
+  };
+
+  const handleLogin = () => {
+    navigate('/admin/login');
+  };
 
   return (
     <motion.div
@@ -211,31 +236,79 @@ const Navbar = ({ isMobile, mobileMenuOpen, setMobileMenuOpen }) => {
               </Box>
             )}
 
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button
-                variant="contained"
-                sx={{
-                  bgcolor: colors.text,
-                  color: 'white',
-                  textTransform: 'none',
-                  px: 3,
-                  py: 1,
-                  borderRadius: '50px',
-                  boxShadow: '0 4px 14px 0 rgba(0,0,0,0.1)',
-                  '&:hover': {
-                    bgcolor: colors.accent,
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 6px 20px rgba(41,151,255,0.35)',
-                  },
-                  transition: 'all 0.3s ease'
-                }}
+            {user ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Typography variant="body1" sx={{ color: colors.text }}>
+                  Welcome, {user.name}
+                </Typography>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
+                    sx={{
+                      color: colors.text,
+                      '&:hover': {
+                        background: colors.hover,
+                      }
+                    }}
+                  >
+                    <AccountCircle sx={{ fontSize: 28 }} />
+                  </IconButton>
+                </motion.div>
+                <Menu
+                  anchorEl={profileMenuAnchor}
+                  open={Boolean(profileMenuAnchor)}
+                  onClose={handleProfileMenuClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/dashboard'); }}>
+                    <Dashboard sx={{ mr: 1 }} />
+                    Dashboard
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Logout sx={{ mr: 1 }} />
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </Box>
+            ) : (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                Get Started
-              </Button>
-            </motion.div>
+                <Button
+                  onClick={handleLogin}
+                  variant="contained"
+                  startIcon={<Login />}
+                  sx={{
+                    bgcolor: colors.text,
+                    color: 'white',
+                    textTransform: 'none',
+                    px: 3,
+                    py: 1,
+                    borderRadius: '50px',
+                    boxShadow: '0 4px 14px 0 rgba(0,0,0,0.1)',
+                    '&:hover': {
+                      bgcolor: colors.accent,
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 20px rgba(41,151,255,0.35)',
+                    },
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  Login
+                </Button>
+              </motion.div>
+            )}
 
             {isMobile && (
               <IconButton
