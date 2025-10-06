@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Card,
-  CardContent,
   Typography,
   TextField,
   Button,
@@ -9,11 +7,9 @@ import {
   Alert,
   CircularProgress,
   Link,
-  Divider,
   InputAdornment,
   IconButton,
-  Fade,
-  Slide,
+  Container,
 } from '@mui/material';
 import {
   Email,
@@ -23,9 +19,11 @@ import {
   VisibilityOff,
   School,
   PersonAdd,
+  ArrowForward,
 } from '@mui/icons-material';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Register = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
@@ -43,13 +41,16 @@ const Register = ({ onSwitchToLogin }) => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Sunset Color Palette - Using darker colors for better contrast
+  // Modern EduPatch Color Palette
   const colors = {
-    primary: '#493129',      // Dark Brown - main background
-    secondary: '#8b597b',    // Purple - accents
-    accent: '#e1c3d0',       // Light Pink - highlights
-    light: '#f5e6d3',       // Cream - text
-    lightest: '#faf5f0',    // Very Light Cream - bright text
+    primary: '#FFFFFF',
+    secondary: '#F5F5F7',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    subtle: '#E8E8E8',
+    glassBg: 'rgba(255, 255, 255, 0.7)',
+    hover: 'rgba(41, 151, 255, 0.08)',
   };
 
   const handleInputChange = (e) => {
@@ -107,11 +108,7 @@ const Register = ({ onSwitchToLogin }) => {
     <Box
       sx={{
         minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        // Using darker background for better contrast
-        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+        background: colors.primary,
         position: 'relative',
         overflow: 'hidden',
         '&::before': {
@@ -121,428 +118,400 @@ const Register = ({ onSwitchToLogin }) => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: `
-            radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)
+          background: `
+            radial-gradient(circle at 0% 0%, ${colors.accent}08 0%, transparent 30%),
+            radial-gradient(circle at 100% 100%, ${colors.accent}05 0%, transparent 30%)
           `,
           pointerEvents: 'none',
         },
       }}
     >
-      <Fade in={true} timeout={800}>
-        <Card 
-          sx={{ 
-            maxWidth: 480, 
-            width: '100%', 
-            mx: 2,
-            // Enhanced glassmorphism with better opacity
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: 4,
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
-            position: 'relative',
-            overflow: 'hidden',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              height: '1px',
-              background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
-            }
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: 8,
           }}
         >
-          <CardContent sx={{ p: 5 }}>
-            <Slide direction="down" in={true} timeout={1000}>
-              <Box textAlign="center" mb={4}>
-                <Box
-                  sx={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 20px',
-                    boxShadow: `0 10px 30px ${colors.primary}60`,
-                  }}
+          <Box sx={{ width: '100%', maxWidth: 480 }}>
+            {/* Header Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <Box textAlign="center" mb={6}>
+                {/* Logo */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                  style={{ marginBottom: '32px' }}
                 >
-                  <School sx={{ fontSize: 40, color: colors.primary }} />
-                </Box>
-                
-                {/* High Contrast Join Us Text */}
-                <Typography 
-                  variant="h3" 
-                  component="h1" 
-                  sx={{
-                    color: colors.lightest,
-                    fontWeight: 700,
-                    textShadow: `2px 2px 8px ${colors.primary}`,
-                    letterSpacing: '1px',
-                    mb: 1,
-                  }}
-                >
-                  Join Us
-                </Typography>
-                
-                <Typography 
-                  variant="body1" 
-                  sx={{ 
-                    color: colors.light,
-                    fontWeight: 400,
-                    textShadow: `1px 1px 4px ${colors.primary}`,
-                  }}
-                >
-                  Create your admin account
-                </Typography>
-              </Box>
-            </Slide>
-
-            <Slide direction="up" in={true} timeout={1200}>
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  fullWidth
-                  placeholder="Full Name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  required
-                  sx={{
-                    mb: 2,
-                    '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 3,
-                      border: `1px solid ${colors.accent}40`,
-                      color: colors.lightest,
-                      '&:hover': {
-                        border: `1px solid ${colors.accent}60`,
-                        background: 'rgba(255, 255, 255, 0.2)',
-                      },
-                      '&.Mui-focused': {
-                        border: `1px solid ${colors.accent}`,
-                        background: 'rgba(255, 255, 255, 0.25)',
-                        boxShadow: `0 0 20px ${colors.accent}40`,
-                      },
-                      '& fieldset': {
-                        border: 'none',
-                      },
-                    },
-                    '& .MuiInputBase-input': {
-                      color: colors.lightest,
-                      fontWeight: 500,
-                      '&::placeholder': {
-                        color: colors.light,
-                        opacity: 1,
-                        fontWeight: 400,
-                      },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Person sx={{ color: colors.light }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                
-                <TextField
-                  fullWidth
-                  placeholder="Email Address"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  required
-                  sx={{
-                    mb: 2,
-                    '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 3,
-                      border: `1px solid ${colors.accent}40`,
-                      color: colors.lightest,
-                      '&:hover': {
-                        border: `1px solid ${colors.accent}60`,
-                        background: 'rgba(255, 255, 255, 0.2)',
-                      },
-                      '&.Mui-focused': {
-                        border: `1px solid ${colors.accent}`,
-                        background: 'rgba(255, 255, 255, 0.25)',
-                        boxShadow: `0 0 20px ${colors.accent}40`,
-                      },
-                      '& fieldset': {
-                        border: 'none',
-                      },
-                    },
-                    '& .MuiInputBase-input': {
-                      color: colors.lightest,
-                      fontWeight: 500,
-                      '&::placeholder': {
-                        color: colors.light,
-                        opacity: 1,
-                        fontWeight: 400,
-                      },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email sx={{ color: colors.light }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                
-                <TextField
-                  fullWidth
-                  placeholder="Password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  required
-                  sx={{
-                    mb: 2,
-                    '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 3,
-                      border: `1px solid ${colors.accent}40`,
-                      color: colors.lightest,
-                      '&:hover': {
-                        border: `1px solid ${colors.accent}60`,
-                        background: 'rgba(255, 255, 255, 0.2)',
-                      },
-                      '&.Mui-focused': {
-                        border: `1px solid ${colors.accent}`,
-                        background: 'rgba(255, 255, 255, 0.25)',
-                        boxShadow: `0 0 20px ${colors.accent}40`,
-                      },
-                      '& fieldset': {
-                        border: 'none',
-                      },
-                    },
-                    '& .MuiInputBase-input': {
-                      color: colors.lightest,
-                      fontWeight: 500,
-                      '&::placeholder': {
-                        color: colors.light,
-                        opacity: 1,
-                        fontWeight: 400,
-                      },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock sx={{ color: colors.light }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          edge="end"
-                          sx={{ color: colors.light }}
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                
-                <TextField
-                  fullWidth
-                  placeholder="Confirm Password"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  margin="normal"
-                  required
-                  sx={{
-                    mb: 3,
-                    '& .MuiOutlinedInput-root': {
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      backdropFilter: 'blur(10px)',
-                      borderRadius: 3,
-                      border: `1px solid ${colors.accent}40`,
-                      color: colors.lightest,
-                      '&:hover': {
-                        border: `1px solid ${colors.accent}60`,
-                        background: 'rgba(255, 255, 255, 0.2)',
-                      },
-                      '&.Mui-focused': {
-                        border: `1px solid ${colors.accent}`,
-                        background: 'rgba(255, 255, 255, 0.25)',
-                        boxShadow: `0 0 20px ${colors.accent}40`,
-                      },
-                      '& fieldset': {
-                        border: 'none',
-                      },
-                    },
-                    '& .MuiInputBase-input': {
-                      color: colors.lightest,
-                      fontWeight: 500,
-                      '&::placeholder': {
-                        color: colors.light,
-                        opacity: 1,
-                        fontWeight: 400,
-                      },
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock sx={{ color: colors.light }} />
-                      </InputAdornment>
-                    ),
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          edge="end"
-                          sx={{ color: colors.light }}
-                        >
-                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-                
-                {error && (
-                  <Fade in={true}>
-                    <Alert 
-                      severity="error" 
-                      sx={{ 
-                        mb: 3,
-                        background: 'rgba(244, 67, 54, 0.15)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(244, 67, 54, 0.4)',
-                        borderRadius: 2,
-                        color: '#ffebee',
-                        fontWeight: 500,
-                        '& .MuiAlert-icon': {
-                          color: '#ffcdd2',
-                        },
-                      }}
-                    >
-                      {error}
-                    </Alert>
-                  </Fade>
-                )}
-                
-                {success && (
-                  <Fade in={true}>
-                    <Alert 
-                      severity="success" 
-                      sx={{ 
-                        mb: 3,
-                        background: 'rgba(76, 175, 80, 0.15)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(76, 175, 80, 0.4)',
-                        borderRadius: 2,
-                        color: '#e8f5e8',
-                        fontWeight: 500,
-                        '& .MuiAlert-icon': {
-                          color: '#c8e6c9',
-                        },
-                      }}
-                    >
-                      {success}
-                    </Alert>
-                  </Fade>
-                )}
-                
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  size="large"
-                  startIcon={loading ? <CircularProgress size={20} sx={{ color: colors.primary }} /> : <PersonAdd />}
-                  disabled={loading || !formData.name || !formData.email || !formData.password || !formData.confirmPassword}
-                  sx={{ 
-                    py: 2,
-                    borderRadius: 3,
-                    background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
-                    color: colors.primary,
-                    fontWeight: 700,
-                    fontSize: '1.1rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                    boxShadow: `0 10px 30px ${colors.accent}60`,
-                    border: `1px solid ${colors.light}`,
-                    '&:hover': {
-                      background: `linear-gradient(135deg, ${colors.light}, ${colors.lightest})`,
-                      transform: 'translateY(-2px)',
-                      boxShadow: `0 15px 40px ${colors.accent}80`,
-                    },
-                    '&:disabled': {
-                      background: 'rgba(255, 255, 255, 0.2)',
-                      color: 'rgba(255, 255, 255, 0.5)',
-                    },
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  {loading ? 'Creating Account...' : 'CREATE ADMIN ACCOUNT'}
-                </Button>
-              </form>
-            </Slide>
-            
-            <Divider 
-              sx={{ 
-                my: 3,
-                '&::before, &::after': {
-                  borderColor: colors.accent,
-                },
-              }} 
-            />
-            
-            {/* High Contrast Sign In Link */}
-            <Fade in={true} timeout={1500}>
-              <Box textAlign="center">
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: colors.light,
-                    fontWeight: 500,
-                    textShadow: `1px 1px 3px ${colors.primary}`,
-                  }}
-                >
-                  Already have an admin account?{' '}
-                  <Link
-                    component="button"
-                    variant="body2"
-                    onClick={onSwitchToLogin}
-                    sx={{ 
-                      color: colors.lightest,
-                      textDecoration: 'none',
-                      fontWeight: 700,
-                      textShadow: `1px 1px 3px ${colors.primary}`,
-                      '&:hover': {
-                        textDecoration: 'underline',
-                        color: colors.accent,
-                      },
+                  <Box
+                    component="img"
+                    src="/images/FullLogo.png"
+                    alt="EduPatch Logo"
+                    sx={{
+                      height: '60px',
+                      width: 'auto',
+                      objectFit: 'contain',
+                      filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.1))',
                     }}
-                  >
-                    Sign in here
-                  </Link>
+                  />
+                </motion.div>
+
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontSize: { xs: '2.5rem', md: '3rem' },
+                    fontWeight: 700,
+                    color: colors.text,
+                    mb: 2,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  Join EduPatch
+                </Typography>
+
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: colors.textSecondary,
+                    fontWeight: 400,
+                    maxWidth: '400px',
+                    mx: 'auto',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Create your admin account and start building amazing learning experiences for your students.
                 </Typography>
               </Box>
-            </Fade>
-          </CardContent>
-        </Card>
-      </Fade>
+            </motion.div>
+
+            {/* Registration Form */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Box
+                sx={{
+                  background: colors.glassBg,
+                  backdropFilter: 'blur(20px)',
+                  border: `1px solid ${colors.subtle}`,
+                  borderRadius: 4,
+                  p: 4,
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.08)',
+                }}
+              >
+                <form onSubmit={handleSubmit}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Full Name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      sx={{
+                        mb: 3,
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          '&:hover fieldset': {
+                            borderColor: colors.accent,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: colors.accent,
+                          },
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: colors.accent,
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Person sx={{ color: colors.textSecondary }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Email Address"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      sx={{
+                        mb: 3,
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          '&:hover fieldset': {
+                            borderColor: colors.accent,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: colors.accent,
+                          },
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: colors.accent,
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Email sx={{ color: colors.textSecondary }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                      sx={{
+                        mb: 3,
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          '&:hover fieldset': {
+                            borderColor: colors.accent,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: colors.accent,
+                          },
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: colors.accent,
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock sx={{ color: colors.textSecondary }} />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowPassword(!showPassword)}
+                              edge="end"
+                            >
+                              {showPassword ? <VisibilityOff sx={{ color: colors.textSecondary }} /> : <Visibility sx={{ color: colors.textSecondary }} />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      sx={{
+                        mb: 4,
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 3,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          '&:hover fieldset': {
+                            borderColor: colors.accent,
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: colors.accent,
+                          },
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: colors.accent,
+                        },
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Lock sx={{ color: colors.textSecondary }} />
+                          </InputAdornment>
+                        ),
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              edge="end"
+                            >
+                              {showConfirmPassword ? <VisibilityOff sx={{ color: colors.textSecondary }} /> : <Visibility sx={{ color: colors.textSecondary }} />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </motion.div>
+
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Alert
+                        severity="error"
+                        sx={{
+                          mb: 3,
+                          borderRadius: 3,
+                          background: 'rgba(244, 67, 54, 0.08)',
+                          border: `1px solid rgba(244, 67, 54, 0.2)`,
+                          '& .MuiAlert-icon': {
+                            color: '#d32f2f',
+                          },
+                        }}
+                      >
+                        {error}
+                      </Alert>
+                    </motion.div>
+                  )}
+
+                  {success && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Alert
+                        severity="success"
+                        sx={{
+                          mb: 3,
+                          borderRadius: 3,
+                          background: 'rgba(76, 175, 80, 0.08)',
+                          border: `1px solid rgba(76, 175, 80, 0.2)`,
+                          '& .MuiAlert-icon': {
+                            color: '#4caf50',
+                          },
+                        }}
+                      >
+                        {success}
+                      </Alert>
+                    </motion.div>
+                  )}
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.7 }}
+                  >
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      size="large"
+                      disabled={loading || !formData.name || !formData.email || !formData.password || !formData.confirmPassword}
+                      endIcon={!loading && <ArrowForward />}
+                      sx={{
+                        py: 2,
+                        borderRadius: 3,
+                        background: `linear-gradient(135deg, ${colors.text}, ${colors.accent})`,
+                        color: 'white',
+                        fontSize: '1.1rem',
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        boxShadow: `0 8px 32px ${colors.text}20`,
+                        '&:hover': {
+                          background: `linear-gradient(135deg, ${colors.accent}, ${colors.text})`,
+                          transform: 'translateY(-2px)',
+                          boxShadow: `0 12px 40px ${colors.accent}30`,
+                        },
+                        '&:disabled': {
+                          background: colors.subtle,
+                          color: colors.textSecondary,
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      {loading ? (
+                        <>
+                          <CircularProgress size={20} sx={{ mr: 1 }} />
+                          Creating Account...
+                        </>
+                      ) : (
+                        'Create Account'
+                      )}
+                    </Button>
+                  </motion.div>
+                </form>
+
+                {/* Links */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 3 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: colors.textSecondary,
+                        fontSize: '0.9rem',
+                      }}
+                    >
+                      Already have an account?{' '}
+                      <Link
+                        component="button"
+                        variant="body2"
+                        onClick={onSwitchToLogin}
+                        sx={{
+                          color: colors.accent,
+                          textDecoration: 'none',
+                          fontWeight: 600,
+                          '&:hover': {
+                            textDecoration: 'underline',
+                          },
+                        }}
+                      >
+                        Sign in here
+                      </Link>
+                    </Typography>
+                  </Box>
+                </motion.div>
+              </Box>
+            </motion.div>
+          </Box>
+        </Box>
+      </Container>
     </Box>
   );
 };
