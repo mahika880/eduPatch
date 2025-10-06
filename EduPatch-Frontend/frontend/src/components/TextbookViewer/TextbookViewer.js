@@ -27,9 +27,11 @@ import {
   AutoAwesome,
   CloudDownload,
   WifiOff,
+  ArrowBack,
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
+import { motion } from 'framer-motion';
 
 const TextbookViewer = () => {
   const { pageId } = useParams();
@@ -39,13 +41,20 @@ const TextbookViewer = () => {
   const [error, setError] = useState('');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
-  // Sunset Color Palette
+  // Landing Page Consistent Color Palette
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#FFFFFF',
+    secondary: '#FAFAFA',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    accentSecondary: '#4F46E5',
+    subtle: '#F1F5F9',
+    glassBg: 'rgba(255, 255, 255, 0.8)',
+    hover: 'rgba(41, 151, 255, 0.08)',
+    shadow: 'rgba(0, 0, 0, 0.1)',
+    buttonBg: '#000000',
+    buttonText: '#FFFFFF',
   };
 
   useEffect(() => {
@@ -97,51 +106,122 @@ const TextbookViewer = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 100%)`,
+          background: colors.primary,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '600px',
+            height: '600px',
+            background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+            borderRadius: '50%',
+            opacity: 0.6,
+            pointerEvents: 'none',
+          },
         }}
       >
-        <AppBar 
-          position="static" 
+        {/* Subtle Background Pattern */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+              radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+            `,
+            backgroundSize: '100px 100px',
+            opacity: 0.3,
+            pointerEvents: 'none',
+          }}
+        />
+
+        <AppBar
+          position="static"
           elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-            boxShadow: `0 4px 20px ${colors.primary}20`,
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            borderBottom: `1px solid ${colors.subtle}`,
+            boxShadow: `0 4px 20px ${colors.shadow}`,
           }}
         >
           <Toolbar>
+            <Button
+              startIcon={<ArrowBack />}
+              onClick={() => navigate('/admin/dashboard')}
+              sx={{
+                color: colors.text,
+                mr: 2,
+                textTransform: 'none',
+                fontWeight: 500,
+                '&:hover': {
+                  background: colors.hover,
+                },
+              }}
+            >
+              Back
+            </Button>
             <Box
               sx={{
                 width: 40,
                 height: 40,
                 borderRadius: 2,
-                background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
+                background: colors.buttonBg,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mr: 2,
               }}
             >
-              <School sx={{ fontSize: 24, color: colors.primary }} />
+              <School sx={{ fontSize: 24, color: colors.buttonText }} />
             </Box>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: colors.text, fontWeight: 600 }}>
               EduPatch - Loading...
             </Typography>
           </Toolbar>
         </AppBar>
-        <Box 
-          display="flex" 
+        <Box
+          display="flex"
           flexDirection="column"
-          justifyContent="center" 
-          alignItems="center" 
+          justifyContent="center"
+          alignItems="center"
           minHeight="60vh"
         >
-          <CircularProgress 
-            size={60}
-            sx={{ color: colors.secondary, mb: 3 }}
-          />
-          <Typography variant="h6" sx={{ color: colors.primary }}>
-            Loading content...
-          </Typography>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+          >
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                background: colors.buttonBg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 3,
+                boxShadow: `0 20px 40px ${colors.shadow}`,
+              }}
+            >
+              <CircularProgress size={40} sx={{ color: colors.buttonText }} />
+            </Box>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Typography variant="h6" sx={{ color: colors.text, fontWeight: 500 }}>
+              Loading content...
+            </Typography>
+          </motion.div>
         </Box>
       </Box>
     );
@@ -152,49 +232,107 @@ const TextbookViewer = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 100%)`,
+          background: colors.primary,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '600px',
+            height: '600px',
+            background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+            borderRadius: '50%',
+            opacity: 0.6,
+            pointerEvents: 'none',
+          },
         }}
       >
-        <AppBar 
-          position="static" 
+        {/* Subtle Background Pattern */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+              radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+            `,
+            backgroundSize: '100px 100px',
+            opacity: 0.3,
+            pointerEvents: 'none',
+          }}
+        />
+
+        <AppBar
+          position="static"
           elevation={0}
           sx={{
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-            boxShadow: `0 4px 20px ${colors.primary}20`,
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            borderBottom: `1px solid ${colors.subtle}`,
+            boxShadow: `0 4px 20px ${colors.shadow}`,
           }}
         >
           <Toolbar>
+            <Button
+              startIcon={<ArrowBack />}
+              onClick={() => navigate('/admin/dashboard')}
+              sx={{
+                color: colors.text,
+                mr: 2,
+                textTransform: 'none',
+                fontWeight: 500,
+                '&:hover': {
+                  background: colors.hover,
+                },
+              }}
+            >
+              Back
+            </Button>
             <Box
               sx={{
                 width: 40,
                 height: 40,
                 borderRadius: 2,
-                background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
+                background: colors.buttonBg,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 mr: 2,
               }}
             >
-              <School sx={{ fontSize: 24, color: colors.primary }} />
+              <School sx={{ fontSize: 24, color: colors.buttonText }} />
             </Box>
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ color: colors.text, fontWeight: 600 }}>
               EduPatch - Error
             </Typography>
           </Toolbar>
         </AppBar>
         <Container maxWidth="lg" sx={{ mt: 4 }}>
-          <Alert 
-            severity="error" 
-            sx={{ 
-              mb: 2,
-              borderRadius: 3,
-              background: 'rgba(244, 67, 54, 0.1)',
-              border: '1px solid rgba(244, 67, 54, 0.3)',
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            {error || 'Page not found'}
-          </Alert>
+            <Alert
+              severity="error"
+              sx={{
+                mb: 2,
+                borderRadius: 3,
+                background: 'rgba(244, 67, 54, 0.08)',
+                border: `1px solid rgba(244, 67, 54, 0.2)`,
+                color: colors.text,
+                '& .MuiAlert-icon': {
+                  color: '#d32f2f',
+                },
+              }}
+            >
+              {error || 'Page not found'}
+            </Alert>
+          </motion.div>
         </Container>
       </Box>
     );
@@ -204,91 +342,122 @@ const TextbookViewer = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 50%, ${colors.accent}20 100%)`,
+        background: colors.primary,
         position: 'relative',
         '&::before': {
           content: '""',
           position: 'absolute',
           top: 0,
-          left: 0,
           right: 0,
-          bottom: 0,
-          background: `
-            radial-gradient(circle at 10% 20%, ${colors.accent}10 0%, transparent 50%),
-            radial-gradient(circle at 90% 80%, ${colors.secondary}08 0%, transparent 50%)
-          `,
+          width: '600px',
+          height: '600px',
+          background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+          borderRadius: '50%',
+          opacity: 0.6,
           pointerEvents: 'none',
         },
       }}
     >
-      {/* Professional Header */}
-      <AppBar 
-        position="static" 
+      {/* Subtle Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
+            radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+          `,
+          backgroundSize: '100px 100px',
+          opacity: 0.3,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Clean Header */}
+      <AppBar
+        position="static"
         elevation={0}
         sx={{
-          background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+          background: colors.glassBg,
           backdropFilter: 'blur(20px)',
-          boxShadow: `0 4px 20px ${colors.primary}20`,
+          borderBottom: `1px solid ${colors.subtle}`,
+          boxShadow: `0 4px 20px ${colors.shadow}`,
         }}
       >
         <Toolbar sx={{ py: 1 }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => navigate('/admin/dashboard')}
+            sx={{
+              color: colors.text,
+              mr: 2,
+              textTransform: 'none',
+              fontWeight: 500,
+              '&:hover': {
+                background: colors.hover,
+              },
+            }}
+          >
+            Back
+          </Button>
           <Box
             sx={{
               width: 40,
               height: 40,
               borderRadius: 2,
-              background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
+              background: colors.buttonBg,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               mr: 2,
-              boxShadow: `0 4px 15px ${colors.accent}40`,
             }}
           >
-            <School sx={{ fontSize: 24, color: colors.primary }} />
+            <School sx={{ fontSize: 24, color: colors.buttonText }} />
           </Box>
-          <Typography 
-            variant="h6" 
-            sx={{ 
+          <Typography
+            variant="h6"
+            sx={{
               flexGrow: 1,
-              color: 'white',
-              fontWeight: 700,
-              textShadow: `0 2px 8px ${colors.primary}60`,
+              color: colors.text,
+              fontWeight: 600,
             }}
           >
             EduPatch - {page.chapter}
           </Typography>
-          
+
           {isOffline && (
-            <Chip 
+            <Chip
               icon={<WifiOff />}
-              label="Offline Mode" 
+              label="Offline Mode"
               sx={{
-                background: `${colors.accent}30`,
-                color: 'white',
-                border: `1px solid ${colors.accent}60`,
+                background: colors.hover,
+                color: colors.text,
+                border: `1px solid ${colors.accent}30`,
                 mr: 2,
               }}
-              size="small" 
+              size="small"
             />
           )}
-          
+
           <Button
-            color="inherit"
             startIcon={<CloudDownload />}
             onClick={downloadForOffline}
             sx={{
-              color: 'white',
+              color: colors.buttonBg,
               fontWeight: 600,
               borderRadius: 2,
-              px: 2,
+              px: 3,
               py: 1,
               textTransform: 'none',
-              background: `${colors.accent}20`,
-              border: `1px solid ${colors.accent}40`,
+              border: `1px solid ${colors.buttonBg}`,
               '&:hover': {
-                background: `${colors.accent}30`,
-                transform: 'translateY(-1px)',
+                background: colors.buttonBg,
+                color: colors.buttonText,
+                transform: 'translateY(-2px)',
+                boxShadow: `0 8px 25px ${colors.shadow}`,
               },
               transition: 'all 0.3s ease',
             }}
@@ -300,26 +469,31 @@ const TextbookViewer = () => {
 
       <Container maxWidth="lg" sx={{ py: 4, position: 'relative', zIndex: 1 }}>
         {/* Quick Action Button */}
-        <Fade in={true} timeout={800}>
-          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center' }}>
             <Button
               variant="contained"
               startIcon={<Quiz />}
               onClick={() => navigate(`/quiz/${pageId}`)}
               size="large"
               sx={{
-                py: 2,
-                px: 4,
+                py: 2.5,
+                px: 6,
                 borderRadius: 3,
-                background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
+                background: colors.buttonBg,
+                color: colors.buttonText,
                 fontSize: '1.1rem',
-                fontWeight: 700,
+                fontWeight: 600,
                 textTransform: 'none',
-                boxShadow: `0 8px 25px ${colors.secondary}40`,
+                boxShadow: `0 8px 32px ${colors.shadow}`,
                 '&:hover': {
-                  background: `linear-gradient(135deg, ${colors.accent}, ${colors.secondary})`,
+                  background: colors.buttonBg,
                   transform: 'translateY(-2px)',
-                  boxShadow: `0 12px 35px ${colors.secondary}50`,
+                  boxShadow: `0 12px 40px ${colors.shadow}`,
                 },
                 transition: 'all 0.3s ease',
               }}
@@ -327,82 +501,90 @@ const TextbookViewer = () => {
               Take Interactive Quiz
             </Button>
           </Box>
-        </Fade>
+        </motion.div>
 
         {/* Main Content Card */}
-        <Slide direction="up" in={true} timeout={1000}>
-          <Card 
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <Card
             elevation={0}
             sx={{
-              background: 'rgba(255, 255, 255, 0.95)',
+              background: colors.glassBg,
               backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.accent}40`,
-              borderRadius: 3,
-              boxShadow: `0 8px 40px ${colors.primary}12`,
+              border: `1px solid ${colors.subtle}`,
+              borderRadius: 4,
+              boxShadow: `0 20px 40px ${colors.shadow}`,
               overflow: 'hidden',
             }}
           >
-            <CardContent sx={{ p: 5 }}>
+            <CardContent sx={{ p: { xs: 4, md: 6 } }}>
               {/* Header Section */}
-              <Box display="flex" alignItems="center" mb={4}>
+              <Box display="flex" alignItems="center" mb={5}>
                 <Box
                   sx={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 2,
-                    background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                    width: 70,
+                    height: 70,
+                    borderRadius: 3,
+                    background: colors.buttonBg,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     mr: 3,
-                    boxShadow: `0 8px 25px ${colors.primary}30`,
+                    boxShadow: `0 12px 30px ${colors.shadow}`,
                   }}
                 >
-                  <MenuBook sx={{ fontSize: 32, color: 'white' }} />
+                  <MenuBook sx={{ fontSize: 36, color: colors.buttonText }} />
                 </Box>
                 <Box>
-                  <Typography 
-                    variant="h3" 
+                  <Typography
+                    variant="h2"
                     component="h1"
                     sx={{
-                      color: colors.primary,
+                      color: colors.text,
                       fontWeight: 700,
-                      mb: 1,
+                      mb: 2,
                       lineHeight: 1.2,
+                      fontSize: { xs: '2rem', md: '2.5rem' },
                     }}
                   >
                     {page.chapter}
                   </Typography>
-                  <Chip 
-                    label={`Page ${page.pageNumber}`} 
+                  <Chip
+                    label={`Page ${page.pageNumber}`}
                     sx={{
-                      background: `linear-gradient(135deg, ${colors.accent}, ${colors.light})`,
-                      color: colors.primary,
+                      background: colors.accent,
+                      color: 'white',
                       fontWeight: 600,
                       fontSize: '0.9rem',
+                      px: 2,
+                      py: 0.5,
                     }}
                   />
                 </Box>
               </Box>
 
-              <Divider 
-                sx={{ 
-                  my: 4,
+              <Divider
+                sx={{
+                  my: 5,
                   background: `linear-gradient(90deg, transparent, ${colors.accent}, transparent)`,
-                  height: 2,
+                  height: 1,
                   border: 'none',
-                }} 
+                }}
               />
 
               {/* Content Section */}
-              <Box mb={5}>
-                <Box display="flex" alignItems="center" mb={3}>
-                  <MenuBook sx={{ color: colors.secondary, mr: 2 }} />
-                  <Typography 
-                    variant="h4" 
+              <Box mb={6}>
+                <Box display="flex" alignItems="center" mb={4}>
+                  <MenuBook sx={{ color: colors.accent, mr: 2, fontSize: '2rem' }} />
+                  <Typography
+                    variant="h4"
                     sx={{
-                      color: colors.primary,
+                      color: colors.text,
                       fontWeight: 600,
+                      fontSize: '1.5rem',
                     }}
                   >
                     Content
@@ -411,18 +593,19 @@ const TextbookViewer = () => {
                 <Paper
                   elevation={0}
                   sx={{
-                    p: 4,
-                    background: `linear-gradient(135deg, ${colors.lightest}, ${colors.light}30)`,
-                    border: `1px solid ${colors.accent}40`,
+                    p: 5,
+                    background: colors.secondary,
+                    border: `1px solid ${colors.subtle}`,
                     borderRadius: 3,
+                    boxShadow: `0 8px 24px ${colors.shadow}`,
                   }}
                 >
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      lineHeight: 1.8, 
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      lineHeight: 1.8,
                       fontSize: '1.1rem',
-                      color: colors.primary,
+                      color: colors.text,
                     }}
                   >
                     {page.content}
@@ -432,15 +615,20 @@ const TextbookViewer = () => {
 
               {/* AI Summary Section */}
               {page.summary && (
-                <Fade in={true} timeout={1200}>
-                  <Box mb={5}>
-                    <Box display="flex" alignItems="center" mb={3}>
-                      <AutoAwesome sx={{ color: colors.secondary, mr: 2 }} />
-                      <Typography 
-                        variant="h4" 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <Box mb={6}>
+                    <Box display="flex" alignItems="center" mb={4}>
+                      <AutoAwesome sx={{ color: colors.accent, mr: 2, fontSize: '2rem' }} />
+                      <Typography
+                        variant="h4"
                         sx={{
-                          color: colors.primary,
+                          color: colors.text,
                           fontWeight: 600,
+                          fontSize: '1.5rem',
                         }}
                       >
                         AI-Generated Summary
@@ -449,19 +637,19 @@ const TextbookViewer = () => {
                     <Paper
                       elevation={0}
                       sx={{
-                        background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
+                        background: colors.buttonBg,
                         borderRadius: 3,
                         overflow: 'hidden',
+                        boxShadow: `0 12px 30px ${colors.shadow}`,
                       }}
                     >
-                      <Box sx={{ p: 4 }}>
-                        <Typography 
-                          variant="body1" 
-                          sx={{ 
-                            color: 'white',
+                      <Box sx={{ p: 5 }}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: colors.buttonText,
                             lineHeight: 1.7,
                             fontSize: '1.1rem',
-                            textShadow: `0 1px 3px ${colors.primary}40`,
                           }}
                         >
                           {page.summary}
@@ -469,20 +657,25 @@ const TextbookViewer = () => {
                       </Box>
                     </Paper>
                   </Box>
-                </Fade>
+                </motion.div>
               )}
 
               {/* Detailed Explanation Section */}
               {page.explanation && (
-                <Fade in={true} timeout={1400}>
-                  <Box mb={5}>
-                    <Box display="flex" alignItems="center" mb={3}>
-                      <Psychology sx={{ color: colors.secondary, mr: 2 }} />
-                      <Typography 
-                        variant="h4" 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                >
+                  <Box mb={6}>
+                    <Box display="flex" alignItems="center" mb={4}>
+                      <Psychology sx={{ color: colors.accent, mr: 2, fontSize: '2rem' }} />
+                      <Typography
+                        variant="h4"
                         sx={{
-                          color: colors.primary,
+                          color: colors.text,
                           fontWeight: 600,
+                          fontSize: '1.5rem',
                         }}
                       >
                         Detailed Explanation
@@ -491,56 +684,65 @@ const TextbookViewer = () => {
                     <Paper
                       elevation={0}
                       sx={{
-                        p: 4,
-                        background: `${colors.accent}15`,
-                        border: `1px solid ${colors.accent}60`,
+                        p: 5,
+                        background: colors.secondary,
+                        border: `1px solid ${colors.subtle}`,
                         borderRadius: 3,
+                        boxShadow: `0 8px 24px ${colors.shadow}`,
                       }}
                     >
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
+                      <Typography
+                        variant="body1"
+                        sx={{
                           lineHeight: 1.7,
                           fontSize: '1.1rem',
-                          color: colors.primary,
+                          color: colors.text,
                         }}
                       >
                         {page.explanation}
                       </Typography>
                     </Paper>
                   </Box>
-                </Fade>
+                </motion.div>
               )}
 
               {/* Call to Action */}
-              <Fade in={true} timeout={1600}>
-                <Box sx={{ textAlign: 'center', mt: 5 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 1 }}
+              >
+                <Box sx={{ textAlign: 'center', mt: 6 }}>
                   <Paper
                     elevation={0}
                     sx={{
-                      p: 4,
-                      background: `linear-gradient(135deg, ${colors.light}60, ${colors.accent}30)`,
-                      border: `2px solid ${colors.accent}60`,
-                      borderRadius: 3,
-                      mb: 3,
+                      p: 6,
+                      background: colors.secondary,
+                      border: `1px solid ${colors.subtle}`,
+                      borderRadius: 4,
+                      mb: 4,
+                      boxShadow: `0 12px 30px ${colors.shadow}`,
                     }}
                   >
-                    <Lightbulb sx={{ fontSize: 48, color: colors.secondary, mb: 2 }} />
-                    <Typography 
-                      variant="h5" 
+                    <Lightbulb sx={{ fontSize: 48, color: colors.accent, mb: 3 }} />
+                    <Typography
+                      variant="h4"
                       sx={{
-                        color: colors.primary,
+                        color: colors.text,
                         fontWeight: 600,
-                        mb: 2,
+                        mb: 3,
+                        fontSize: '1.8rem',
                       }}
                     >
                       Ready to Test Your Knowledge?
                     </Typography>
-                    <Typography 
-                      variant="body1" 
+                    <Typography
+                      variant="body1"
                       sx={{
-                        color: colors.secondary,
-                        mb: 3,
+                        color: colors.textSecondary,
+                        mb: 4,
+                        fontSize: '1.1rem',
+                        lineHeight: 1.6,
                       }}
                     >
                       Take our interactive quiz to reinforce your understanding of this content
@@ -551,18 +753,19 @@ const TextbookViewer = () => {
                       startIcon={<Quiz />}
                       onClick={() => navigate(`/quiz/${pageId}`)}
                       sx={{
-                        py: 2,
-                        px: 4,
+                        py: 2.5,
+                        px: 6,
                         borderRadius: 3,
-                        background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                        background: colors.buttonBg,
+                        color: colors.buttonText,
                         fontSize: '1.1rem',
-                        fontWeight: 700,
+                        fontWeight: 600,
                         textTransform: 'none',
-                        boxShadow: `0 8px 25px ${colors.primary}40`,
+                        boxShadow: `0 8px 32px ${colors.shadow}`,
                         '&:hover': {
-                          background: `linear-gradient(135deg, ${colors.secondary}, ${colors.primary})`,
+                          background: colors.buttonBg,
                           transform: 'translateY(-2px)',
-                          boxShadow: `0 12px 35px ${colors.primary}50`,
+                          boxShadow: `0 12px 40px ${colors.shadow}`,
                         },
                         transition: 'all 0.3s ease',
                       }}
@@ -571,10 +774,10 @@ const TextbookViewer = () => {
                     </Button>
                   </Paper>
                 </Box>
-              </Fade>
+              </motion.div>
             </CardContent>
           </Card>
-        </Slide>
+        </motion.div>
       </Container>
     </Box>
   );
