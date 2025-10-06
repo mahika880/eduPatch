@@ -21,7 +21,6 @@ export const apiService = {
   updateProfile: (userId, profileData) => api.put(`/user/profile/${userId}`, profileData),
   changePassword: (userId, passwordData) => api.put(`/user/password/${userId}`, passwordData),
   updateSettings: (userId, settingsData) => api.put(`/user/settings/${userId}`, settingsData),
-  exportUserData: (userId) => api.get(`/user/export/${userId}`),
   
   // Content creation (connects to DemoController)
   createContent: (data) => api.post('/demo/workflow', data),
