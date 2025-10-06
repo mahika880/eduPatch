@@ -28,6 +28,8 @@ import {
   CloudDownload,
   WifiOff,
   ArrowBack,
+  QrCode,
+  Share,
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiService } from '../../services/api';
@@ -40,6 +42,8 @@ const TextbookViewer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [qrLoading, setQrLoading] = useState(false);
 
   // Landing Page Consistent Color Palette
   const colors = {
@@ -84,13 +88,31 @@ const TextbookViewer = () => {
     try {
       const response = await apiService.getPageById(pageId);
       setPage(response.data);
-      
+
       // Cache content for offline access
       localStorage.setItem(`page_${pageId}`, JSON.stringify(response.data));
+
+      // Fetch QR code for this page
+      fetchQRCode();
     } catch (error) {
       setError('Failed to load page content.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchQRCode = async () => {
+    try {
+      setQrLoading(true);
+      const response = await apiService.getQRCode(pageId);
+      const blob = new Blob([response.data], { type: 'image/png' });
+      const qrUrl = URL.createObjectURL(blob);
+      setQrCodeUrl(qrUrl);
+    } catch (error) {
+      console.error('Failed to load QR code:', error);
+      // QR code is optional, don't show error for it
+    } finally {
+      setQrLoading(false);
     }
   };
 
@@ -700,6 +722,93 @@ const TextbookViewer = () => {
                         }}
                       >
                         {page.explanation}
+                      </Typography>
+                    </Paper>
+                  </Box>
+                </motion.div>
+              )}
+
+              {/* QR Code Section */}
+              {qrCodeUrl && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9 }}
+                >
+                  <Box mb={6}>
+                    <Box display="flex" alignItems="center" mb={4}>
+                      <QrCode sx={{ color: colors.accent, mr: 2, fontSize: '2rem' }} />
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          color: colors.text,
+                          fontWeight: 600,
+                          fontSize: '1.5rem',
+                        }}
+                      >
+                        QR Code Access
+                      </Typography>
+                    </Box>
+                    <Paper
+                      elevation={0}
+                      sx={{
+                        p: 5,
+                        background: colors.secondary,
+                        border: `1px solid ${colors.subtle}`,
+                        borderRadius: 3,
+                        boxShadow: `0 8px 24px ${colors.shadow}`,
+                        textAlign: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: colors.textSecondary,
+                          mb: 4,
+                          fontSize: '1.1rem',
+                          lineHeight: 1.6,
+                        }}
+                      >
+                        Scan this QR code with your mobile device to access this content instantly
+                      </Typography>
+
+                      {qrLoading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200 }}>
+                          <CircularProgress sx={{ color: colors.accent }} />
+                        </Box>
+                      ) : (
+                        <Box
+                          sx={{
+                            display: 'inline-block',
+                            p: 3,
+                            background: 'white',
+                            borderRadius: 3,
+                            border: `2px solid ${colors.accent}`,
+                            boxShadow: `0 8px 24px ${colors.accent}20`,
+                          }}
+                        >
+                          <Box
+                            component="img"
+                            src={qrCodeUrl}
+                            alt="QR Code for this page"
+                            sx={{
+                              width: 200,
+                              height: 200,
+                              objectFit: 'contain',
+                            }}
+                          />
+                        </Box>
+                      )}
+
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: colors.textSecondary,
+                          mt: 3,
+                          fontSize: '0.9rem',
+                        }}
+                      >
+                        This QR code contains a direct link to this page
                       </Typography>
                     </Paper>
                   </Box>
