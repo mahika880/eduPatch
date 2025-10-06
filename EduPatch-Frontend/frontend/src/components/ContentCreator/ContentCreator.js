@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const steps = ['Enter Content', 'AI Processing', 'Review & Publish'];
 
@@ -47,13 +48,17 @@ const ContentCreator = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Sunset Color Palette
+  // First, update the color scheme to match the dashboard theme
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#FFFFFF',
+    secondary: '#F5F5F7',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    subtle: '#E8E8E8',
+    navBackground: 'rgba(255, 255, 255, 0.8)',
+    glassBg: 'rgba(255, 255, 255, 0.7)',
+    hover: 'rgba(41, 151, 255, 0.08)',
   };
 
   const handleInputChange = (e) => {
@@ -89,9 +94,10 @@ const ContentCreator = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 50%, ${colors.accent}20 100%)`,
+        background: colors.primary,
         position: 'relative',
-        py: 4,
+        pt: { xs: 8, md: 12 }, // Added padding for navbar
+        pb: 8,
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -100,74 +106,61 @@ const ContentCreator = () => {
           right: 0,
           bottom: 0,
           background: `
-            radial-gradient(circle at 10% 20%, ${colors.accent}15 0%, transparent 50%),
-            radial-gradient(circle at 90% 80%, ${colors.secondary}10 0%, transparent 50%)
+            radial-gradient(circle at 0% 0%, ${colors.accent}08 0%, transparent 30%),
+            radial-gradient(circle at 100% 100%, ${colors.accent}05 0%, transparent 30%)
           `,
           pointerEvents: 'none',
         },
       }}
     >
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-        {/* Professional Header */}
-        <Fade in={true} timeout={800}>
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           <Box textAlign="center" mb={6}>
-            <Box
-              sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 80,
-                height: 80,
-                borderRadius: 2,
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                mb: 3,
-                boxShadow: `0 8px 32px ${colors.primary}25`,
-              }}
-            >
-              <AutoAwesome sx={{ fontSize: 40, color: 'white' }} />
-            </Box>
-            
             <Typography 
-              variant="h3" 
-              gutterBottom
-              sx={{
-                fontWeight: 600,
-                color: colors.primary,
+              variant="h2" 
+              sx={{ 
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                fontWeight: 700,
+                color: colors.text,
                 mb: 2,
                 letterSpacing: '-0.5px',
               }}
             >
-              AI-Powered Content Creator
+              Content Creator
             </Typography>
-            
             <Typography 
-              variant="h6" 
+              variant="h5" 
               sx={{ 
-                color: colors.secondary,
+                color: colors.textSecondary,
                 fontWeight: 400,
-                maxWidth: 600,
+                maxWidth: '700px',
                 mx: 'auto',
                 lineHeight: 1.6,
               }}
             >
-              Transform your educational content into comprehensive summaries, detailed explanations, and interactive assessments
+              Create interactive learning experiences with intelligent content generation
             </Typography>
           </Box>
-        </Fade>
+        </motion.div>
 
-        {/* Professional Progress Stepper */}
-        <Slide direction="down" in={true} timeout={1000}>
-          <Card 
-            elevation={0}
-            sx={{ 
-              mb: 4,
-              background: 'rgba(255, 255, 255, 0.9)',
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.accent}60`,
-              borderRadius: 3,
-              boxShadow: `0 4px 20px ${colors.primary}08`,
-            }}
-          >
+        {/* Stepper Card */}
+        <Card 
+          elevation={0}
+          sx={{ 
+            mb: 4,
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${colors.subtle}`,
+            borderRadius: 3,
+          }}
+        >
+          {/* Professional Progress Stepper */}
+          <Slide direction="down" in={true} timeout={1000}>
             <CardContent sx={{ p: 4 }}>
               <Stepper 
                 activeStep={activeStep} 
@@ -200,173 +193,172 @@ const ContentCreator = () => {
                 ))}
               </Stepper>
             </CardContent>
-          </Card>
-        </Slide>
+          </Slide>
+        </Card>
 
         {/* Main Content Card */}
-        <Slide direction="up" in={true} timeout={1200}>
-          <Card 
-            elevation={0}
-            sx={{ 
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.accent}40`,
-              borderRadius: 3,
-              boxShadow: `0 8px 40px ${colors.primary}12`,
-            }}
-          >
-            <CardContent sx={{ p: 5 }}>
-              {/* Step 1: Content Input Form */}
-              {activeStep === 0 && (
-                <Fade in={true} timeout={600}>
-                  <Box>
-                    <Box mb={4}>
-                      <Typography 
-                        variant="h4" 
-                        sx={{ 
-                          color: colors.primary,
-                          fontWeight: 600,
-                          mb: 1,
-                        }}
-                      >
-                        Content Input
-                      </Typography>
-                      <Typography 
-                        variant="body1" 
-                        sx={{ 
-                          color: colors.secondary,
-                          mb: 4,
-                        }}
-                      >
-                        Provide your educational content and let our AI generate comprehensive learning materials
-                      </Typography>
-                    </Box>
-                    
-                    <form onSubmit={handleSubmit}>
-                      <Grid container spacing={3} mb={3}>
-                        <Grid item xs={12} md={8}>
-                          <TextField
-                            fullWidth
-                            label="Chapter Title"
-                            name="chapter"
-                            value={formData.chapter}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="e.g., Introduction to Cellular Biology"
-                            sx={{
-                              '& .MuiOutlinedInput-root': {
-                                borderRadius: 2,
-                                background: colors.lightest,
-                                '&:hover fieldset': {
-                                  borderColor: colors.accent,
-                                },
-                                '&.Mui-focused fieldset': {
-                                  borderColor: colors.secondary,
-                                },
+        <Card 
+          elevation={0}
+          sx={{ 
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${colors.subtle}`,
+            borderRadius: 3,
+          }}
+        >
+          <CardContent sx={{ p: { xs: 3, md: 5 } }}>
+            {/* Step 1: Content Input Form */}
+            {activeStep === 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <Box>
+                  <Box mb={4}>
+                    <Typography 
+                      variant="h4" 
+                      sx={{ 
+                        color: colors.primary,
+                        fontWeight: 600,
+                        mb: 1,
+                      }}
+                    >
+                      Content Input
+                    </Typography>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        color: colors.secondary,
+                        mb: 4,
+                      }}
+                    >
+                      Provide your educational content and let our AI generate comprehensive learning materials
+                    </Typography>
+                  </Box>
+                  
+                  <form onSubmit={handleSubmit}>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12} md={8}>
+                        <TextField
+                          fullWidth
+                          label="Chapter Title"
+                          name="chapter"
+                          value={formData.chapter}
+                          onChange={handleInputChange}
+                          required
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 2,
+                              backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                              '&:hover fieldset': {
+                                borderColor: colors.accent,
                               },
-                              '& .MuiInputLabel-root.Mui-focused': {
-                                color: colors.secondary,
+                              '&.Mui-focused fieldset': {
+                                borderColor: colors.accent,
                               },
-                            }}
-                          />
-                        </Grid>
-                        
-                        <Grid item xs={12} md={4}>
-                          <TextField
-                            fullWidth
-                            label="Page Number"
-                            name="pageNumber"
-                            value={formData.pageNumber}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="156"
-                            sx={{
-                              '& .MuiOutlinedInput-root': {
-                                borderRadius: 2,
-                                background: colors.lightest,
-                                '&:hover fieldset': {
-                                  borderColor: colors.accent,
-                                },
-                                '&.Mui-focused fieldset': {
-                                  borderColor: colors.secondary,
-                                },
-                              },
-                              '& .MuiInputLabel-root.Mui-focused': {
-                                color: colors.secondary,
-                              },
-                            }}
-                          />
-                        </Grid>
+                            },
+                          }}
+                        />
                       </Grid>
                       
-                      <TextField
-                        fullWidth
-                        label="Educational Content"
-                        name="content"
-                        value={formData.content}
-                        onChange={handleInputChange}
-                        required
-                        multiline
-                        rows={12}
-                        placeholder="Paste your textbook content here. Our AI will analyze and generate comprehensive learning materials including summaries, explanations, and quiz questions."
-                        sx={{
-                          mb: 4,
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 2,
-                            background: colors.lightest,
-                            '&:hover fieldset': {
-                              borderColor: colors.accent,
+                      <Grid item xs={12} md={4}>
+                        <TextField
+                          fullWidth
+                          label="Page Number"
+                          name="pageNumber"
+                          value={formData.pageNumber}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="156"
+                          sx={{
+                            '& .MuiOutlinedInput-root': {
+                              borderRadius: 2,
+                              background: colors.lightest,
+                              '&:hover fieldset': {
+                                borderColor: colors.accent,
+                              },
+                              '&.Mui-focused fieldset': {
+                                borderColor: colors.secondary,
+                              },
                             },
-                            '&.Mui-focused fieldset': {
-                              borderColor: colors.secondary,
+                            '& .MuiInputLabel-root.Mui-focused': {
+                              color: colors.secondary,
                             },
+                          }}
+                        />
+                      </Grid>
+                    </Grid>
+                    
+                    <TextField
+                      fullWidth
+                      label="Educational Content"
+                      name="content"
+                      value={formData.content}
+                      onChange={handleInputChange}
+                      required
+                      multiline
+                      rows={12}
+                      placeholder="Paste your textbook content here. Our AI will analyze and generate comprehensive learning materials including summaries, explanations, and quiz questions."
+                      sx={{
+                        mb: 4,
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 2,
+                          background: colors.lightest,
+                          '&:hover fieldset': {
+                            borderColor: colors.accent,
                           },
-                          '& .MuiInputLabel-root.Mui-focused': {
-                            color: colors.secondary,
+                          '&.Mui-focused fieldset': {
+                            borderColor: colors.secondary,
                           },
-                        }}
-                      />
-                      
-                      {/* Feature Cards */}
-                      <Grid container spacing={3} mb={4}>
-                        {[
-                          { 
-                            icon: <Lightbulb />, 
-                            title: 'AI Summary', 
-                            desc: 'Concise key points extraction',
-                            color: colors.accent 
-                          },
-                          { 
-                            icon: <Psychology />, 
-                            title: 'Detailed Explanation', 
-                            desc: 'Comprehensive content breakdown',
-                            color: colors.secondary 
-                          },
-                          { 
-                            icon: <Quiz />, 
-                            title: 'Interactive Quiz', 
-                            desc: 'Assessment questions generation',
-                            color: colors.primary 
-                          },
-                        ].map((feature, index) => (
-                          <Grid item xs={12} md={4} key={feature.title}>
-                            <Card 
+                        },
+                        '& .MuiInputLabel-root.Mui-focused': {
+                          color: colors.secondary,
+                        },
+                      }}
+                    />
+                    
+                    {/* Feature Cards */}
+                    <Grid container spacing={3} sx={{ mt: 4 }}>
+                      {[
+                        {
+                          icon: <AutoAwesome />,
+                          title: 'AI Generation',
+                          description: 'Intelligent content processing'
+                        },
+                        {
+                          icon: <Psychology />,
+                          title: 'Smart Analysis',
+                          description: 'Deep learning algorithms'
+                        },
+                        {
+                          icon: <Quiz />,
+                          title: 'Auto Assessment',
+                          description: 'Automatic quiz generation'
+                        }
+                      ].map((feature, index) => (
+                        <Grid item xs={12} md={4} key={index}>
+                          <motion.div
+                            whileHover={{ y: -5 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                          >
+                            <Card
                               elevation={0}
-                              sx={{ 
-                                background: `${feature.color}08`,
-                                border: `1px solid ${feature.color}30`,
-                                borderRadius: 2,
+                              sx={{
                                 p: 3,
                                 height: '100%',
+                                background: 'rgba(255, 255, 255, 0.5)',
+                                backdropFilter: 'blur(10px)',
+                                border: `1px solid ${colors.subtle}`,
+                                borderRadius: 2,
                                 transition: 'all 0.3s ease',
                                 '&:hover': {
-                                  transform: 'translateY(-2px)',
-                                  boxShadow: `0 8px 25px ${feature.color}20`,
-                                  border: `1px solid ${feature.color}50`,
-                                },
+                                  background: 'rgba(255, 255, 255, 0.8)',
+                                  borderColor: colors.accent,
+                                }
                               }}
                             >
-                              <Box sx={{ color: feature.color, mb: 2 }}>
+                              <Box sx={{ color: colors.accent, mb: 2 }}>
                                 {feature.icon}
                               </Box>
                               <Typography 
@@ -389,337 +381,338 @@ const ContentCreator = () => {
                                 {feature.desc}
                               </Typography>
                             </Card>
-                          </Grid>
-                        ))}
-                      </Grid>
-                      
-                      <Box textAlign="center">
+                          </motion.div>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    
+                    {/* Submit Button */}
+                    <Box sx={{ textAlign: 'center', mt: 6 }}>
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
                         <Button
                           type="submit"
                           variant="contained"
                           size="large"
                           startIcon={<AutoAwesome />}
-                          disabled={!formData.content || !formData.chapter || !formData.pageNumber}
                           sx={{
+                            bgcolor: colors.text,
+                            color: 'white',
                             py: 1.5,
                             px: 4,
-                            borderRadius: 2,
-                            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
-                            fontSize: '1rem',
-                            fontWeight: 600,
+                            borderRadius: '50px',
+                            fontSize: '1.1rem',
                             textTransform: 'none',
-                            boxShadow: `0 4px 20px ${colors.primary}30`,
                             '&:hover': {
-                              background: `linear-gradient(135deg, ${colors.secondary}, ${colors.primary})`,
-                              transform: 'translateY(-1px)',
-                              boxShadow: `0 6px 25px ${colors.primary}40`,
-                            },
-                            transition: 'all 0.3s ease',
+                              bgcolor: colors.accent,
+                            }
                           }}
                         >
-                          Generate AI Content
+                          Generate Content
                         </Button>
-                      </Box>
-                    </form>
-                  </Box>
-                </Fade>
-              )}
-
-              {/* Step 2: AI Processing */}
-              {activeStep === 1 && (
-                <Fade in={true} timeout={600}>
-                  <Box textAlign="center" py={6}>
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        display: 'inline-block',
-                        mb: 4,
-                      }}
-                    >
-                      <CircularProgress 
-                        size={80} 
-                        thickness={4}
-                        sx={{ 
-                          color: colors.secondary,
-                        }}
-                      />
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                        }}
-                      >
-                        <Analytics sx={{ fontSize: 32, color: colors.primary }} />
-                      </Box>
+                      </motion.div>
                     </Box>
-                    
-                    <Typography 
-                      variant="h4" 
-                      sx={{ 
-                        mb: 2,
-                        color: colors.primary,
-                        fontWeight: 600,
-                      }}
-                    >
-                      Processing Content
-                    </Typography>
-                    
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
-                        color: colors.secondary,
-                        mb: 4,
-                        maxWidth: 400,
-                        mx: 'auto',
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      Our AI is analyzing your content and generating comprehensive learning materials
-                    </Typography>
-                    
-                    <LinearProgress 
-                      sx={{
-                        width: 300,
-                        mx: 'auto',
-                        height: 6,
-                        borderRadius: 3,
-                        backgroundColor: colors.light,
-                        '& .MuiLinearProgress-bar': {
-                          backgroundColor: colors.secondary,
-                          borderRadius: 3,
-                        },
-                      }}
-                    />
-                  </Box>
-                </Fade>
-              )}
+                  </form>
+                </Box>
+              </motion.div>
+            )}
 
-              {/* Step 3: Results & Publish */}
-              {activeStep === 2 && result && (
-                <Fade in={true} timeout={600}>
-                  <Box>
-                    <Alert 
-                      severity="success" 
-                      sx={{ 
-                        mb: 4,
-                        borderRadius: 2,
-                        background: `rgba(76, 175, 80, 0.08)`,
-                        border: `1px solid rgba(76, 175, 80, 0.3)`,
-                        '& .MuiAlert-icon': {
-                          color: '#4caf50',
-                        },
-                      }}
-                      icon={<CheckCircle />}
-                    >
-                      <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-                        Content Generated Successfully
-                      </Typography>
-                      <Typography variant="body2">
-                        AI has generated comprehensive learning materials including summary, explanation, and {result.quizzes?.length || 5} quiz questions.
-                      </Typography>
-                    </Alert>
-                    
-                    {/* Content Preview */}
-                    <Box mb={4}>
-                      <Box display="flex" alignItems="center" mb={3}>
-                        <Chip 
-                          label={`Page ${formData.pageNumber}`}
-                          sx={{ 
-                            background: colors.accent,
-                            color: colors.primary,
-                            fontWeight: 600,
-                            mr: 2,
-                          }}
-                        />
-                        <Typography 
-                          variant="h5" 
-                          sx={{ 
-                            color: colors.primary,
-                            fontWeight: 600,
-                          }}
-                        >
-                          {result.page.chapter}
-                        </Typography>
-                      </Box>
-                      
-                      <Grid container spacing={3}>
-                        {/* AI Summary */}
-                        <Grid item xs={12}>
-                          <Card 
-                            elevation={0}
-                            sx={{ 
-                              background: `${colors.accent}08`,
-                              border: `1px solid ${colors.accent}40`,
-                              borderRadius: 2,
-                            }}
-                          >
-                            <CardContent sx={{ p: 3 }}>
-                              <Box display="flex" alignItems="center" mb={2}>
-                                <Lightbulb sx={{ color: colors.secondary, mr: 1 }} />
-                                <Typography 
-                                  variant="h6" 
-                                  sx={{ 
-                                    color: colors.primary,
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  AI-Generated Summary
-                                </Typography>
-                              </Box>
-                              <Typography 
-                                variant="body1" 
-                                sx={{ 
-                                  color: colors.primary,
-                                  lineHeight: 1.7,
-                                }}
-                              >
-                                {result.page.summary}
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                        
-                        {/* AI Explanation */}
-                        <Grid item xs={12}>
-                          <Card 
-                            elevation={0}
-                            sx={{ 
-                              background: `${colors.secondary}08`,
-                              border: `1px solid ${colors.secondary}40`,
-                              borderRadius: 2,
-                            }}
-                          >
-                            <CardContent sx={{ p: 3 }}>
-                              <Box display="flex" alignItems="center" mb={2}>
-                                <Psychology sx={{ color: colors.secondary, mr: 1 }} />
-                                <Typography 
-                                  variant="h6" 
-                                  sx={{ 
-                                    color: colors.primary,
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  Detailed Explanation
-                                </Typography>
-                              </Box>
-                              <Typography 
-                                variant="body1" 
-                                sx={{ 
-                                  color: colors.primary,
-                                  lineHeight: 1.7,
-                                }}
-                              >
-                                {result.page.explanation.substring(0, 300)}...
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                        
-                        {/* Quiz Preview */}
-                        <Grid item xs={12}>
-                          <Card 
-                            elevation={0}
-                            sx={{ 
-                              background: `${colors.primary}08`,
-                              border: `1px solid ${colors.primary}40`,
-                              borderRadius: 2,
-                            }}
-                          >
-                            <CardContent sx={{ p: 3, textAlign: 'center' }}>
-                              <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
-                                <Quiz sx={{ color: colors.primary, mr: 1 }} />
-                                <Typography 
-                                  variant="h6" 
-                                  sx={{ 
-                                    color: colors.primary,
-                                    fontWeight: 600,
-                                  }}
-                                >
-                                  Interactive Quiz Ready
-                                </Typography>
-                              </Box>
-                              <Typography 
-                                variant="body1" 
-                                sx={{ 
-                                  color: colors.secondary,
-                                }}
-                              >
-                                {result.quizzes?.length || 5} assessment questions have been generated to evaluate comprehension.
-                              </Typography>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                    
-                    {/* Action Buttons */}
-                    <Box display="flex" gap={2} justifyContent="center">
-                      <Button
-                        variant="outlined"
-                        size="large"
-                        startIcon={<Create />}
-                        onClick={() => setActiveStep(0)}
-                        sx={{
-                          borderColor: colors.accent,
-                          color: colors.secondary,
-                          borderRadius: 2,
-                          px: 3,
-                          '&:hover': {
-                            borderColor: colors.secondary,
-                            background: `${colors.accent}10`,
-                          },
-                        }}
-                      >
-                        Create New Content
-                      </Button>
-                      
-                      <Button
-                        variant="contained"
-                        size="large"
-                        startIcon={<Send />}
-                        onClick={handlePublish}
-                        sx={{
-                          background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
-                          borderRadius: 2,
-                          px: 4,
-                          fontWeight: 600,
-                          boxShadow: `0 4px 20px ${colors.secondary}30`,
-                          '&:hover': {
-                            background: `linear-gradient(135deg, ${colors.accent}, ${colors.secondary})`,
-                            transform: 'translateY(-1px)',
-                            boxShadow: `0 6px 25px ${colors.secondary}40`,
-                          },
-                          transition: 'all 0.3s ease',
-                        }}
-                      >
-                        View Published Content
-                      </Button>
-                    </Box>
-                  </Box>
-                </Fade>
-              )}
-
-              {/* Error Display */}
-              {error && (
-                <Fade in={true}>
-                  <Alert 
-                    severity="error" 
-                    sx={{ 
-                      mt: 3,
-                      borderRadius: 2,
-                      background: 'rgba(244, 67, 54, 0.08)',
-                      border: '1px solid rgba(244, 67, 54, 0.3)',
+            {/* Step 2: AI Processing */}
+            {activeStep === 1 && (
+              <Fade in={true} timeout={600}>
+                <Box textAlign="center" py={6}>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      mb: 4,
                     }}
                   >
-                    {error}
+                    <CircularProgress 
+                      size={80} 
+                      thickness={4}
+                      sx={{ 
+                        color: colors.secondary,
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                      }}
+                    >
+                      <Analytics sx={{ fontSize: 32, color: colors.primary }} />
+                    </Box>
+                  </Box>
+                  
+                  <Typography 
+                    variant="h4" 
+                    sx={{ 
+                      mb: 2,
+                      color: colors.primary,
+                      fontWeight: 600,
+                    }}
+                  >
+                    Processing Content
+                  </Typography>
+                  
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: colors.secondary,
+                      mb: 4,
+                      maxWidth: 400,
+                      mx: 'auto',
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    Our AI is analyzing your content and generating comprehensive learning materials
+                  </Typography>
+                  
+                  <LinearProgress 
+                    sx={{
+                      width: 300,
+                      mx: 'auto',
+                      height: 6,
+                      borderRadius: 3,
+                      backgroundColor: colors.light,
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: colors.secondary,
+                        borderRadius: 3,
+                      },
+                    }}
+                  />
+                </Box>
+              </Fade>
+            )}
+
+            {/* Step 3: Results & Publish */}
+            {activeStep === 2 && result && (
+              <Fade in={true} timeout={600}>
+                <Box>
+                  <Alert 
+                    severity="success" 
+                    sx={{ 
+                      mb: 4,
+                      borderRadius: 2,
+                      background: `rgba(76, 175, 80, 0.08)`,
+                      border: `1px solid rgba(76, 175, 80, 0.3)`,
+                      '& .MuiAlert-icon': {
+                        color: '#4caf50',
+                      },
+                    }}
+                    icon={<CheckCircle />}
+                  >
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                      Content Generated Successfully
+                    </Typography>
+                    <Typography variant="body2">
+                      AI has generated comprehensive learning materials including summary, explanation, and {result.quizzes?.length || 5} quiz questions.
+                    </Typography>
                   </Alert>
-                </Fade>
-              )}
-            </CardContent>
-          </Card>
-        </Slide>
+                  
+                  {/* Content Preview */}
+                  <Box mb={4}>
+                    <Box display="flex" alignItems="center" mb={3}>
+                      <Chip 
+                        label={`Page ${formData.pageNumber}`}
+                        sx={{ 
+                          background: colors.accent,
+                          color: colors.primary,
+                          fontWeight: 600,
+                          mr: 2,
+                        }}
+                      />
+                      <Typography 
+                        variant="h5" 
+                        sx={{ 
+                          color: colors.primary,
+                          fontWeight: 600,
+                        }}
+                      >
+                        {result.page.chapter}
+                      </Typography>
+                    </Box>
+                    
+                    <Grid container spacing={3}>
+                      {/* AI Summary */}
+                      <Grid item xs={12}>
+                        <Card 
+                          elevation={0}
+                          sx={{ 
+                            background: `${colors.accent}08`,
+                            border: `1px solid ${colors.accent}40`,
+                            borderRadius: 2,
+                          }}
+                        >
+                          <CardContent sx={{ p: 3 }}>
+                            <Box display="flex" alignItems="center" mb={2}>
+                              <Lightbulb sx={{ color: colors.secondary, mr: 1 }} />
+                              <Typography 
+                                variant="h6" 
+                                sx={{ 
+                                  color: colors.primary,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                AI-Generated Summary
+                              </Typography>
+                            </Box>
+                            <Typography 
+                              variant="body1" 
+                              sx={{ 
+                                color: colors.primary,
+                                lineHeight: 1.7,
+                              }}
+                            >
+                              {result.page.summary}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                      
+                      {/* AI Explanation */}
+                      <Grid item xs={12}>
+                        <Card 
+                          elevation={0}
+                          sx={{ 
+                            background: `${colors.secondary}08`,
+                            border: `1px solid ${colors.secondary}40`,
+                            borderRadius: 2,
+                          }}
+                        >
+                          <CardContent sx={{ p: 3 }}>
+                            <Box display="flex" alignItems="center" mb={2}>
+                              <Psychology sx={{ color: colors.secondary, mr: 1 }} />
+                              <Typography 
+                                variant="h6" 
+                                sx={{ 
+                                  color: colors.primary,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Detailed Explanation
+                              </Typography>
+                            </Box>
+                            <Typography 
+                              variant="body1" 
+                              sx={{ 
+                                color: colors.primary,
+                                lineHeight: 1.7,
+                              }}
+                            >
+                              {result.page.explanation.substring(0, 300)}...
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                      
+                      {/* Quiz Preview */}
+                      <Grid item xs={12}>
+                        <Card 
+                          elevation={0}
+                          sx={{ 
+                            background: `${colors.primary}08`,
+                            border: `1px solid ${colors.primary}40`,
+                            borderRadius: 2,
+                          }}
+                        >
+                          <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                            <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+                              <Quiz sx={{ color: colors.primary, mr: 1 }} />
+                              <Typography 
+                                variant="h6" 
+                                sx={{ 
+                                  color: colors.primary,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Interactive Quiz Ready
+                              </Typography>
+                            </Box>
+                            <Typography 
+                              variant="body1" 
+                              sx={{ 
+                                color: colors.secondary,
+                              }}
+                            >
+                              {result.quizzes?.length || 5} assessment questions have been generated to evaluate comprehension.
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                  
+                  {/* Action Buttons */}
+                  <Box display="flex" gap={2} justifyContent="center">
+                    <Button
+                      variant="outlined"
+                      size="large"
+                      startIcon={<Create />}
+                      onClick={() => setActiveStep(0)}
+                      sx={{
+                        borderColor: colors.accent,
+                        color: colors.secondary,
+                        borderRadius: 2,
+                        px: 3,
+                        '&:hover': {
+                          borderColor: colors.secondary,
+                          background: `${colors.accent}10`,
+                        },
+                      }}
+                    >
+                      Create New Content
+                    </Button>
+                    
+                    <Button
+                      variant="contained"
+                      size="large"
+                      startIcon={<Send />}
+                      onClick={handlePublish}
+                      sx={{
+                        background: `linear-gradient(135deg, ${colors.secondary}, ${colors.accent})`,
+                        borderRadius: 2,
+                        px: 4,
+                        fontWeight: 600,
+                        boxShadow: `0 4px 20px ${colors.secondary}30`,
+                        '&:hover': {
+                          background: `linear-gradient(135deg, ${colors.accent}, ${colors.secondary})`,
+                          transform: 'translateY(-1px)',
+                          boxShadow: `0 6px 25px ${colors.secondary}40`,
+                        },
+                        transition: 'all 0.3s ease',
+                      }}
+                    >
+                      View Published Content
+                    </Button>
+                  </Box>
+                </Box>
+              </Fade>
+            )}
+
+            {/* Error Display */}
+            {error && (
+              <Fade in={true}>
+                <Alert 
+                  severity="error" 
+                  sx={{ 
+                    mt: 3,
+                    borderRadius: 2,
+                    background: 'rgba(244, 67, 54, 0.08)',
+                    border: '1px solid rgba(244, 67, 54, 0.3)',
+                  }}
+                >
+                  {error}
+                </Alert>
+              </Fade>
+            )}
+          </CardContent>
+        </Card>
       </Container>
     </Box>
   );
