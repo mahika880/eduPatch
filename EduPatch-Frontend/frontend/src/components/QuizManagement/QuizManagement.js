@@ -29,6 +29,7 @@ import {
   Divider,
   Fade,
   Slide,
+  Avatar,
 } from '@mui/material';
 import {
   Quiz,
@@ -43,8 +44,12 @@ import {
   CheckCircle,
   Cancel,
   MenuBook,
+  Assessment,
+  Analytics,
+  School,
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
+import { motion } from 'framer-motion';
 
 const QuizManagement = () => {
   const [quizzes, setQuizzes] = useState([]);
@@ -56,13 +61,23 @@ const QuizManagement = () => {
   const [deleteDialog, setDeleteDialog] = useState({ open: false, quiz: null });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-  // Sunset Color Palette
+  // Landing Page Consistent Color Palette
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#FFFFFF',
+    secondary: '#FAFAFA',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    accentSecondary: '#4F46E5',
+    subtle: '#F1F5F9',
+    glassBg: 'rgba(255, 255, 255, 0.8)',
+    hover: 'rgba(41, 151, 255, 0.08)',
+    shadow: 'rgba(0, 0, 0, 0.1)',
+    buttonBg: '#000000',
+    buttonText: '#FFFFFF',
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
   };
 
   useEffect(() => {
@@ -156,17 +171,74 @@ const QuizManagement = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 100%)`,
+          background: colors.primary,
+          position: 'relative',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            width: '600px',
+            height: '600px',
+            background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+            borderRadius: '50%',
+            opacity: 0.6,
+            pointerEvents: 'none',
+          },
         }}
       >
+        {/* Subtle Background Pattern */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+              radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
+            `,
+            backgroundSize: '100px 100px',
+            opacity: 0.3,
+            pointerEvents: 'none',
+          }}
+        />
+
         <Box textAlign="center">
-          <CircularProgress size={60} sx={{ color: colors.secondary, mb: 3 }} />
-          <Typography variant="h6" sx={{ color: colors.primary }}>
-            Loading quiz management...
-          </Typography>
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+          >
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                background: colors.buttonBg,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mb: 3,
+                boxShadow: `0 20px 40px ${colors.shadow}`,
+              }}
+            >
+              <CircularProgress size={40} sx={{ color: colors.buttonText }} />
+            </Box>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Typography variant="h6" sx={{ color: colors.text, fontWeight: 500 }}>
+              Loading assessments...
+            </Typography>
+          </motion.div>
         </Box>
       </Box>
     );
@@ -176,94 +248,134 @@ const QuizManagement = () => {
     <Box
       sx={{
         minHeight: '100vh',
-        background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 50%, ${colors.accent}20 100%)`,
-        py: 4,
+        background: colors.primary,
         position: 'relative',
+        py: 4,
+        overflow: 'hidden',
         '&::before': {
           content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '800px',
+          height: '800px',
+          background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
+          borderRadius: '50%',
+          opacity: 0.6,
+          pointerEvents: 'none',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          width: '600px',
+          height: '600px',
+          background: `radial-gradient(circle, ${colors.accent}10 0%, transparent 70%)`,
+          borderRadius: '50%',
+          opacity: 0.4,
+          pointerEvents: 'none',
+        },
+      }}
+    >
+      {/* Subtle Background Pattern */}
+      <Box
+        sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          background: `
-            radial-gradient(circle at 10% 20%, ${colors.accent}10 0%, transparent 50%),
-            radial-gradient(circle at 90% 80%, ${colors.secondary}08 0%, transparent 50%)
+          backgroundImage: `
+            radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
           `,
+          backgroundSize: '100px 100px',
+          opacity: 0.3,
           pointerEvents: 'none',
-        },
-      }}
-    >
+        }}
+      />
+
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1 }}>
         {/* Header Section */}
-        <Fade in={true} timeout={800}>
-          <Paper
-            elevation={0}
-            sx={{
-              mb: 4,
-              background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-              color: 'white',
-              borderRadius: 3,
-              overflow: 'hidden',
-              position: 'relative',
-            }}
-          >
-            <CardContent sx={{ p: 4 }}>
-              <Box display="flex" alignItems="center" mb={2}>
-                <Quiz sx={{ fontSize: 40, mr: 2 }} />
-                <Box>
-                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
-                    Quiz Management 🎯
-                  </Typography>
-                  <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                    Manage and organize your AI-generated quiz questions
-                  </Typography>
-                </Box>
-              </Box>
-              <Typography variant="body1" sx={{ opacity: 0.8 }}>
-                {filteredQuizzes.length} quizzes across {pages.length} content pieces
-              </Typography>
-            </CardContent>
-          </Paper>
-        </Fade>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <Box textAlign="center" mb={6}>
+            <Typography
+              variant="h2"
+              sx={{
+                color: colors.text,
+                fontWeight: 800,
+                mb: 3,
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Assessment Center
+            </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                color: colors.textSecondary,
+                fontWeight: 400,
+                maxWidth: '600px',
+                mx: 'auto',
+                lineHeight: 1.6,
+                fontSize: '1.25rem',
+              }}
+            >
+              Manage, organize, and optimize your AI-generated assessments for better learning outcomes
+            </Typography>
+          </Box>
+        </motion.div>
 
         {/* Search and Filter Section */}
-        <Slide direction="down" in={true} timeout={1000}>
-          <Paper
-            elevation={0}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Box
             sx={{
-              mb: 4,
-              background: 'rgba(255, 255, 255, 0.95)',
+              background: colors.glassBg,
               backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.accent}40`,
-              borderRadius: 3,
-              p: 3,
+              border: `1px solid ${colors.subtle}`,
+              borderRadius: 4,
+              p: 4,
+              mb: 6,
+              boxShadow: `0 8px 32px ${colors.shadow}`,
             }}
           >
-            <Grid container spacing={3} alignItems="center">
+            <Grid container spacing={4} alignItems="center">
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  placeholder="Search quizzes by question or content..."
+                  placeholder="Search assessments by question or content..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Search sx={{ color: colors.secondary }} />
+                        <Search sx={{ color: colors.textSecondary }} />
                       </InputAdornment>
                     ),
                   }}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 2,
-                      background: colors.lightest,
+                      borderRadius: 3,
+                      backgroundColor: 'rgba(255, 255, 255, 0.8)',
                       '&:hover fieldset': {
                         borderColor: colors.accent,
                       },
                       '&.Mui-focused fieldset': {
-                        borderColor: colors.secondary,
+                        borderColor: colors.accent,
                       },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: colors.accent,
                     },
                   }}
                 />
@@ -278,8 +390,17 @@ const QuizManagement = () => {
                     SelectProps={{ native: true }}
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        borderRadius: 2,
-                        background: colors.lightest,
+                        borderRadius: 3,
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        '&:hover fieldset': {
+                          borderColor: colors.accent,
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: colors.accent,
+                        },
+                      },
+                      '& .MuiInputLabel-root.Mui-focused': {
+                        color: colors.accent,
                       },
                     }}
                   >
@@ -293,232 +414,493 @@ const QuizManagement = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={2}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <FilterList sx={{ color: colors.secondary }} />
-                  <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600 }}>
-                    {filteredQuizzes.length} Results
-                  </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 1,
+                    p: 2,
+                    background: colors.secondary,
+                    borderRadius: 3,
+                    border: `1px solid ${colors.subtle}`,
+                  }}
+                >
+                  <Assessment sx={{ color: colors.accent, fontSize: '1.5rem' }} />
+                  <Box>
+                    <Typography variant="h6" sx={{ color: colors.text, fontWeight: 700, lineHeight: 1 }}>
+                      {filteredQuizzes.length}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: colors.textSecondary, fontWeight: 500 }}>
+                      Results
+                    </Typography>
+                  </Box>
                 </Box>
               </Grid>
             </Grid>
-          </Paper>
-        </Slide>
+          </Box>
+        </motion.div>
 
-        {/* Stats Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {[
-            { title: 'Total Quizzes', value: quizzes.length, icon: <Quiz />, color: colors.primary },
-            { title: 'Content Pages', value: pages.length, icon: <MenuBook />, color: colors.secondary },
-            { title: 'Avg per Page', value: Math.round(quizzes.length / Math.max(pages.length, 1)), icon: <Psychology />, color: colors.accent },
-            { title: 'AI Generated', value: '100%', icon: <AutoAwesome />, color: colors.primary },
-          ].map((stat, index) => (
-            <Grid item xs={12} sm={6} md={3} key={stat.title}>
-              <Fade in={true} timeout={1200 + index * 200}>
-                <Card
-                  sx={{
-                    p: 3,
-                    borderRadius: 3,
-                    textAlign: 'center',
-                    background: `${stat.color}08`,
-                    border: `1px solid ${stat.color}30`,
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-5px)',
-                      boxShadow: `0 10px 30px ${stat.color}20`,
-                    },
+        {/* Stats Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <Grid container spacing={4} sx={{ mb: 8 }}>
+            {[
+              {
+                title: 'Total Assessments',
+                value: quizzes.length,
+                icon: <Assessment />,
+                color: colors.accent,
+                subtitle: 'Active questions'
+              },
+              {
+                title: 'Content Pages',
+                value: pages.length,
+                icon: <MenuBook />,
+                color: colors.accentSecondary,
+                subtitle: 'Learning materials'
+              },
+              {
+                title: 'Avg per Page',
+                value: Math.round(quizzes.length / Math.max(pages.length, 1)),
+                icon: <Analytics />,
+                color: colors.success,
+                subtitle: 'Questions generated'
+              },
+              {
+                title: 'AI Powered',
+                value: '100%',
+                icon: <AutoAwesome />,
+                color: colors.warning,
+                subtitle: 'Intelligent creation'
+              },
+            ].map((stat, index) => (
+              <Grid item xs={12} sm={6} md={3} key={stat.title}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.6 + index * 0.1,
+                    type: "spring",
+                    stiffness: 100
                   }}
+                  whileHover={{ y: -8 }}
                 >
-                  <Box
-                    sx={{
-                      color: stat.color,
-                      mb: 2,
-                      p: 2,
-                      borderRadius: '50%',
-                      background: `${stat.color}15`,
-                      display: 'inline-flex',
-                    }}
-                  >
-                    {stat.icon}
-                  </Box>
-                  <Typography variant="h4" sx={{ fontWeight: 700, color: colors.primary, mb: 1 }}>
-                    {stat.value}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: colors.secondary, fontWeight: 500 }}>
-                    {stat.title}
-                  </Typography>
-                </Card>
-              </Fade>
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* Quiz Cards Grid */}
-        {filteredQuizzes.length === 0 ? (
-          <Fade in={true} timeout={1400}>
-            <Card sx={{ textAlign: 'center', p: 6, borderRadius: 3 }}>
-              <Quiz sx={{ fontSize: 80, mb: 2, color: colors.accent }} />
-              <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: colors.primary }}>
-                {searchTerm || selectedPage !== 'all' ? 'No Matching Quizzes Found' : 'No Quizzes Available'}
-              </Typography>
-              <Typography variant="body1" sx={{ mb: 3, color: colors.secondary }}>
-                {searchTerm || selectedPage !== 'all' 
-                  ? 'Try adjusting your search or filter criteria'
-                  : 'Create some content first to generate AI quizzes!'}
-              </Typography>
-            </Card>
-          </Fade>
-        ) : (
-          <Grid container spacing={3}>
-            {filteredQuizzes.map((quiz, index) => (
-              <Grid item xs={12} md={6} lg={4} key={quiz.quizId}>
-                <Slide direction="up" in={true} timeout={1400 + index * 100}>
                   <Card
                     sx={{
-                      borderRadius: 3,
-                      height: '100%',
+                      p: 4,
+                      borderRadius: 4,
+                      textAlign: 'center',
+                      background: colors.secondary,
+                      border: `1px solid ${colors.subtle}`,
+                      boxShadow: `0 8px 32px ${colors.shadow}`,
                       transition: 'all 0.3s ease',
-                      background: 'rgba(255, 255, 255, 0.95)',
-                      backdropFilter: 'blur(10px)',
-                      border: `1px solid ${colors.accent}40`,
                       '&:hover': {
-                        transform: 'translateY(-5px)',
-                        boxShadow: `0 10px 30px ${colors.primary}15`,
+                        boxShadow: `0 20px 40px ${stat.color}20`,
+                        borderColor: stat.color,
                       },
                     }}
                   >
-                    <CardContent sx={{ p: 3 }}>
-                      {/* Quiz Header */}
-                      <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                        <Chip
-                          label={`${quiz.pageTitle} - Page ${quiz.pageNumber}`}
-                          size="small"
-                          sx={{
-                            background: colors.light,
-                            color: colors.primary,
-                            fontWeight: 600,
-                          }}
-                        />
-                        <Box display="flex" alignItems="center">
-                          <Psychology sx={{ color: colors.secondary, fontSize: 20 }} />
-                        </Box>
-                      </Box>
-
-                      {/* Question */}
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          color: colors.primary,
-                          fontWeight: 600,
-                          mb: 2,
-                          lineHeight: 1.4,
-                          minHeight: 60,
-                        }}
-                      >
-                        {quiz.question}
-                      </Typography>
-
-                      {/* Options Preview */}
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="body2" sx={{ color: colors.secondary, mb: 1, fontWeight: 600 }}>
-                          Options:
-                        </Typography>
-                        {quiz.options?.slice(0, 2).map((option, idx) => (
-                          <Box key={idx} display="flex" alignItems="center" mb={0.5}>
-                            <Box
-                              sx={
-                                option.charAt(0) === quiz.answer
-                                  ? {
-                                      width: 8,
-                                      height: 8,
-                                      borderRadius: '50%',
-                                      background: '#4caf50',
-                                      mr: 1,
-                                    }
-                                  : {
-                                      width: 8,
-                                      height: 8,
-                                      borderRadius: '50%',
-                                      background: colors.accent,
-                                      mr: 1,
-                                    }
-                              }
-                            />
-                            <Typography variant="body2" sx={{ color: colors.primary, fontSize: '0.9rem' }}>
-                              {option.length > 40 ? `${option.substring(0, 40)}...` : option}
-                            </Typography>
-                          </Box>
-                        ))}
-                        {quiz.options?.length > 2 && (
-                          <Typography variant="caption" sx={{ color: colors.secondary, fontStyle: 'italic' }}>
-                            +{quiz.options.length - 2} more options
-                          </Typography>
-                        )}
-                      </Box>
-
-                      {/* Correct Answer */}
-                      <Box display="flex" alignItems="center" mb={2}>
-                        <CheckCircle sx={{ color: '#4caf50', fontSize: 16, mr: 1 }} />
-                        <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600 }}>
-                          Correct Answer: {quiz.answer}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-
-                    <CardActions sx={{ justifyContent: 'space-between', px: 3, pb: 3 }}>
-                      <Button
-                        size="small"
-                        startIcon={<Visibility />}
-                        onClick={() => window.open(`/quiz/${quiz.pageId}`, '_blank')}
-                        sx={{
-                          color: colors.primary,
-                          '&:hover': {
-                            background: `${colors.primary}10`,
-                          },
-                        }}
-                      >
-                        Preview
-                      </Button>
-                      <Box>
-                        <Tooltip title="Edit Quiz">
-                          <IconButton
-                            size="small"
-                            onClick={() => setEditDialog({ open: true, quiz })}
-                            sx={{
-                              color: colors.secondary,
-                              mr: 1,
-                              '&:hover': {
-                                background: `${colors.secondary}20`,
-                              },
-                            }}
-                          >
-                            <Edit />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Delete Quiz">
-                          <IconButton
-                            size="small"
-                            onClick={() => setDeleteDialog({ open: true, quiz })}
-                            sx={{
-                              color: '#f44336',
-                              '&:hover': {
-                                background: 'rgba(244, 67, 54, 0.1)',
-                              },
-                            }}
-                          >
-                            <Delete />
-                          </IconButton>
-                        </Tooltip>
-                      </Box>
-                    </CardActions>
+                    <Box
+                      sx={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 3,
+                        background: stat.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mx: 'auto',
+                        mb: 3,
+                        boxShadow: `0 8px 24px ${stat.color}30`,
+                      }}
+                    >
+                      {React.cloneElement(stat.icon, { sx: { color: 'white', fontSize: 28 } })}
+                    </Box>
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 800,
+                        color: colors.text,
+                        mb: 1,
+                        fontSize: '2rem'
+                      }}
+                    >
+                      {stat.value}
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        color: colors.text,
+                        fontWeight: 600,
+                        mb: 1,
+                        fontSize: '1rem'
+                      }}
+                    >
+                      {stat.title}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: colors.textSecondary,
+                        fontWeight: 500,
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {stat.subtitle}
+                    </Typography>
                   </Card>
-                </Slide>
+                </motion.div>
               </Grid>
             ))}
           </Grid>
+        </motion.div>
+
+        {/* Assessment Cards */}
+        {filteredQuizzes.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <Card
+              sx={{
+                textAlign: 'center',
+                p: 8,
+                borderRadius: 4,
+                background: colors.secondary,
+                border: `1px solid ${colors.subtle}`,
+                boxShadow: `0 20px 40px ${colors.shadow}`,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 120,
+                  height: 120,
+                  borderRadius: '50%',
+                  background: colors.buttonBg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mx: 'auto',
+                  mb: 4,
+                  boxShadow: `0 20px 40px ${colors.shadow}`,
+                }}
+              >
+                <Assessment sx={{ fontSize: 60, color: colors.buttonText }} />
+              </Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: colors.text,
+                  mb: 3,
+                  fontSize: '1.8rem'
+                }}
+              >
+                {searchTerm || selectedPage !== 'all' ? 'No Matching Assessments' : 'No Assessments Available'}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  mb: 4,
+                  color: colors.textSecondary,
+                  fontSize: '1.1rem',
+                  maxWidth: '400px',
+                  mx: 'auto',
+                  lineHeight: 1.6
+                }}
+              >
+                {searchTerm || selectedPage !== 'all'
+                  ? 'Try adjusting your search or filter criteria to find what you\'re looking for.'
+                  : 'Create educational content first to generate AI-powered assessments for your students.'}
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<Add />}
+                onClick={() => window.location.href = '/admin/create'}
+                sx={{
+                  background: colors.buttonBg,
+                  color: colors.buttonText,
+                  borderRadius: 3,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  boxShadow: `0 8px 32px ${colors.shadow}`,
+                  '&:hover': {
+                    background: colors.buttonBg,
+                    transform: 'translateY(-2px)',
+                    boxShadow: `0 12px 40px ${colors.shadow}`,
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Create Content
+              </Button>
+            </Card>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <Grid container spacing={4}>
+              {filteredQuizzes.map((quiz, index) => (
+                <Grid item xs={12} md={6} lg={4} key={quiz.quizId}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 1 + index * 0.1,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    whileHover={{ y: -8 }}
+                  >
+                    <Card
+                      sx={{
+                        borderRadius: 4,
+                        height: '100%',
+                        transition: 'all 0.3s ease',
+                        background: colors.secondary,
+                        border: `1px solid ${colors.subtle}`,
+                        boxShadow: `0 8px 32px ${colors.shadow}`,
+                        '&:hover': {
+                          boxShadow: `0 20px 40px ${colors.accent}20`,
+                          borderColor: colors.accent,
+                        },
+                      }}
+                    >
+                      <CardContent sx={{ p: 4 }}>
+                        {/* Assessment Header */}
+                        <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+                          <Chip
+                            label={`${quiz.pageTitle} • Page ${quiz.pageNumber}`}
+                            size="small"
+                            sx={{
+                              background: colors.accent,
+                              color: 'white',
+                              fontWeight: 600,
+                              fontSize: '0.75rem',
+                              px: 2,
+                              py: 0.5,
+                            }}
+                          />
+                          <Box
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: 2,
+                              background: colors.buttonBg,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Psychology sx={{ color: colors.buttonText, fontSize: 18 }} />
+                          </Box>
+                        </Box>
+
+                        {/* Question */}
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            color: colors.text,
+                            fontWeight: 600,
+                            mb: 3,
+                            lineHeight: 1.4,
+                            fontSize: '1.1rem',
+                            minHeight: 70,
+                            display: '-webkit-box',
+                            WebkitLineClamp: 3,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {quiz.question}
+                        </Typography>
+
+                        {/* Options Preview */}
+                        <Box sx={{ mb: 3 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              color: colors.textSecondary,
+                              mb: 2,
+                              fontWeight: 600,
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            Answer Options:
+                          </Typography>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            {quiz.options?.slice(0, 3).map((option, idx) => (
+                              <Box key={idx} display="flex" alignItems="center">
+                                <Box
+                                  sx={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    background: option.charAt(0) === quiz.answer ? colors.success : colors.subtle,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    mr: 2,
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {option.charAt(0) === quiz.answer && (
+                                    <CheckCircle sx={{ color: 'white', fontSize: 12 }} />
+                                  )}
+                                </Box>
+                                <Typography
+                                  variant="body2"
+                                  sx={{
+                                    color: colors.text,
+                                    fontSize: '0.9rem',
+                                    lineHeight: 1.4,
+                                    flex: 1,
+                                  }}
+                                >
+                                  {option.length > 35 ? `${option.substring(0, 35)}...` : option}
+                                </Typography>
+                              </Box>
+                            ))}
+                          </Box>
+                          {quiz.options?.length > 3 && (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: colors.textSecondary,
+                                fontStyle: 'italic',
+                                mt: 1,
+                                display: 'block'
+                              }}
+                            >
+                              +{quiz.options.length - 3} more options
+                            </Typography>
+                          )}
+                        </Box>
+
+                        {/* Correct Answer Highlight */}
+                        <Box
+                          sx={{
+                            background: `${colors.success}10`,
+                            border: `1px solid ${colors.success}30`,
+                            borderRadius: 2,
+                            p: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <CheckCircle sx={{ color: colors.success, fontSize: 18, mr: 2 }} />
+                          <Box>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                color: colors.textSecondary,
+                                fontWeight: 600,
+                                textTransform: 'uppercase',
+                                fontSize: '0.7rem',
+                                letterSpacing: '0.5px'
+                              }}
+                            >
+                              Correct Answer
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: colors.text,
+                                fontWeight: 600,
+                                fontSize: '0.9rem'
+                              }}
+                            >
+                              {quiz.answer}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </CardContent>
+
+                      <CardActions sx={{ justifyContent: 'space-between', px: 4, pb: 4, pt: 0 }}>
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                          <Button
+                            size="small"
+                            startIcon={<Visibility />}
+                            onClick={() => window.open(`/quiz/${quiz.pageId}`, '_blank')}
+                            sx={{
+                              color: colors.text,
+                              borderRadius: 2,
+                              px: 3,
+                              textTransform: 'none',
+                              fontWeight: 600,
+                              border: `1px solid ${colors.subtle}`,
+                              '&:hover': {
+                                background: colors.hover,
+                                borderColor: colors.accent,
+                              },
+                              transition: 'all 0.3s ease',
+                            }}
+                          >
+                            Preview
+                          </Button>
+                        </motion.div>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                          <Tooltip title="Edit Assessment">
+                            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                              <IconButton
+                                size="small"
+                                onClick={() => setEditDialog({ open: true, quiz })}
+                                sx={{
+                                  background: colors.accent,
+                                  color: 'white',
+                                  '&:hover': {
+                                    background: colors.accentSecondary,
+                                  },
+                                  transition: 'all 0.3s ease',
+                                }}
+                              >
+                                <Edit sx={{ fontSize: 16 }} />
+                              </IconButton>
+                            </motion.div>
+                          </Tooltip>
+                          <Tooltip title="Delete Assessment">
+                            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                              <IconButton
+                                size="small"
+                                onClick={() => setDeleteDialog({ open: true, quiz })}
+                                sx={{
+                                  background: colors.error,
+                                  color: 'white',
+                                  '&:hover': {
+                                    background: '#dc2626',
+                                  },
+                                  transition: 'all 0.3s ease',
+                                }}
+                              >
+                                <Delete sx={{ fontSize: 16 }} />
+                              </IconButton>
+                            </motion.div>
+                          </Tooltip>
+                        </Box>
+                      </CardActions>
+                    </Card>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </motion.div>
         )}
       </Container>
 
-      {/* Edit Quiz Dialog */}
+      {/* Edit Assessment Dialog */}
       <EditQuizDialog
         open={editDialog.open}
         quiz={editDialog.quiz}
@@ -533,29 +915,94 @@ const QuizManagement = () => {
         onClose={() => setDeleteDialog({ open: false, quiz: null })}
         maxWidth="sm"
         fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            background: colors.secondary,
+            border: `1px solid ${colors.subtle}`,
+            boxShadow: `0 25px 50px ${colors.shadow}`,
+          }
+        }}
       >
-        <DialogTitle sx={{ color: colors.primary, fontWeight: 600 }}>
-          🗑️ Delete Quiz Question
+        <DialogTitle sx={{
+          color: colors.text,
+          fontWeight: 700,
+          fontSize: '1.5rem',
+          textAlign: 'center',
+          pt: 4
+        }}>
+          <Box
+            sx={{
+              width: 60,
+              height: 60,
+              borderRadius: '50%',
+              background: colors.error,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mx: 'auto',
+              mb: 2,
+              boxShadow: `0 8px 24px ${colors.error}30`,
+            }}
+          >
+            <Delete sx={{ color: 'white', fontSize: 28 }} />
+          </Box>
+          Delete Assessment
         </DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            Are you sure you want to delete this quiz question?
+        <DialogContent sx={{ px: 4, pb: 2 }}>
+          <Typography
+            variant="body1"
+            sx={{
+              mb: 3,
+              color: colors.textSecondary,
+              textAlign: 'center',
+              fontSize: '1rem',
+              lineHeight: 1.6
+            }}
+          >
+            Are you sure you want to delete this assessment question? This action cannot be undone.
           </Typography>
           {deleteDialog.quiz && (
-            <Paper sx={{ p: 2, background: colors.lightest, borderRadius: 2 }}>
-              <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 600 }}>
+            <Box
+              sx={{
+                background: colors.primary,
+                border: `1px solid ${colors.subtle}`,
+                borderRadius: 3,
+                p: 3,
+                mb: 2
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{
+                  color: colors.text,
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  lineHeight: 1.5
+                }}
+              >
                 {deleteDialog.quiz.question}
               </Typography>
-            </Paper>
+            </Box>
           )}
-          <Typography variant="body2" sx={{ mt: 2, color: colors.secondary }}>
-            This action cannot be undone.
-          </Typography>
         </DialogContent>
-        <DialogActions sx={{ p: 3 }}>
+        <DialogActions sx={{ p: 4, pt: 2, gap: 2 }}>
           <Button
             onClick={() => setDeleteDialog({ open: false, quiz: null })}
-            sx={{ color: colors.secondary }}
+            sx={{
+              color: colors.text,
+              borderRadius: 3,
+              px: 4,
+              py: 1.5,
+              textTransform: 'none',
+              fontWeight: 600,
+              border: `1px solid ${colors.subtle}`,
+              '&:hover': {
+                background: colors.hover,
+                borderColor: colors.accent,
+              },
+              transition: 'all 0.3s ease',
+            }}
           >
             Cancel
           </Button>
@@ -563,11 +1010,23 @@ const QuizManagement = () => {
             onClick={() => handleDeleteQuiz(deleteDialog.quiz?.quizId)}
             variant="contained"
             sx={{
-              background: '#f44336',
-              '&:hover': { background: '#d32f2f' },
+              background: colors.error,
+              color: 'white',
+              borderRadius: 3,
+              px: 4,
+              py: 1.5,
+              textTransform: 'none',
+              fontWeight: 600,
+              boxShadow: `0 8px 32px ${colors.error}30`,
+              '&:hover': {
+                background: '#dc2626',
+                transform: 'translateY(-2px)',
+                boxShadow: `0 12px 40px ${colors.error}40`,
+              },
+              transition: 'all 0.3s ease',
             }}
           >
-            Delete
+            Delete Assessment
           </Button>
         </DialogActions>
       </Dialog>
@@ -575,14 +1034,22 @@ const QuizManagement = () => {
       {/* Success/Error Snackbar */}
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={4000}
+        autoHideDuration={5000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
-          sx={{ borderRadius: 2 }}
+          sx={{
+            borderRadius: 3,
+            fontWeight: 600,
+            fontSize: '0.95rem',
+            boxShadow: `0 8px 32px ${colors.shadow}`,
+            '& .MuiAlert-icon': {
+              fontSize: '1.2rem',
+            },
+          }}
         >
           {snackbar.message}
         </Alert>
@@ -591,7 +1058,7 @@ const QuizManagement = () => {
   );
 };
 
-// Edit Quiz Dialog Component
+// Edit Assessment Dialog Component
 const EditQuizDialog = ({ open, quiz, onClose, onSave, colors }) => {
   const [editedQuiz, setEditedQuiz] = useState({
     question: '',
@@ -619,11 +1086,46 @@ const EditQuizDialog = ({ open, quiz, onClose, onSave, colors }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle sx={{ color: colors.primary, fontWeight: 600 }}>
-        ✏️ Edit Quiz Question
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 4,
+          background: colors.secondary,
+          border: `1px solid ${colors.subtle}`,
+          boxShadow: `0 25px 50px ${colors.shadow}`,
+        }
+      }}
+    >
+      <DialogTitle sx={{
+        color: colors.text,
+        fontWeight: 700,
+        fontSize: '1.5rem',
+        textAlign: 'center',
+        pt: 4
+      }}>
+        <Box
+          sx={{
+            width: 60,
+            height: 60,
+            borderRadius: '50%',
+            background: colors.accent,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            mx: 'auto',
+            mb: 2,
+            boxShadow: `0 8px 24px ${colors.accent}30`,
+          }}
+        >
+          <Edit sx={{ color: 'white', fontSize: 28 }} />
+        </Box>
+        Edit Assessment
       </DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ px: 4 }}>
         <Box sx={{ mt: 2 }}>
           {/* Question */}
           <TextField
@@ -633,11 +1135,34 @@ const EditQuizDialog = ({ open, quiz, onClose, onSave, colors }) => {
             rows={3}
             value={editedQuiz.question}
             onChange={(e) => setEditedQuiz({ ...editedQuiz, question: e.target.value })}
-            sx={{ mb: 3 }}
+            sx={{
+              mb: 4,
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 3,
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                '&:hover fieldset': {
+                  borderColor: colors.accent,
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: colors.accent,
+                },
+              },
+              '& .MuiInputLabel-root.Mui-focused': {
+                color: colors.accent,
+              },
+            }}
           />
 
           {/* Options */}
-          <Typography variant="h6" sx={{ mb: 2, color: colors.primary }}>
+          <Typography
+            variant="h6"
+            sx={{
+              mb: 3,
+              color: colors.text,
+              fontWeight: 600,
+              fontSize: '1.1rem'
+            }}
+          >
             Answer Options:
           </Typography>
           {editedQuiz.options.map((option, index) => (
@@ -647,44 +1172,124 @@ const EditQuizDialog = ({ open, quiz, onClose, onSave, colors }) => {
               label={`Option ${String.fromCharCode(65 + index)}`}
               value={option}
               onChange={(e) => handleOptionChange(index, e.target.value)}
-              sx={{ mb: 2 }}
+              sx={{
+                mb: 3,
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 3,
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                  '&:hover fieldset': {
+                    borderColor: colors.accent,
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: colors.accent,
+                  },
+                },
+                '& .MuiInputLabel-root.Mui-focused': {
+                  color: colors.accent,
+                },
+              }}
             />
           ))}
 
           {/* Correct Answer */}
           <FormControl component="fieldset" sx={{ mt: 2 }}>
-            <FormLabel component="legend" sx={{ color: colors.primary, fontWeight: 600 }}>
+            <FormLabel
+              component="legend"
+              sx={{
+                color: colors.text,
+                fontWeight: 600,
+                fontSize: '1rem',
+                mb: 2
+              }}
+            >
               Correct Answer:
             </FormLabel>
             <RadioGroup
               row
               value={editedQuiz.answer}
               onChange={(e) => setEditedQuiz({ ...editedQuiz, answer: e.target.value })}
+              sx={{ gap: 2 }}
             >
               {['A', 'B', 'C', 'D'].map((letter) => (
                 <FormControlLabel
                   key={letter}
                   value={letter}
-                  control={<Radio sx={{ color: colors.secondary }} />}
-                  label={letter}
+                  control={
+                    <Radio
+                      sx={{
+                        color: colors.accent,
+                        '&.Mui-checked': {
+                          color: colors.accent,
+                        },
+                      }}
+                    />
+                  }
+                  label={
+                    <Typography
+                      sx={{
+                        color: colors.text,
+                        fontWeight: 600,
+                        fontSize: '1rem'
+                      }}
+                    >
+                      {letter}
+                    </Typography>
+                  }
+                  sx={{
+                    background: colors.primary,
+                    border: `1px solid ${colors.subtle}`,
+                    borderRadius: 2,
+                    px: 3,
+                    py: 1,
+                    m: 0,
+                    '&:hover': {
+                      background: colors.hover,
+                    },
+                  }}
                 />
               ))}
             </RadioGroup>
           </FormControl>
         </Box>
       </DialogContent>
-      <DialogActions sx={{ p: 3 }}>
-        <Button onClick={onClose} sx={{ color: colors.secondary }}>
+      <DialogActions sx={{ p: 4, pt: 2, gap: 2 }}>
+        <Button
+          onClick={onClose}
+          sx={{
+            color: colors.text,
+            borderRadius: 3,
+            px: 4,
+            py: 1.5,
+            textTransform: 'none',
+            fontWeight: 600,
+            border: `1px solid ${colors.subtle}`,
+            '&:hover': {
+              background: colors.hover,
+              borderColor: colors.accent,
+            },
+            transition: 'all 0.3s ease',
+          }}
+        >
           Cancel
         </Button>
         <Button
           onClick={handleSave}
           variant="contained"
           sx={{
-            background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+            background: colors.buttonBg,
+            color: colors.buttonText,
+            borderRadius: 3,
+            px: 4,
+            py: 1.5,
+            textTransform: 'none',
+            fontWeight: 600,
+            boxShadow: `0 8px 32px ${colors.shadow}`,
             '&:hover': {
-              background: `linear-gradient(135deg, ${colors.secondary}, ${colors.primary})`,
+              background: colors.buttonBg,
+              transform: 'translateY(-2px)',
+              boxShadow: `0 12px 40px ${colors.shadow}`,
             },
+            transition: 'all 0.3s ease',
           }}
         >
           Save Changes
