@@ -640,6 +640,116 @@ const LandingPage = () => {
         </Grid>
       </Container>
 
+      {/* Image Gallery Section */}
+      <Box sx={{ py: { xs: 8, md: 12 }, background: colors.primary }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              align="center"
+              sx={{
+                fontSize: { xs: '2rem', md: '3rem' },
+                fontWeight: 700,
+                color: colors.text,
+                mb: 2
+              }}
+            >
+              Explore EduPatch
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              sx={{
+                color: colors.textSecondary,
+                mb: 8,
+                fontWeight: 400,
+                maxWidth: '600px',
+                mx: 'auto'
+              }}
+            >
+              Discover the visual journey of transforming education through innovation
+            </Typography>
+
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Box
+                    component="img"
+                    src="/images/image1.jpg"
+                    alt="EduPatch Innovation 1"
+                    sx={{
+                      width: '100%',
+                      height: '300px',
+                      objectFit: 'cover',
+                      borderRadius: '20px',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                      }
+                    }}
+                  />
+                </motion.div>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Box
+                    component="img"
+                    src="/images/image 2.jpg"
+                    alt="EduPatch Innovation 2"
+                    sx={{
+                      width: '100%',
+                      height: '300px',
+                      objectFit: 'cover',
+                      borderRadius: '20px',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                      }
+                    }}
+                  />
+                </motion.div>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <motion.div
+                  whileHover={{ y: -10, scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Box
+                    component="img"
+                    src="/images/image3.png"
+                    alt="EduPatch Innovation 3"
+                    sx={{
+                      width: '100%',
+                      height: '300px',
+                      objectFit: 'cover',
+                      borderRadius: '20px',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
+                      }
+                    }}
+                  />
+                </motion.div>
+              </Grid>
+            </Grid>
+          </motion.div>
+        </Container>
+      </Box>
+
       {/* How it Works Section */}
       <Box sx={{ background: colors.secondary, py: 15 }}>
         <Container maxWidth="lg">
