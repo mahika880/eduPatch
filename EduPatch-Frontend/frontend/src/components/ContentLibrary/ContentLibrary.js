@@ -15,6 +15,10 @@ import {
   IconButton,
   Tooltip,
   Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import {
   Search,
@@ -57,6 +61,7 @@ const ContentLibrary = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [qrCodeModal, setQrCodeModal] = useState({ open: false, pageId: null, qrCodeUrl: null, loading: false, error: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,6 +127,25 @@ const ContentLibrary = () => {
         console.error('Error deleting content:', error);
       }
     }
+  };
+
+  const handleShowQRCode = async (pageId) => {
+    setQrCodeModal({ open: true, pageId, qrCodeUrl: null, loading: true, error: null });
+    try {
+      const response = await apiService.getQRCode(pageId);
+      const qrCodeUrl = URL.createObjectURL(response.data);
+      setQrCodeModal(prev => ({ ...prev, qrCodeUrl, loading: false }));
+    } catch (error) {
+      console.error('Error fetching QR code:', error);
+      setQrCodeModal(prev => ({ ...prev, loading: false, error: 'Failed to load QR code' }));
+    }
+  };
+
+  const handleCloseQRCodeModal = () => {
+    if (qrCodeModal.qrCodeUrl) {
+      URL.revokeObjectURL(qrCodeModal.qrCodeUrl);
+    }
+    setQrCodeModal({ open: false, pageId: null, qrCodeUrl: null, loading: false, error: null });
   };
 
   if (loading) {
@@ -684,13 +708,18 @@ const ContentLibrary = () => {
                             icon={<QrCode sx={{ fontSize: '0.9rem !important' }} />}
                             label="QR Code"
                             size="small"
+                            onClick={() => handleShowQRCode(page.pageId)}
                             sx={{
                               background: colors.accent + '20',
                               color: colors.accent,
                               fontSize: '0.7rem',
                               height: 24,
+                              cursor: 'pointer',
                               '& .MuiChip-icon': {
                                 color: colors.accent,
+                              },
+                              '&:hover': {
+                                background: colors.accent + '30',
                               },
                             }}
                           />
@@ -767,6 +796,97 @@ const ContentLibrary = () => {
           </motion.div>
         )}
       </Container>
+
+      {/* QR Code Modal */}
+      <Dialog
+        open={qrCodeModal.open}
+        onClose={handleCloseQRCodeModal}
+        maxWidth="sm"
+        fullWidth
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: 4,
+            background: colors.secondary,
+            border: `1px solid ${colors.subtle}`,
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            color: colors.text,
+            fontWeight: 600,
+            textAlign: 'center',
+            pb: 1,
+          }}
+        >
+          QR Code for Content Access
+        </DialogTitle>
+        <DialogContent sx={{ textAlign: 'center', pb: 3 }}>
+          {qrCodeModal.loading && (
+            <Box sx={{ py: 4 }}>
+              <CircularProgress sx={{ color: colors.accent }} />
+              <Typography sx={{ mt: 2, color: colors.textSecondary }}>
+                Generating QR code...
+              </Typography>
+            </Box>
+          )}
+          {qrCodeModal.error && (
+            <Alert
+              severity="error"
+              sx={{
+                borderRadius: 3,
+                background: 'rgba(244, 67, 54, 0.08)',
+                border: `1px solid rgba(244, 67, 54, 0.2)`,
+              }}
+            >
+              {qrCodeModal.error}
+            </Alert>
+          )}
+          {qrCodeModal.qrCodeUrl && (
+            <Box>
+              <Box
+                component="img"
+                src={qrCodeModal.qrCodeUrl}
+                alt="QR Code"
+                sx={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  borderRadius: 2,
+                  boxShadow: `0 8px 32px ${colors.shadow}`,
+                  border: `1px solid ${colors.subtle}`,
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  mt: 2,
+                  color: colors.textSecondary,
+                  fontSize: '0.9rem',
+                }}
+              >
+                Scan this QR code or share the link to access this content
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+          <Button
+            onClick={handleCloseQRCodeModal}
+            variant="outlined"
+            sx={{
+              borderRadius: 3,
+              borderColor: colors.subtle,
+              color: colors.text,
+              '&:hover': {
+                borderColor: colors.accent,
+                background: colors.hover,
+              },
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
