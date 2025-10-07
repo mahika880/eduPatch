@@ -14,6 +14,7 @@ import QuizManagement from './components/QuizManagement/QuizManagement';
 import QRScanner from './components/QRScanner/QRScanner';
 import Settings from './components/Settings/Settings'; // Add this import
 import About from './components/About/About';
+import Features from './components/Features/Features';
 import AdminLayout from './components/Layout/AdminLayout';
 import Navbar from './components/Navbar/Navbar';
 
@@ -52,6 +53,7 @@ const AppContent = () => {
                   <Route path="dashboard" element={<Dashboard />} />
                   <Route path="create" element={<ContentCreator />} />
                   <Route path="content" element={<ContentLibrary />} />
+                  <Route path="features" element={<Features />} />
                   <Route path="quizzes" element={<QuizManagement />} />
                   <Route path="qr-scanner" element={<QRScanner />} />
                   <Route path="about" element={<About />} />

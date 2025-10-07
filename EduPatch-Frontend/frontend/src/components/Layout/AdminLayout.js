@@ -72,7 +72,7 @@ const AdminLayout = ({ children }) => {
     },
     {
       text: 'Features',
-      path: '/features',
+      path: '/admin/features',
       description: 'Explore our innovative learning tools'
     },
 
