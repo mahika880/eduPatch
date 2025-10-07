@@ -3,675 +3,650 @@ import {
   Box,
   Container,
   Typography,
-  Grid,
-  Card,
-  CardContent,
   Button,
-  Chip,
-  Avatar,
   Divider,
 } from '@mui/material';
 import {
-  School,
-  Psychology,
-  Assessment,
-  QrCodeScanner,
-  AutoAwesome,
-  Group,
-  Security,
-  Speed,
-  SmartToy,
-  Book,
-  EmojiObjects,
-  TrendingUp,
+  PlayArrow,
+  ChevronRight,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
-// Landing Page Consistent Color Palette
+// Nike-inspired Color Palette with EduPatch theme
 const colors = {
   primary: '#FFFFFF',
   secondary: '#FAFAFA',
   text: '#1D1D1F',
   textSecondary: '#86868B',
   accent: '#2997FF',
-  accentSecondary: '#4F46E5',
-  subtle: '#F1F5F9',
-  hover: 'rgba(41, 151, 255, 0.08)',
-  shadow: 'rgba(0, 0, 0, 0.1)',
-  buttonBg: '#000000',
-  buttonText: '#FFFFFF',
-  success: '#10b981',
-  warning: '#f59e0b',
-  error: '#ef4444',
+  dark: '#000000',
+  lightGray: '#F5F5F7',
 };
 
 const About = () => {
   const navigate = useNavigate();
 
-  const features = [
-    {
-      icon: <Psychology sx={{ fontSize: 40, color: colors.accent }} />,
-      title: 'AI-Powered Content Generation',
-      description: 'Leverage advanced Gemini AI to create comprehensive educational content, summaries, and explanations automatically.',
-    },
-    {
-      icon: <Assessment sx={{ fontSize: 40, color: colors.accentSecondary }} />,
-      title: 'Smart Assessment Creation',
-      description: 'Generate intelligent quizzes and assessments that adapt to student learning patterns and difficulty levels.',
-    },
-    {
-      icon: <QrCodeScanner sx={{ fontSize: 40, color: colors.success }} />,
-      title: 'QR Code Integration',
-      description: 'Seamlessly connect physical textbooks with digital content through QR codes for enhanced learning experiences.',
-    },
-    {
-      icon: <AutoAwesome sx={{ fontSize: 40, color: colors.warning }} />,
-      title: 'Intelligent Summarization',
-      description: 'Transform complex educational content into clear, concise summaries that improve student comprehension.',
-    },
-    {
-      icon: <Security sx={{ fontSize: 40, color: colors.error }} />,
-      title: 'Secure & Private',
-      description: 'Enterprise-grade security ensures that educational content and student data remain protected and private.',
-    },
-    {
-      icon: <Speed sx={{ fontSize: 40, color: colors.accent }} />,
-      title: 'Lightning Fast',
-      description: 'Optimized performance ensures quick content generation and seamless user experiences across all devices.',
-    },
-  ];
-
-  const stats = [
-    { value: '10,000+', label: 'Content Pieces Generated', icon: <Book /> },
-    { value: '500+', label: 'Active Educators', icon: <School /> },
-    { value: '95%', label: 'Student Engagement', icon: <TrendingUp /> },
-    { value: '24/7', label: 'AI Availability', icon: <SmartToy /> },
-  ];
-
-  const team = [
-    {
-      name: 'AI-Powered Platform',
-      role: 'Content Generation Engine',
-      description: 'Built with Google Gemini AI for intelligent content creation',
-    },
-    {
-      name: 'Modern Tech Stack',
-      role: 'Full-Stack Development',
-      description: 'React frontend with Spring Boot backend and MongoDB',
-    },
-    {
-      name: 'Educational Focus',
-      role: 'Learning Innovation',
-      description: 'Designed specifically for modern educational needs',
-    },
-  ];
-
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        background: colors.primary,
-        position: 'relative',
-        overflow: 'hidden',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '600px',
-          height: '600px',
-          background: `radial-gradient(circle, ${colors.hover} 0%, transparent 70%)`,
-          borderRadius: '50%',
-          opacity: 0.6,
-          pointerEvents: 'none',
-        },
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: '500px',
-          height: '500px',
-          background: `radial-gradient(circle, ${colors.accent}10 0%, transparent 70%)`,
-          borderRadius: '50%',
-          opacity: 0.4,
-          pointerEvents: 'none',
-        },
-      }}
-    >
-      {/* Subtle Background Pattern */}
+    <Box sx={{ background: colors.primary, minHeight: '100vh' }}>
+      {/* Hero Section */}
       <Box
         sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundImage: `
-            radial-gradient(circle at 25% 25%, ${colors.hover} 1px, transparent 1px),
-            radial-gradient(circle at 75% 75%, ${colors.hover} 1px, transparent 1px)
-          `,
-          backgroundSize: '100px 100px',
-          opacity: 0.3,
-          pointerEvents: 'none',
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.lightGray} 100%)`,
+          position: 'relative',
+          overflow: 'hidden',
         }}
-      />
+      >
+        {/* Background Pattern */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundImage: `
+              radial-gradient(circle at 20% 80%, ${colors.accent}15 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, ${colors.accent}10 0%, transparent 50%)
+            `,
+            opacity: 0.6,
+          }}
+        />
 
-      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 1, py: 8 }}>
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Box textAlign="center" mb={8}>
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
             <Typography
               variant="h1"
               sx={{
+                fontSize: { xs: '3rem', md: '6rem', lg: '8rem' },
+                fontWeight: 900,
                 color: colors.text,
-                fontWeight: 800,
-                mb: 3,
-                fontSize: { xs: '2.5rem', md: '4rem' },
+                lineHeight: 0.9,
+                mb: 4,
                 letterSpacing: '-0.02em',
               }}
             >
-              About EduPatch
+              EDU
+              <Box component="span" sx={{ color: colors.accent }}>PATCH</Box>
             </Typography>
+
             <Typography
               variant="h4"
               sx={{
+                fontSize: { xs: '1.5rem', md: '2rem' },
+                fontWeight: 300,
                 color: colors.textSecondary,
-                fontWeight: 400,
-                maxWidth: '800px',
-                mx: 'auto',
-                lineHeight: 1.6,
-                fontSize: '1.5rem',
-              }}
-            >
-              Revolutionizing Education Through AI-Powered Content Creation and Interactive Learning
-            </Typography>
-          </Box>
-        </motion.div>
-
-        {/* Mission Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <Card
-            sx={{
-              mb: 8,
-              borderRadius: 4,
-              background: `rgba(255, 255, 255, 0.8)`,
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.subtle}`,
-              boxShadow: `0 20px 40px ${colors.shadow}`,
-            }}
-          >
-            <CardContent sx={{ p: 6 }}>
-              <Box textAlign="center" mb={4}>
-                <EmojiObjects sx={{ fontSize: 60, color: colors.accent, mb: 3 }} />
-                <Typography
-                  variant="h3"
-                  sx={{
-                    color: colors.text,
-                    fontWeight: 700,
-                    mb: 3,
-                    fontSize: '2.5rem',
-                  }}
-                >
-                  Our Mission
-                </Typography>
-              </Box>
-              <Typography
-                variant="h5"
-                sx={{
-                  color: colors.textSecondary,
-                  lineHeight: 1.8,
-                  fontSize: '1.25rem',
-                  textAlign: 'center',
-                  maxWidth: '900px',
-                  mx: 'auto',
-                }}
-              >
-                EduPatch is dedicated to transforming education by harnessing the power of artificial intelligence.
-                We empower educators to create engaging, personalized learning experiences while maintaining the
-                human touch that makes education meaningful. Our platform bridges the gap between traditional
-                teaching methods and cutting-edge technology.
-              </Typography>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          <Grid container spacing={4} sx={{ mb: 8 }}>
-            {stats.map((stat, index) => (
-              <Grid item xs={12} sm={6} md={3} key={stat.label}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.6 + index * 0.1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card
-                    sx={{
-                      p: 4,
-                      borderRadius: 4,
-                      textAlign: 'center',
-                      background: colors.secondary,
-                      border: `1px solid ${colors.subtle}`,
-                      boxShadow: `0 8px 32px ${colors.shadow}`,
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: `0 20px 40px ${stat.value.includes('95') ? colors.success : colors.accent}20`,
-                        borderColor: stat.value.includes('95') ? colors.success : colors.accent,
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 3,
-                        background: stat.value.includes('95') ? colors.success + '20' : colors.accent + '20',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mx: 'auto',
-                        mb: 3,
-                        boxShadow: `0 8px 24px ${stat.value.includes('95') ? colors.success : colors.accent}30`,
-                      }}
-                    >
-                      {React.cloneElement(stat.icon, { sx: { color: stat.value.includes('95') ? colors.success : colors.accent, fontSize: 28 } })}
-                    </Box>
-                    <Typography
-                      variant="h2"
-                      sx={{
-                        fontWeight: 800,
-                        color: colors.text,
-                        mb: 1,
-                        fontSize: '2.5rem'
-                      }}
-                    >
-                      {stat.value}
-                    </Typography>
-                    <Typography
-                      variant="h6"
-                      sx={{
-                        color: colors.textSecondary,
-                        fontWeight: 600,
-                        fontSize: '1rem'
-                      }}
-                    >
-                      {stat.label}
-                    </Typography>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-
-        {/* Features Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <Box textAlign="center" mb={6}>
-            <Typography
-              variant="h2"
-              sx={{
-                color: colors.text,
-                fontWeight: 700,
-                mb: 3,
-                fontSize: '3rem',
-              }}
-            >
-              Powerful Features
-            </Typography>
-            <Typography
-              variant="h5"
-              sx={{
-                color: colors.textSecondary,
-                fontWeight: 400,
+                mb: 6,
                 maxWidth: '600px',
                 mx: 'auto',
-                lineHeight: 1.6,
+                lineHeight: 1.4,
               }}
             >
-              Discover the innovative tools that make EduPatch the future of education
+              Revolutionizing education through AI-powered innovation
             </Typography>
-          </Box>
 
-          <Grid container spacing={4}>
-            {features.map((feature, index) => (
-              <Grid item xs={12} md={6} lg={4} key={feature.title}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 0.8 + index * 0.1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card
-                    sx={{
-                      height: '100%',
-                      borderRadius: 4,
-                      background: colors.secondary,
-                      border: `1px solid ${colors.subtle}`,
-                      boxShadow: `0 8px 32px ${colors.shadow}`,
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: `0 20px 40px ${colors.accent}20`,
-                        borderColor: colors.accent,
-                      },
-                    }}
-                  >
-                    <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                      <Box sx={{ mb: 3 }}>
-                        {feature.icon}
-                      </Box>
-                      <Typography
-                        variant="h5"
-                        sx={{
-                          color: colors.text,
-                          fontWeight: 600,
-                          mb: 3,
-                          fontSize: '1.25rem',
-                        }}
-                      >
-                        {feature.title}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: colors.textSecondary,
-                          lineHeight: 1.6,
-                          fontSize: '1rem',
-                        }}
-                      >
-                        {feature.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-
-        {/* Technology Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
-        >
-          <Card
-            sx={{
-              mt: 8,
-              mb: 8,
-              borderRadius: 4,
-              background: `rgba(255, 255, 255, 0.8)`,
-              backdropFilter: 'blur(20px)',
-              border: `1px solid ${colors.subtle}`,
-              boxShadow: `0 20px 40px ${colors.shadow}`,
-            }}
-          >
-            <CardContent sx={{ p: 6 }}>
-              <Box textAlign="center" mb={6}>
-                <SmartToy sx={{ fontSize: 60, color: colors.accent, mb: 3 }} />
-                <Typography
-                  variant="h3"
-                  sx={{
-                    color: colors.text,
-                    fontWeight: 700,
-                    mb: 3,
-                    fontSize: '2.5rem',
-                  }}
-                >
-                  Built with Modern Technology
-                </Typography>
-              </Box>
-
-              <Grid container spacing={4}>
-                <Grid item xs={12} md={4}>
-                  <Box textAlign="center">
-                    <Chip
-                      label="Google Gemini AI"
-                      sx={{
-                        mb: 2,
-                        background: colors.accent + '20',
-                        color: colors.accent,
-                        fontSize: '1rem',
-                        py: 1,
-                        px: 2,
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ color: colors.textSecondary, lineHeight: 1.6 }}>
-                      Advanced AI model for intelligent content generation, summarization, and assessment creation.
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <Box textAlign="center">
-                    <Chip
-                      label="React & Spring Boot"
-                      sx={{
-                        mb: 2,
-                        background: colors.accentSecondary + '20',
-                        color: colors.accentSecondary,
-                        fontSize: '1rem',
-                        py: 1,
-                        px: 2,
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ color: colors.textSecondary, lineHeight: 1.6 }}>
-                      Modern full-stack architecture ensuring scalability, security, and exceptional user experience.
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={4}>
-                  <Box textAlign="center">
-                    <Chip
-                      label="MongoDB & QR Integration"
-                      sx={{
-                        mb: 2,
-                        background: colors.success + '20',
-                        color: colors.success,
-                        fontSize: '1rem',
-                        py: 1,
-                        px: 2,
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ color: colors.textSecondary, lineHeight: 1.6 }}>
-                      NoSQL database with seamless QR code generation for connecting physical and digital learning.
-                    </Typography>
-                  </Box>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Team Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-        >
-          <Box textAlign="center" mb={6}>
-            <Typography
-              variant="h2"
-              sx={{
-                color: colors.text,
-                fontWeight: 700,
-                mb: 3,
-                fontSize: '3rem',
-              }}
-            >
-              Meet Our Technology
-            </Typography>
-          </Box>
-
-          <Grid container spacing={4}>
-            {team.map((member, index) => (
-              <Grid item xs={12} md={4} key={member.name}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.6,
-                    delay: 1.4 + index * 0.1,
-                    type: "spring",
-                    stiffness: 100
-                  }}
-                  whileHover={{ y: -8 }}
-                >
-                  <Card
-                    sx={{
-                      borderRadius: 4,
-                      background: colors.secondary,
-                      border: `1px solid ${colors.subtle}`,
-                      boxShadow: `0 8px 32px ${colors.shadow}`,
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: `0 20px 40px ${colors.accent}20`,
-                        borderColor: colors.accent,
-                      },
-                    }}
-                  >
-                    <CardContent sx={{ p: 4, textAlign: 'center' }}>
-                      <Avatar
-                        sx={{
-                          width: 80,
-                          height: 80,
-                          bgcolor: colors.accent,
-                          mx: 'auto',
-                          mb: 3,
-                          fontSize: '2rem',
-                        }}
-                      >
-                        {member.name.charAt(0)}
-                      </Avatar>
-                      <Typography
-                        variant="h5"
-                        sx={{
-                          color: colors.text,
-                          fontWeight: 600,
-                          mb: 1,
-                          fontSize: '1.25rem',
-                        }}
-                      >
-                        {member.name}
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        sx={{
-                          color: colors.accent,
-                          fontWeight: 500,
-                          mb: 3,
-                        }}
-                      >
-                        {member.role}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: colors.textSecondary,
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {member.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </Grid>
-            ))}
-          </Grid>
-        </motion.div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.6 }}
-        >
-          <Box
-            sx={{
-              mt: 8,
-              p: 6,
-              borderRadius: 4,
-              background: `linear-gradient(135deg, ${colors.accent} 0%, ${colors.accentSecondary} 100%)`,
-              textAlign: 'center',
-              color: 'white',
-            }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 700,
-                mb: 3,
-                fontSize: '2.5rem',
-              }}
-            >
-              Ready to Transform Education?
-            </Typography>
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 4,
-                opacity: 0.9,
-                fontSize: '1.25rem',
-                lineHeight: 1.6,
-              }}
-            >
-              Join thousands of educators who are already using EduPatch to create engaging, AI-powered learning experiences.
-            </Typography>
             <Button
               variant="contained"
               size="large"
-              onClick={() => navigate('/admin/login')}
+              onClick={() => navigate('/admin/create')}
+              endIcon={<ChevronRight />}
               sx={{
-                background: 'white',
-                color: colors.accent,
-                borderRadius: 3,
+                background: colors.dark,
+                color: colors.primary,
+                borderRadius: 0,
                 px: 6,
                 py: 2,
                 fontSize: '1.1rem',
                 fontWeight: 600,
                 textTransform: 'none',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.2)',
                 '&:hover': {
-                  background: 'white',
+                  background: colors.text,
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 40px rgba(0,0,0,0.3)',
                 },
                 transition: 'all 0.3s ease',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
               }}
             >
-              Get Started Today
+              Start Creating
             </Button>
-          </Box>
+          </motion.div>
+        </Container>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          style={{
+            position: 'absolute',
+            bottom: '2rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <PlayArrow
+              sx={{
+                fontSize: '2rem',
+                color: colors.textSecondary,
+                transform: 'rotate(90deg)',
+              }}
+            />
+          </motion.div>
         </motion.div>
-      </Container>
+      </Box>
+
+      {/* Mission Section */}
+      <Box sx={{ py: { xs: 8, md: 16 }, background: colors.primary }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                color: colors.text,
+                textAlign: 'center',
+                mb: 6,
+                lineHeight: 1.1,
+              }}
+            >
+              Our Mission
+            </Typography>
+
+            <Typography
+              variant="h5"
+              sx={{
+                fontSize: { xs: '1.25rem', md: '1.5rem' },
+                fontWeight: 300,
+                color: colors.textSecondary,
+                textAlign: 'center',
+                maxWidth: '800px',
+                mx: 'auto',
+                lineHeight: 1.6,
+                mb: 8,
+              }}
+            >
+              To democratize education by empowering educators with cutting-edge AI technology,
+              creating personalized learning experiences that adapt to every student's unique journey.
+            </Typography>
+
+            <Box sx={{ textAlign: 'center' }}>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => navigate('/admin/content')}
+                sx={{
+                  borderColor: colors.accent,
+                  color: colors.accent,
+                  borderRadius: 0,
+                  px: 6,
+                  py: 2,
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  '&:hover': {
+                    background: colors.accent,
+                    color: colors.primary,
+                    borderColor: colors.accent,
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Explore Content
+              </Button>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Innovation Section */}
+      <Box sx={{ py: { xs: 8, md: 16 }, background: colors.lightGray }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                color: colors.text,
+                textAlign: 'center',
+                mb: 4,
+              }}
+            >
+              Innovation
+            </Typography>
+
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                color: colors.accent,
+                textAlign: 'center',
+                mb: 8,
+                lineHeight: 1.1,
+              }}
+            >
+              Meets Education
+            </Typography>
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 8 }}>
+              <Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontSize: '2rem',
+                    fontWeight: 600,
+                    color: colors.text,
+                    mb: 4,
+                  }}
+                >
+                  AI-Powered Learning
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: colors.textSecondary,
+                    lineHeight: 1.7,
+                    mb: 4,
+                  }}
+                >
+                  Our platform leverages Google Gemini AI to create intelligent, adaptive content
+                  that evolves with each student's learning pace and style.
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: colors.textSecondary,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  From automated content generation to smart assessments, we make education
+                  more efficient, engaging, and effective.
+                </Typography>
+              </Box>
+
+              <Box>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontSize: '2rem',
+                    fontWeight: 600,
+                    color: colors.text,
+                    mb: 4,
+                  }}
+                >
+                  Seamless Integration
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: colors.textSecondary,
+                    lineHeight: 1.7,
+                    mb: 4,
+                  }}
+                >
+                  QR code technology bridges the gap between physical textbooks and digital
+                  learning experiences, creating a unified educational ecosystem.
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: '1.1rem',
+                    color: colors.textSecondary,
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Print QR codes, scan with mobile devices, and instantly access rich,
+                  interactive content that brings textbooks to life.
+                </Typography>
+              </Box>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Impact Section */}
+      <Box sx={{ py: { xs: 8, md: 16 }, background: colors.primary }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                color: colors.text,
+                textAlign: 'center',
+                mb: 8,
+              }}
+            >
+              The Impact
+            </Typography>
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 6 }}>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: '3rem',
+                    fontWeight: 900,
+                    color: colors.accent,
+                    mb: 2,
+                  }}
+                >
+                  10,000+
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    color: colors.textSecondary,
+                  }}
+                >
+                  Content Pieces Created
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: '3rem',
+                    fontWeight: 900,
+                    color: colors.accent,
+                    mb: 2,
+                  }}
+                >
+                  500+
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    color: colors.textSecondary,
+                  }}
+                >
+                  Active Educators
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    fontSize: '3rem',
+                    fontWeight: 900,
+                    color: colors.accent,
+                    mb: 2,
+                  }}
+                >
+                  95%
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: '1.1rem',
+                    fontWeight: 500,
+                    color: colors.textSecondary,
+                  }}
+                >
+                  Student Engagement
+                </Typography>
+              </Box>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Technology Section */}
+      <Box sx={{ py: { xs: 8, md: 16 }, background: colors.lightGray }}>
+        <Container maxWidth="lg">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                color: colors.text,
+                textAlign: 'center',
+                mb: 8,
+              }}
+            >
+              Built for the Future
+            </Typography>
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' }, gap: 6 }}>
+              <Box sx={{ textAlign: 'center', p: 4 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontSize: '1.5rem',
+                    fontWeight: 600,
+                    color: colors.text,
+                    mb: 3,
+                  }}
+                >
+                  Google Gemini AI
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: colors.textSecondary,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Advanced AI model powering intelligent content generation,
+                  summarization, and adaptive assessments.
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: 'center', p: 4 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontSize: '1.5rem',
+                    fontWeight: 600,
+                    color: colors.text,
+                    mb: 3,
+                  }}
+                >
+                  Modern Architecture
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: colors.textSecondary,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  React frontend with Spring Boot backend, ensuring
+                  scalability, security, and exceptional performance.
+                </Typography>
+              </Box>
+
+              <Box sx={{ textAlign: 'center', p: 4 }}>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontSize: '1.5rem',
+                    fontWeight: 600,
+                    color: colors.text,
+                    mb: 3,
+                  }}
+                >
+                  QR Integration
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: colors.textSecondary,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Seamless connection between physical textbooks and
+                  digital content through advanced QR technology.
+                </Typography>
+              </Box>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* CTA Section */}
+      <Box
+        sx={{
+          py: { xs: 8, md: 16 },
+          background: colors.dark,
+          color: colors.primary,
+          textAlign: 'center',
+        }}
+      >
+        <Container maxWidth="md">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: true }}
+          >
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                mb: 4,
+                lineHeight: 1.1,
+              }}
+            >
+              Ready to Make
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 700,
+                mb: 6,
+                lineHeight: 1.1,
+              }}
+            >
+              Education Better?
+            </Typography>
+
+            <Typography
+              variant="h5"
+              sx={{
+                fontSize: '1.25rem',
+                fontWeight: 300,
+                mb: 8,
+                opacity: 0.9,
+                lineHeight: 1.6,
+              }}
+            >
+              Join the revolution. Start creating AI-powered educational content today.
+            </Typography>
+
+            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={() => navigate('/admin/create')}
+                sx={{
+                  background: colors.primary,
+                  color: colors.dark,
+                  borderRadius: 0,
+                  px: 6,
+                  py: 2,
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  '&:hover': {
+                    background: colors.lightGray,
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Start Creating
+              </Button>
+
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => navigate('/admin/login')}
+                sx={{
+                  borderColor: colors.primary,
+                  color: colors.primary,
+                  borderRadius: 0,
+                  px: 6,
+                  py: 2,
+                  fontSize: '1.1rem',
+                  fontWeight: 600,
+                  textTransform: 'none',
+                  '&:hover': {
+                    background: colors.primary,
+                    color: colors.dark,
+                  },
+                  transition: 'all 0.3s ease',
+                }}
+              >
+                Sign In
+              </Button>
+            </Box>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box sx={{ py: 4, background: colors.primary, borderTop: `1px solid ${colors.lightGray}` }}>
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: colors.textSecondary,
+                fontWeight: 500,
+              }}
+            >
+              © 2024 EduPatch. Revolutionizing education through AI-powered innovation.
+            </Typography>
+          </Box>
+        </Container>
+      </Box>
     </Box>
   );
 };
