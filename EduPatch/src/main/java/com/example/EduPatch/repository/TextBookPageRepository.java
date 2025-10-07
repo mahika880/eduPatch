@@ -10,4 +10,5 @@ import java.util.List;
 public interface TextBookPageRepository extends MongoRepository<TextBookPage , String> {
 
     List<TextBookPage> findPagesByChapter(String chapter);
+    List<TextBookPage> findByCreatedBy(String createdBy);
 }

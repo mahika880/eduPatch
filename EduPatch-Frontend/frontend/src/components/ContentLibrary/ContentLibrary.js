@@ -32,10 +32,12 @@ import {
   AutoAwesome,
   FilterList,
   QrCode,
+  Download,
 } from '@mui/icons-material';
 import { apiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 // Landing Page Consistent Color Palette
 const colors = {
@@ -63,6 +65,7 @@ const ContentLibrary = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [qrCodeModal, setQrCodeModal] = useState({ open: false, pageId: null, qrCodeUrl: null, loading: false, error: null });
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchContent();
@@ -75,10 +78,17 @@ const ContentLibrary = () => {
   const fetchContent = async () => {
     try {
       setLoading(true);
-      const response = await apiService.getAllPages();
-      setPages(response.data);
+      if (user && user.id) {
+        const response = await apiService.getPagesByUser(user.id);
+        setPages(response.data || []);
+      } else {
+        // Fallback to all pages if no user is logged in
+        const response = await apiService.getAllPages();
+        setPages(response.data || []);
+      }
     } catch (error) {
       console.error('Error fetching content:', error);
+      setPages([]);
     } finally {
       setLoading(false);
     }
@@ -146,6 +156,25 @@ const ContentLibrary = () => {
       URL.revokeObjectURL(qrCodeModal.qrCodeUrl);
     }
     setQrCodeModal({ open: false, pageId: null, qrCodeUrl: null, loading: false, error: null });
+  };
+
+  const handleDownloadQRCode = async () => {
+    if (!qrCodeModal.qrCodeUrl) return;
+
+    try {
+      const response = await fetch(qrCodeModal.qrCodeUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `qr-code-${qrCodeModal.pageId}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading QR code:', error);
+    }
   };
 
   if (loading) {
@@ -869,7 +898,27 @@ const ContentLibrary = () => {
             </Box>
           )}
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', pb: 3 }}>
+        <DialogActions sx={{ justifyContent: 'center', pb: 3, gap: 2 }}>
+          <Button
+            onClick={handleDownloadQRCode}
+            variant="contained"
+            startIcon={<Download />}
+            disabled={!qrCodeModal.qrCodeUrl}
+            sx={{
+              borderRadius: 3,
+              background: colors.accent,
+              color: 'white',
+              '&:hover': {
+                background: colors.accentSecondary,
+              },
+              '&:disabled': {
+                background: colors.subtle,
+                color: colors.textSecondary,
+              },
+            }}
+          >
+            Download QR Code
+          </Button>
           <Button
             onClick={handleCloseQRCodeModal}
             variant="outlined"

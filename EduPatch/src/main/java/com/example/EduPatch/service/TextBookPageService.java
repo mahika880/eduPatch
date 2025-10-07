@@ -31,6 +31,10 @@ public class TextBookPageService {
         return textBookPageRepository.findPagesByChapter(chapter);
     }
 
+    public List<TextBookPage> getPagesByCreatedBy(String createdBy) {
+        return textBookPageRepository.findByCreatedBy(createdBy);
+    }
+
     public TextBookPage createPage(TextBookPage textBookPage) {
         return textBookPageRepository.save(textBookPage);
     }

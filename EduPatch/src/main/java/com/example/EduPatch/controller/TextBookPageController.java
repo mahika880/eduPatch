@@ -61,6 +61,16 @@ public class TextBookPageController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TextBookPage>> getPagesByUser(@PathVariable String userId) {
+        List<TextBookPage> pages = textBookPageService.getPagesByCreatedBy(userId);
+
+        if (pages != null && !pages.isEmpty()) {
+            return ResponseEntity.ok(pages);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
     
     // New endpoints for AI content generation
     

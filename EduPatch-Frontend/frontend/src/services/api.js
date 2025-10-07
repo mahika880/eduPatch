@@ -27,6 +27,7 @@ export const apiService = {
   
   // Pages (connects to TextBookPageController)
   getAllPages: () => api.get('/pages'),
+  getPagesByUser: (userId) => api.get(`/pages/user/${userId}`),
   getPageById: (pageId) => api.get(`/pages/${pageId}`),
   getQRCode: (pageId) => api.get(`/pages/${pageId}/qrcode`, { responseType: 'blob' }),
   
