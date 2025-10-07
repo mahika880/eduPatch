@@ -93,7 +93,7 @@ const AdminLayout = ({ children }) => {
     },
     {
       text: 'About',
-      path: '/about',
+      path: '/admin/about',
       description: 'Learn about our AI-powered educational platform'
     }
   ];

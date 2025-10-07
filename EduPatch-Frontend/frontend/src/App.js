@@ -13,6 +13,7 @@ import ContentLibrary from './components/ContentLibrary/ContentLibrary';
 import QuizManagement from './components/QuizManagement/QuizManagement';
 import QRScanner from './components/QRScanner/QRScanner';
 import Settings from './components/Settings/Settings'; // Add this import
+import About from './components/About/About';
 import AdminLayout from './components/Layout/AdminLayout';
 import Navbar from './components/Navbar/Navbar';
 
@@ -53,6 +54,7 @@ const AppContent = () => {
                   <Route path="content" element={<ContentLibrary />} />
                   <Route path="quizzes" element={<QuizManagement />} />
                   <Route path="qr-scanner" element={<QRScanner />} />
+                  <Route path="about" element={<About />} />
                   <Route path="cache" element={<div>Offline Cache Page (Coming Soon)</div>} />
                   <Route path="settings" element={<Settings />} />
                 </Routes>
