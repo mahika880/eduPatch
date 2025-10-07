@@ -283,8 +283,8 @@ const About = () => {
         <Box sx={{ flex: 1, position: 'relative' }}>
           <Box
             component="img"
-            src="/images/bdb0266036e0239b97f0b82bcadd3045.jpg"
-            alt="Innovation in education"
+            src="/images/ChatGPT Image Oct 7, 2025, 07_13_13 PM.png"
+            alt="AI-powered education innovation"
             sx={{
               width: '100%',
               height: '100%',
