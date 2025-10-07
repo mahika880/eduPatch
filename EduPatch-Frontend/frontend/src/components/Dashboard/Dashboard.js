@@ -640,114 +640,222 @@ const LandingPage = () => {
         </Grid>
       </Container>
 
-      {/* Image Gallery Section */}
-      <Box sx={{ py: { xs: 8, md: 12 }, background: colors.primary }}>
-        <Container maxWidth="lg">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-          >
-            <Typography
-              variant="h2"
-              align="center"
-              sx={{
-                fontSize: { xs: '2rem', md: '3rem' },
-                fontWeight: 700,
-                color: colors.text,
-                mb: 2
-              }}
+      {/* Innovation Showcase - Image + Text */}
+      <Box sx={{ display: 'flex', minHeight: '80vh' }}>
+        <Box sx={{ flex: 1, position: 'relative' }}>
+          <Box
+            component="img"
+            src="/images/image1.jpg"
+            alt="AI-powered education innovation"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: { xs: 4, md: 8 },
+            background: colors.primary,
+          }}
+        >
+          <Container maxWidth="sm">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: true }}
             >
-              Explore EduPatch
-            </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              sx={{
-                color: colors.textSecondary,
-                mb: 8,
-                fontWeight: 400,
-                maxWidth: '600px',
-                mx: 'auto'
-              }}
-            >
-              Discover the visual journey of transforming education through innovation
-            </Typography>
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: { xs: '2rem', md: '3rem' },
+                  fontWeight: 700,
+                  color: colors.text,
+                  mb: 4,
+                  lineHeight: 1.1,
+                }}
+              >
+                Innovation
+                <Box component="span" sx={{ color: colors.accent }}> Redefined </Box>
+              </Typography>
 
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={4}>
-                <motion.div
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Box
-                    component="img"
-                    src="/images/image1.jpg"
-                    alt="EduPatch Innovation 1"
-                    sx={{
-                      width: '100%',
-                      height: '300px',
-                      objectFit: 'cover',
-                      borderRadius: '20px',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                      }
-                    }}
-                  />
-                </motion.div>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <motion.div
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Box
-                    component="img"
-                    src="/images/image 2.jpg"
-                    alt="EduPatch Innovation 2"
-                    sx={{
-                      width: '100%',
-                      height: '300px',
-                      objectFit: 'cover',
-                      borderRadius: '20px',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                      }
-                    }}
-                  />
-                </motion.div>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <motion.div
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Box
-                    component="img"
-                    src="/images/image3.png"
-                    alt="EduPatch Innovation 3"
-                    sx={{
-                      width: '100%',
-                      height: '300px',
-                      objectFit: 'cover',
-                      borderRadius: '20px',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-                      transition: 'all 0.3s ease',
-                      '&:hover': {
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.15)',
-                      }
-                    }}
-                  />
-                </motion.div>
-              </Grid>
-            </Grid>
-          </motion.div>
-        </Container>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: '1.25rem',
+                  fontWeight: 300,
+                  color: colors.textSecondary,
+                  lineHeight: 1.6,
+                  mb: 4,
+                }}
+              >
+                Experience the future of education with cutting-edge AI technology.
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: '1rem',
+                  color: colors.textSecondary,
+                  lineHeight: 1.6,
+                  mb: 6,
+                }}
+              >
+                From intelligent content generation to adaptive learning paths,
+                EduPatch transforms traditional education into an interactive,
+                personalized experience.
+              </Typography>
+            </motion.div>
+          </Container>
+        </Box>
+      </Box>
+
+      {/* Technology Preview - Text + Image */}
+      <Box sx={{ display: 'flex', minHeight: '80vh' }}>
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            p: { xs: 4, md: 8 },
+            background: colors.primary,
+          }}
+        >
+          <Container maxWidth="sm">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: true }}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: { xs: '2rem', md: '3rem' },
+                  fontWeight: 700,
+                  color: colors.text,
+                  mb: 4,
+                  lineHeight: 1.1,
+                }}
+              >
+                Smart
+                <Box component="span" sx={{ color: colors.accent }}> Learning </Box>
+                Platform
+              </Typography>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: '1.25rem',
+                  fontWeight: 300,
+                  color: colors.textSecondary,
+                  lineHeight: 1.6,
+                  mb: 4,
+                }}
+              >
+                Advanced analytics and adaptive assessments for every student.
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{
+                  fontSize: '1rem',
+                  color: colors.textSecondary,
+                  lineHeight: 1.6,
+                  mb: 6,
+                }}
+              >
+                Track progress, identify learning gaps, and create personalized
+                educational journeys that adapt to each student's unique needs
+                and pace.
+              </Typography>
+            </motion.div>
+          </Container>
+        </Box>
+        <Box sx={{ flex: 1, position: 'relative' }}>
+          <Box
+            component="img"
+            src="/images/image 2.jpg"
+            alt="Smart learning platform"
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </Box>
+      </Box>
+
+      {/* Future Vision - Full Width Image */}
+      <Box sx={{ position: 'relative', height: '70vh', overflow: 'hidden' }}>
+        <Box
+          component="img"
+          src="/images/image3.png"
+          alt="Future of education"
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%)`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Container maxWidth="md" sx={{ textAlign: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: true }}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  fontSize: { xs: '2rem', md: '3.5rem' },
+                  fontWeight: 700,
+                  color: colors.primary,
+                  mb: 4,
+                  lineHeight: 1.1,
+                }}
+              >
+                The Future of
+                <Box component="span" sx={{ color: colors.accent }}> Education </Box>
+                is Here
+              </Typography>
+
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: '1.25rem',
+                  fontWeight: 300,
+                  color: colors.primary,
+                  mb: 6,
+                  lineHeight: 1.6,
+                  opacity: 0.9,
+                }}
+              >
+                Join thousands of educators revolutionizing learning with AI-powered tools
+              </Typography>
+            </motion.div>
+          </Container>
+        </Box>
       </Box>
 
       {/* How it Works Section */}
