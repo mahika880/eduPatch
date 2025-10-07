@@ -82,16 +82,6 @@ const AdminLayout = ({ children }) => {
       description: 'Create and manage smart assessments'
     },
     {
-      text: 'Resources',
-      path: '/resources',
-      description: 'Educational materials and guides'
-    },
-    {
-      text: 'Community',
-      path: '/community',
-      description: 'Connect with other educators'
-    },
-    {
       text: 'About',
       path: '/admin/about',
       description: 'Learn about our AI-powered educational platform'
