@@ -39,17 +39,18 @@ public class DemoController {
             String content = request.getContent();
             String chapter = request.getChapter();
             String pageNumber = request.getPageNumber();
-            
+            String userId = request.getUserId();
+
             if (content == null || content.trim().isEmpty()) {
                 Map<String, String> response = new HashMap<>();
                 response.put("error", "Content is required");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            
+
             // Step 1: Generate summary and explanation
             String summary = geminiService.generateSummary(content);
             String explanation = geminiService.generateExplanation(content);
-            
+
             // Step 2: Create a new page
             TextBookPage page = new TextBookPage();
             page.setChapter(chapter);
@@ -57,7 +58,8 @@ public class DemoController {
             page.setContent(content);
             page.setSummary(summary);
             page.setExplanation(explanation);
-            
+            page.setCreatedBy(userId); // Set the user who created this content
+
             TextBookPage savedPage = textBookPageService.createPage(page);
             
             // Step 3: Generate multiple quizzes (5 questions)

@@ -20,6 +20,7 @@ import {
 import { apiService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 const ContentCreator = () => {
   const [formData, setFormData] = useState({
@@ -32,6 +33,7 @@ const ContentCreator = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Scroll-based parallax
   const { scrollY } = useScroll();
@@ -90,7 +92,12 @@ const ContentCreator = () => {
     setSuccess('');
 
     try {
-      const response = await apiService.createContent(formData);
+      // Include userId in the request if user is logged in
+      const requestData = {
+        ...formData,
+        userId: user?.id || null
+      };
+      const response = await apiService.createContent(requestData);
       setResult(response.data);
       setSuccess('Content generated successfully! You can now view your interactive learning materials.');
     } catch (error) {

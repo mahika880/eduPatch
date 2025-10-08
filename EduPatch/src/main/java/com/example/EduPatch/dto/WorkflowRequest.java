@@ -12,15 +12,26 @@ public class WorkflowRequest {
     
     @JsonProperty("pageNumber")
     private String pageNumber;
-    
+
+    @JsonProperty("userId")
+    private String userId;
+
     // Default constructor
     public WorkflowRequest() {}
-    
+
     // Constructor with parameters
     public WorkflowRequest(String content, String chapter, String pageNumber) {
         this.content = content;
         this.chapter = chapter;
         this.pageNumber = pageNumber;
+    }
+
+    // Constructor with userId
+    public WorkflowRequest(String content, String chapter, String pageNumber, String userId) {
+        this.content = content;
+        this.chapter = chapter;
+        this.pageNumber = pageNumber;
+        this.userId = userId;
     }
     
     // Getters and setters
@@ -46,5 +57,13 @@ public class WorkflowRequest {
     
     public void setPageNumber(String pageNumber) {
         this.pageNumber = pageNumber;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
