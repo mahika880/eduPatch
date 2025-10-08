@@ -118,43 +118,8 @@ const TextbookViewer = () => {
 
   const downloadForOffline = () => {
     if (page) {
-      // Create a downloadable text file with the content
-      const content = `
-EduPatch - Offline Content
-==========================
-
-Chapter: ${page.chapter}
-Page Number: ${page.pageNumber}
-
-Content:
-${page.content}
-
-${page.summary ? `AI-Generated Summary:
-${page.summary}
-
-` : ''}${page.explanation ? `Detailed Explanation:
-${page.explanation}
-
-` : ''}Downloaded on: ${new Date().toLocaleString()}
-Source: EduPatch Application
-      `.trim();
-
-      // Create blob and download
-      const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${page.chapter.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_page_${page.pageNumber}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-
-      // Also cache in localStorage for offline viewing
-      localStorage.setItem(`page_${page.pageId}`, JSON.stringify(page));
-
-      // Show success message
-      alert('Content saved for offline access and downloaded to your device!');
+      // Already cached in localStorage
+      alert('Content saved for offline access!');
     }
   };
 
