@@ -269,7 +269,7 @@ const AdminLayout = ({ children }) => {
                   <Dashboard sx={{ mr: 1, fontSize: 18 }} />
                   Dashboard
                 </MenuItem>
-                <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/settings'); }}>
+                <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin/profile'); }}>
                   <Person sx={{ mr: 1, fontSize: 18 }} />
                   Profile
                 </MenuItem>
