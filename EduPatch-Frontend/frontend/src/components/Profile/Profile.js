@@ -24,13 +24,16 @@ import {
   PhotoCamera,
 } from '@mui/icons-material';
 
-// Sunset Color Palette matching the theme
+// Modern Color Palette matching the project theme
 const colors = {
-  primary: '#493129',
-  secondary: '#8b597b',
-  accent: '#e1c3d0',
-  light: '#f5e6d3',
-  lightest: '#faf5f0',
+  primary: '#FFFFFF',
+  secondary: '#F5F5F7',
+  text: '#1D1D1F',
+  textSecondary: '#86868B',
+  accent: '#2997FF',
+  subtle: '#E8E8E8',
+  navBackground: 'rgba(255, 255, 255, 0.8)',
+  glassBg: 'rgba(255, 255, 255, 0.7)',
 };
 
 const Profile = () => {
@@ -76,10 +79,10 @@ const Profile = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            background: `linear-gradient(135deg, ${colors.lightest} 0%, ${colors.light} 100%)`,
+            background: `linear-gradient(135deg, ${colors.secondary} 0%, ${colors.primary} 100%)`,
           }}
         >
-          <Typography variant="h6" sx={{ color: colors.primary }}>
+          <Typography variant="h6" sx={{ color: colors.text }}>
             Loading profile...
           </Typography>
         </Box>
@@ -95,8 +98,9 @@ const Profile = () => {
           elevation={0}
           sx={{
             mb: 4,
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-            color: 'white',
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${colors.subtle}`,
             borderRadius: 3,
             overflow: 'hidden',
             position: 'relative',
@@ -104,17 +108,17 @@ const Profile = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box display="flex" alignItems="center" mb={2}>
-              <Person sx={{ fontSize: 40, mr: 2 }} />
+              <Person sx={{ fontSize: 40, mr: 2, color: colors.accent }} />
               <Box>
-                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: colors.text }}>
                   My Profile 👤
                 </Typography>
-                <Typography variant="h6" sx={{ opacity: 0.9 }}>
+                <Typography variant="h6" sx={{ color: colors.textSecondary }}>
                   View and manage your account information
                 </Typography>
               </Box>
             </Box>
-            <Typography variant="body1" sx={{ opacity: 0.8 }}>
+            <Typography variant="body1" sx={{ color: colors.textSecondary }}>
               Keep your profile up to date to personalize your EduPatch experience
             </Typography>
           </CardContent>
@@ -129,8 +133,9 @@ const Profile = () => {
             <Card
               elevation={0}
               sx={{
-                background: `${colors.accent}15`,
-                border: `1px solid ${colors.accent}40`,
+                background: colors.glassBg,
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${colors.subtle}`,
                 borderRadius: 3,
                 textAlign: 'center',
                 p: 3,
@@ -142,7 +147,7 @@ const Profile = () => {
                   sx={{
                     width: 120,
                     height: 120,
-                    background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                    background: `linear-gradient(135deg, ${colors.accent}, ${colors.textSecondary})`,
                     fontSize: '3rem',
                     fontWeight: 700,
                     mx: 'auto',
@@ -158,8 +163,7 @@ const Profile = () => {
                     background: colors.accent,
                     color: colors.primary,
                     '&:hover': {
-                      background: colors.secondary,
-                      color: 'white',
+                      background: colors.text,
                     },
                   }}
                   onClick={() => alert('Avatar upload feature coming soon! 📷')}
@@ -167,20 +171,20 @@ const Profile = () => {
                   <PhotoCamera />
                 </IconButton>
               </Box>
-              <Typography variant="h5" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
+              <Typography variant="h5" sx={{ color: colors.text, fontWeight: 600, mb: 1 }}>
                 {profileData.name || 'User'}
               </Typography>
               <Chip
                 label={profileData.role || 'User'}
                 icon={<AdminPanelSettings />}
                 sx={{
-                  background: colors.light,
-                  color: colors.primary,
+                  background: colors.secondary,
+                  color: colors.text,
                   fontWeight: 600,
                   mb: 2,
                 }}
               />
-              <Typography variant="body2" sx={{ color: colors.secondary, mb: 2 }}>
+              <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 2 }}>
                 Member since 2024
               </Typography>
             </Card>
@@ -191,14 +195,15 @@ const Profile = () => {
             <Card
               elevation={0}
               sx={{
-                background: colors.lightest,
-                border: `1px solid ${colors.light}`,
+                background: colors.glassBg,
+                backdropFilter: 'blur(20px)',
+                border: `1px solid ${colors.subtle}`,
                 borderRadius: 3,
                 p: 3,
               }}
             >
               <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <Typography variant="h5" sx={{ color: colors.primary, fontWeight: 600 }}>
+                <Typography variant="h5" sx={{ color: colors.text, fontWeight: 600 }}>
                   Profile Information
                 </Typography>
                 <Button
@@ -207,9 +212,9 @@ const Profile = () => {
                   onClick={() => alert('Edit profile feature available in Settings! ⚙️')}
                   sx={{
                     borderColor: colors.accent,
-                    color: colors.secondary,
+                    color: colors.text,
                     '&:hover': {
-                      borderColor: colors.secondary,
+                      borderColor: colors.accent,
                       background: `${colors.accent}10`,
                     },
                   }}
@@ -219,51 +224,51 @@ const Profile = () => {
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle1" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
+                <Typography variant="subtitle1" sx={{ color: colors.text, fontWeight: 600, mb: 1 }}>
                   Full Name
                 </Typography>
                 <Paper
                   sx={{
                     p: 2,
-                    background: 'white',
-                    border: `1px solid ${colors.accent}30`,
+                    background: colors.primary,
+                    border: `1px solid ${colors.subtle}`,
                     borderRadius: 2,
                     display: 'flex',
                     alignItems: 'center',
                   }}
                 >
-                  <Person sx={{ color: colors.secondary, mr: 2 }} />
-                  <Typography variant="body1" sx={{ color: colors.primary }}>
+                  <Person sx={{ color: colors.accent, mr: 2 }} />
+                  <Typography variant="body1" sx={{ color: colors.text }}>
                     {profileData.name || 'Not provided'}
                   </Typography>
                 </Paper>
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <Typography variant="subtitle1" sx={{ color: colors.primary, fontWeight: 600, mb: 1 }}>
+                <Typography variant="subtitle1" sx={{ color: colors.text, fontWeight: 600, mb: 1 }}>
                   Email Address
                 </Typography>
                 <Paper
                   sx={{
                     p: 2,
-                    background: 'white',
-                    border: `1px solid ${colors.accent}30`,
+                    background: colors.primary,
+                    border: `1px solid ${colors.subtle}`,
                     borderRadius: 2,
                     display: 'flex',
                     alignItems: 'center',
                   }}
                 >
-                  <Email sx={{ color: colors.secondary, mr: 2 }} />
-                  <Typography variant="body1" sx={{ color: colors.primary }}>
+                  <Email sx={{ color: colors.accent, mr: 2 }} />
+                  <Typography variant="body1" sx={{ color: colors.text }}>
                     {profileData.email || 'Not provided'}
                   </Typography>
                 </Paper>
               </Box>
 
-              <Divider sx={{ my: 3, borderColor: colors.light }} />
+              <Divider sx={{ my: 3, borderColor: colors.subtle }} />
 
               <Box>
-                <Typography variant="subtitle1" sx={{ color: colors.primary, fontWeight: 600, mb: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: colors.text, fontWeight: 600, mb: 2 }}>
                   Account Status
                 </Typography>
                 <Box display="flex" gap={2} flexWrap="wrap">
@@ -279,15 +284,15 @@ const Profile = () => {
                     label={profileData.role || 'User'}
                     sx={{
                       background: colors.secondary,
-                      color: 'white',
+                      color: colors.text,
                       fontWeight: 600,
                     }}
                   />
                   <Chip
                     label="Verified"
                     sx={{
-                      background: colors.light,
-                      color: colors.primary,
+                      background: colors.subtle,
+                      color: colors.text,
                       fontWeight: 600,
                     }}
                   />
