@@ -107,13 +107,16 @@ const Settings = () => {
     confirmPassword: ''
   });
 
-  // Sunset Color Palette
+  // Modern Color Palette matching the project theme
   const colors = {
-    primary: '#493129',
-    secondary: '#8b597b',
-    accent: '#e1c3d0',
-    light: '#f5e6d3',
-    lightest: '#faf5f0',
+    primary: '#FFFFFF',
+    secondary: '#F5F5F7',
+    text: '#1D1D1F',
+    textSecondary: '#86868B',
+    accent: '#2997FF',
+    subtle: '#E8E8E8',
+    navBackground: 'rgba(255, 255, 255, 0.8)',
+    glassBg: 'rgba(255, 255, 255, 0.7)',
   };
 
   useEffect(() => {
@@ -125,14 +128,13 @@ const Settings = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/id/${user.userId}`);
-      if (response.ok) {
-        const userData = await response.json();
+      const response = await apiService.getUserById(user.id);
+      if (response.data) {
         setProfileData({
-          name: userData.name || '',
-          email: userData.email || '',
-          phone: userData.phone || '',
-          role: userData.role || '',
+          name: response.data.name || '',
+          email: response.data.email || '',
+          phone: response.data.phone || '',
+          role: response.data.role || '',
           avatar: null,
         });
       }
@@ -144,14 +146,13 @@ const Settings = () => {
 
   const fetchUserSettings = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/settings/${user.userId}`);
-      if (response.ok) {
-        const userSettings = await response.json();
+      const response = await apiService.getUserSettings(user.id);
+      if (response.data) {
         setSettings({
-          notifications: userSettings.notifications || settings.notifications,
-          appearance: userSettings.appearance || settings.appearance,
-          privacy: userSettings.privacy || settings.privacy,
-          system: userSettings.system || settings.system,
+          notifications: response.data.notifications || settings.notifications,
+          appearance: response.data.appearance || settings.appearance,
+          privacy: response.data.privacy || settings.privacy,
+          system: response.data.system || settings.system,
         });
       }
     } catch (error) {
@@ -167,21 +168,9 @@ const Settings = () => {
 
   const handleProfileSave = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/profile/${user.userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData),
-      });
-
-      if (response.ok) {
-        setEditMode(false);
-        showSnackbar('Profile updated successfully! 👤', 'success');
-      } else {
-        const errorData = await response.json();
-        showSnackbar(errorData.error || 'Failed to update profile', 'error');
-      }
+      await apiService.updateProfile(user.id, profileData);
+      setEditMode(false);
+      showSnackbar('Profile updated successfully! 👤', 'success');
     } catch (error) {
       console.error('Error updating profile:', error);
       showSnackbar('Failed to update profile', 'error');
@@ -196,25 +185,12 @@ const Settings = () => {
         [setting]: value,
       },
     };
-    
-    setSettings(newSettings);
-    
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/settings/${user.userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newSettings),
-      });
 
-      if (response.ok) {
-        showSnackbar(`${setting.charAt(0).toUpperCase() + setting.slice(1)} ${value ? 'enabled' : 'disabled'}! ⚙️`, 'success');
-      } else {
-        // Revert on error
-        setSettings(settings);
-        showSnackbar('Failed to update setting', 'error');
-      }
+    setSettings(newSettings);
+
+    try {
+      await apiService.updateUserSettings(user.id, newSettings);
+      showSnackbar(`${setting.charAt(0).toUpperCase() + setting.slice(1)} ${value ? 'enabled' : 'disabled'}! ⚙️`, 'success');
     } catch (error) {
       console.error('Error updating setting:', error);
       setSettings(settings);
@@ -227,37 +203,22 @@ const Settings = () => {
       showSnackbar('Please fill in all password fields', 'error');
       return;
     }
-    
+
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       showSnackbar('New passwords do not match', 'error');
       return;
     }
-    
+
     if (passwordData.newPassword.length < 8) {
       showSnackbar('New password must be at least 8 characters long', 'error');
       return;
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'https://edupatch.onrender.com'}/user/password/${user.userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword,
-        }),
-      });
-
-      if (response.ok) {
-        setPasswordDialog(false);
-        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        showSnackbar('Password updated successfully! 🔐', 'success');
-      } else {
-        const errorData = await response.json();
-        showSnackbar(errorData.error || 'Failed to change password', 'error');
-      }
+      await apiService.changePassword(user.id, passwordData);
+      setPasswordDialog(false);
+      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      showSnackbar('Password updated successfully! 🔐', 'success');
     } catch (error) {
       console.error('Error changing password:', error);
       showSnackbar('Failed to change password', 'error');
@@ -301,16 +262,16 @@ const Settings = () => {
             // Update profile if present
             if (importedData.profile) {
               setProfileData(importedData.profile);
-              await apiService.updateProfile(user.userId, {
+              await apiService.updateProfile(user.id, {
                 name: importedData.profile.name,
                 email: importedData.profile.email,
               });
             }
-            
+
             // Update settings if present
             if (importedData.settings) {
               setSettings(importedData.settings);
-              
+
               const backendSettings = {
                 emailNotifications: importedData.settings.notifications.email,
                 pushNotifications: importedData.settings.notifications.push,
@@ -328,8 +289,8 @@ const Settings = () => {
                 cacheSize: importedData.settings.system.cacheSize,
                 language: importedData.settings.system.language,
               };
-              
-              await apiService.updateUserSettings(user.userId, backendSettings);
+
+              await apiService.updateUserSettings(user.id, backendSettings);
             }
             
             showSnackbar('Settings imported successfully! 📥', 'success');
@@ -408,8 +369,9 @@ const Settings = () => {
           elevation={0}
           sx={{
             mb: 4,
-            background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
-            color: 'white',
+            background: colors.glassBg,
+            backdropFilter: 'blur(20px)',
+            border: `1px solid ${colors.subtle}`,
             borderRadius: 3,
             overflow: 'hidden',
             position: 'relative',
@@ -417,17 +379,17 @@ const Settings = () => {
         >
           <CardContent sx={{ p: 4 }}>
             <Box display="flex" alignItems="center" mb={2}>
-              <SettingsIcon sx={{ fontSize: 40, mr: 2 }} />
+              <SettingsIcon sx={{ fontSize: 40, mr: 2, color: colors.accent }} />
               <Box>
-                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, mb: 1, color: colors.text }}>
                   Settings ⚙️
                 </Typography>
-                <Typography variant="h6" sx={{ opacity: 0.9 }}>
+                <Typography variant="h6" sx={{ color: colors.textSecondary }}>
                   Customize your EduPatch AI experience
                 </Typography>
               </Box>
             </Box>
-            <Typography variant="body1" sx={{ opacity: 0.8 }}>
+            <Typography variant="body1" sx={{ color: colors.textSecondary }}>
               Manage your profile, preferences, and system settings
             </Typography>
           </CardContent>
@@ -439,14 +401,14 @@ const Settings = () => {
         <Card
           elevation={0}
           sx={{
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: colors.glassBg,
             backdropFilter: 'blur(20px)',
-            border: `1px solid ${colors.accent}40`,
+            border: `1px solid ${colors.subtle}`,
             borderRadius: 3,
             overflow: 'hidden',
           }}
         >
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ borderBottom: 1, borderColor: colors.subtle }}>
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
@@ -454,16 +416,16 @@ const Settings = () => {
               scrollButtons="auto"
               sx={{
                 '& .MuiTab-root': {
-                  color: colors.secondary,
+                  color: colors.textSecondary,
                   fontWeight: 600,
                   textTransform: 'none',
                   fontSize: '1rem',
                   '&.Mui-selected': {
-                    color: colors.primary,
+                    color: colors.accent,
                   },
                 },
                 '& .MuiTabs-indicator': {
-                  backgroundColor: colors.secondary,
+                  backgroundColor: colors.accent,
                   height: 3,
                 },
               }}
@@ -483,8 +445,9 @@ const Settings = () => {
                 <Card
                   elevation={0}
                   sx={{
-                    background: `${colors.accent}15`,
-                    border: `1px solid ${colors.accent}40`,
+                    background: colors.glassBg,
+                    backdropFilter: 'blur(20px)',
+                    border: `1px solid ${colors.subtle}`,
                     borderRadius: 3,
                     textAlign: 'center',
                     p: 3,
@@ -496,7 +459,7 @@ const Settings = () => {
                         {
                           width: 120,
                           height: 120,
-                          background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                          background: `linear-gradient(135deg, ${colors.accent}, ${colors.textSecondary})`,
                           fontSize: '3rem',
                           fontWeight: 700,
                         }
@@ -530,8 +493,8 @@ const Settings = () => {
                     label={profileData.role || 'User'}
                     sx={
                       {
-                        background: colors.light,
-                        color: colors.primary,
+                        background: colors.secondary,
+                        color: colors.text,
                         fontWeight: 600,
                       }
                     }
@@ -544,8 +507,9 @@ const Settings = () => {
                   elevation={0}
                   sx={
                     {
-                      background: colors.lightest,
-                      border: `1px solid ${colors.light}`,
+                      background: colors.glassBg,
+                      backdropFilter: 'blur(20px)',
+                      border: `1px solid ${colors.subtle}`,
                       borderRadius: 3,
                       p: 3,
                     }
@@ -562,11 +526,12 @@ const Settings = () => {
                       sx={
                         editMode
                           ? {
-                              background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                              background: `linear-gradient(135deg, ${colors.accent}, ${colors.textSecondary})`,
+                              color: colors.primary,
                             }
                           : {
                               borderColor: colors.accent,
-                              color: colors.secondary,
+                              color: colors.text,
                             }
                       }
                     >
@@ -635,7 +600,7 @@ const Settings = () => {
                           {
                             '& .MuiOutlinedInput-root': {
                               borderRadius: 2,
-                              background: editMode ? 'white' : colors.lightest,
+                              background: editMode ? 'white' : colors.secondary,
                             },
                           }
                         }
@@ -651,7 +616,7 @@ const Settings = () => {
                           {
                             '& .MuiOutlinedInput-root': {
                               borderRadius: 2,
-                              background: colors.lightest,
+                              background: colors.secondary,
                             },
                           }
                         }
@@ -670,7 +635,7 @@ const Settings = () => {
                         }}
                         sx={{
                           borderColor: colors.accent,
-                          color: colors.secondary,
+                          color: colors.text,
                         }}
                       >
                         Cancel
@@ -690,8 +655,9 @@ const Settings = () => {
                   elevation={0}
                   sx={
                     {
-                      background: colors.lightest,
-                      border: `1px solid ${colors.light}`,
+                      background: colors.glassBg,
+                      backdropFilter: 'blur(20px)',
+                      border: `1px solid ${colors.subtle}`,
                       borderRadius: 3,
                       p: 3,
                     }
@@ -729,10 +695,10 @@ const Settings = () => {
                     <ListItem
                       sx={
                         {
-                          background: 'white',
+                          background: colors.primary,
                           borderRadius: 2,
                           mb: 2,
-                          border: `1px solid ${colors.accent}40`,
+                          border: `1px solid ${colors.subtle}`,
                         }
                       }
                     >
@@ -769,8 +735,9 @@ const Settings = () => {
                   elevation={0}
                   sx={
                     {
-                      background: `${colors.accent}15`,
-                      border: `1px solid ${colors.accent}40`,
+                      background: colors.glassBg,
+                      backdropFilter: 'blur(20px)',
+                      border: `1px solid ${colors.subtle}`,
                       borderRadius: 3,
                       p: 3,
                     }
@@ -904,17 +871,18 @@ const Settings = () => {
                   <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
                     Configure when you want to receive notifications
                   </Alert>
-                  <Box sx={{ p: 3, background: 'white', borderRadius: 2, textAlign: 'center' }}>
+                  <Box sx={{ p: 3, background: colors.primary, borderRadius: 2, textAlign: 'center' }}>
                     <Typography variant="body1" sx={{ color: colors.secondary, mb: 2 }}>
                       🕐 Active Hours
                     </Typography>
-                    <Typography variant="h6" sx={{ color: colors.primary, fontWeight: 600 }}>
+                    <Typography variant="h6" sx={{ color: colors.text, fontWeight: 600 }}>
                       9:00 AM - 6:00 PM
                     </Typography>
                     <Button
                       size="small"
                       sx={{ mt: 2, color: colors.secondary }}
                       onClick={() => showSnackbar('Schedule customization coming soon! ⏰', 'info')}
+                      sx={{ color: colors.accent }}
                     >
                       Customize Schedule
                     </Button>
@@ -1001,9 +969,9 @@ const Settings = () => {
                   <Typography variant="h6" sx={{ color: colors.primary, fontWeight: 600, mb: 3 }}>
                     🌈 Color Palette Preview
                   </Typography>
-                  <Box sx={{ p: 3, background: 'white', borderRadius: 2 }}>
-                    <Typography variant="body2" sx={{ color: colors.secondary, mb: 2 }}>
-                      Current Theme: Sunset
+                  <Box sx={{ p: 3, background: colors.primary, borderRadius: 2 }}>
+                    <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 2 }}>
+                      Current Theme: EduPatch Modern
                     </Typography>
                     <Box display="flex" gap={1} mb={3}>
                       {[
@@ -1103,7 +1071,7 @@ const Settings = () => {
                     ))}
                   </List>
 
-                  <Box sx={{ mt: 3, p: 3, background: 'white', borderRadius: 2 }}>
+                  <Box sx={{ mt: 3, p: 3, background: colors.primary, borderRadius: 2 }}>
                     <Typography variant="body2" sx={{ color: colors.secondary, mb: 2 }}>
                       Cache Usage: {settings.system?.cacheSize || '500MB'}
                     </Typography>
@@ -1267,7 +1235,8 @@ const Settings = () => {
             onClick={handlePasswordChange}
             sx={
               {
-                background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
+                background: `linear-gradient(135deg, ${colors.accent}, ${colors.textSecondary})`,
+                color: colors.primary,
               }
             }
           >

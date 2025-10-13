@@ -13,7 +13,6 @@ import ContentLibrary from './components/ContentLibrary/ContentLibrary';
 import QuizManagement from './components/QuizManagement/QuizManagement';
 import QRScanner from './components/QRScanner/QRScanner';
 import Settings from './components/Settings/Settings'; // Add this import
-import Profile from './components/Profile/Profile'; // Add this import
 import About from './components/About/About';
 import Features from './components/Features/Features';
 import AdminLayout from './components/Layout/AdminLayout';
@@ -60,7 +59,6 @@ const AppContent = () => {
                   <Route path="about" element={<About />} />
                   <Route path="cache" element={<div>Offline Cache Page (Coming Soon)</div>} />
                   <Route path="settings" element={<Settings />} />
-                  <Route path="profile" element={<Profile />} />
                 </Routes>
               </AdminLayout>
             </AdminRoute>
