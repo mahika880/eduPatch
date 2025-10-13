@@ -54,7 +54,7 @@ const Profile = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await apiService.getUserById(user.userId);
+      const response = await apiService.getUserById(user.id);
       if (response.data) {
         setProfileData({
           name: response.data.name || '',
