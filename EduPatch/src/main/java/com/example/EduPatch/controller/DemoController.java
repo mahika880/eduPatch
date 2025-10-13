@@ -62,8 +62,8 @@ public class DemoController {
 
             TextBookPage savedPage = textBookPageService.createPage(page);
             
-            // Step 3: Generate multiple quizzes (5 questions)
-            List<Quiz> quizzes = geminiService.generateQuiz(content, savedPage.getPageId());
+            // Step 3: Generate multiple quizzes (5 questions) based on content, summary, and explanation
+            List<Quiz> quizzes = geminiService.generateExamQuiz(content, summary, explanation, savedPage.getPageId());
             List<Quiz> savedQuizzes = new ArrayList<>();
             for (Quiz quiz : quizzes) {
                 savedQuizzes.add(quizService.createQuiz(quiz));
