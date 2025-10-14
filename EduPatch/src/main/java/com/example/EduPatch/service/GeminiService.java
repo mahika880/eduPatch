@@ -1,48 +1,24 @@
 package com.example.EduPatch.service;
 
 import com.example.EduPatch.entity.Quiz;
-import com.google.cloud.aiplatform.v1beta1.GenerateContentRequest;
-import com.google.cloud.aiplatform.v1beta1.GenerateContentResponse;
-import com.google.cloud.aiplatform.v1beta1.GenerationConfig;
-import com.google.cloud.aiplatform.v1beta1.Part;
-import com.google.cloud.aiplatform.v1beta1.PredictionServiceClient;
-import com.google.cloud.aiplatform.v1beta1.PredictionServiceSettings;
-import com.google.protobuf.Value;
-import com.google.protobuf.util.JsonFormat;
-import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class GeminiService {
 
-    @org.springframework.beans.factory.annotation.Value("${gemini.api.key}")
+    @Value("${gemini.api.key}")
     private String apiKey;
 
-    @org.springframework.beans.factory.annotation.Value("${gemini.project.id}")
-    private String projectId;
-
-    @org.springframework.beans.factory.annotation.Value("${gemini.location.id}")
-    private String locationId;
-
-    @org.springframework.beans.factory.annotation.Value("${gemini.publisher.model}")
-    private String publisherModel;
-
-    private PredictionServiceClient predictionServiceClient;
-
-    public GeminiService() throws IOException {
-        PredictionServiceSettings settings = PredictionServiceSettings.newBuilder()
-                .setEndpoint(locationId + "-aiplatform.googleapis.com:443")
-                .build();
-        this.predictionServiceClient = PredictionServiceClient.create(settings);
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
 
     /**
      * Generates a summary of the given content
@@ -68,44 +44,73 @@ public class GeminiService {
      * Generates a quiz based on the given content
      * @param content The textbook content to create quiz from
      * @param pageId The page ID for the quiz
-     * @return A Quiz object with 5 questions
+     * @return A list of Quiz objects
      */
     public List<Quiz> generateQuiz(String content, String pageId) {
-        String prompt = String.format("Generate 5 multiple-choice questions based on the following textbook content. Each question should have 4 options (A, B, C, D) and one correct answer. Format each question as: Question: [question text] Options: A. [option1] B. [option2] C. [option3] D. [option4] Answer: [correct letter] Separate each question with '---'. Content: %s", content);
+        String prompt = String.format(
+                "Generate 5 multiple-choice questions based on the following textbook content. " +
+                        "Each question should have 4 options (A, B, C, D) and one correct answer. " +
+                        "Format each question as: " +
+                        "Question: [question text] " +
+                        "Options: A. [option1] B. [option2] C. [option3] D. [option4] " +
+                        "Answer: [correct letter] " +
+                        "Separate each question with '---'. Content: %s", content);
+
         String response = generateWithGemini(prompt);
         return parseQuizResponse(response, pageId);
     }
 
     /**
-     * Generate content using Google Gemini API
+     * Core method to generate response from Gemini API using REST
      */
     private String generateWithGemini(String prompt) {
+        if (apiKey == null || apiKey.isEmpty()) {
+            return "Gemini API key is not configured.";
+        }
+
         try {
-            String endpoint = String.format("projects/%s/locations/%s/publishers/google/models/%s", projectId, locationId, publisherModel);
+            String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=" + apiKey;
 
-            Value.Builder instanceValue = Value.newBuilder();
-            instanceValue.setStringValue(prompt);
+            // Create request body
+            Map<String, Object> requestBody = new HashMap<>();
+            List<Map<String, Object>> contents = new ArrayList<>();
 
-            GenerateContentRequest request = GenerateContentRequest.newBuilder()
-                    .setModel(endpoint)
-                    .addContents(com.google.cloud.aiplatform.v1beta1.Content.newBuilder()
-                            .addParts(Part.newBuilder().setText(prompt).build())
-                            .build())
-                    .setGenerationConfig(GenerationConfig.newBuilder()
-                            .setTemperature(0.7f)
-                            .setTopK(40)
-                            .setTopP(0.95f)
-                            .setMaxOutputTokens(2048)
-                            .build())
-                    .build();
+            Map<String, Object> content = new HashMap<>();
+            List<Map<String, Object>> parts = new ArrayList<>();
+            Map<String, Object> part = new HashMap<>();
+            part.put("text", prompt);
+            parts.add(part);
+            content.put("parts", parts);
+            contents.add(content);
 
-            GenerateContentResponse response = predictionServiceClient.generateContent(request);
+            requestBody.put("contents", contents);
 
-            if (response.getCandidatesCount() > 0) {
-                return response.getCandidates(0).getContent().getParts(0).getText();
-            } else {
-                return "Unable to generate content. Please try again.";
+            // Set headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            // Create HTTP entity
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+
+            // Make the request
+            ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                Map<String, Object> responseBody = response.getBody();
+                List<Map<String, Object>> candidates = (List<Map<String, Object>>) responseBody.get("candidates");
+
+                if (candidates != null && !candidates.isEmpty()) {
+                    Map<String, Object> candidate = candidates.get(0);
+                    Map<String, Object> contentResponse = (Map<String, Object>) candidate.get("content");
+                    List<Map<String, Object>> partsResponse = (List<Map<String, Object>>) contentResponse.get("parts");
+
+                    if (partsResponse != null && !partsResponse.isEmpty()) {
+                        return (String) partsResponse.get(0).get("text");
+                    }
+                }
             }
+
+            return "Unable to generate content. Please try again.";
         } catch (Exception e) {
             e.printStackTrace();
             return "Error generating content: " + e.getMessage();
@@ -113,10 +118,12 @@ public class GeminiService {
     }
 
     /**
-     * Parse quiz response from Gemini API
+     * Parse quiz response from Gemini output
      */
     private List<Quiz> parseQuizResponse(String response, String pageId) {
         List<Quiz> quizzes = new ArrayList<>();
+        if (response == null || response.isEmpty()) return quizzes;
+
         String[] questions = response.split("---");
 
         for (String questionBlock : questions) {
@@ -135,7 +142,7 @@ public class GeminiService {
                 String optionsText = optionsMatcher.find() ? optionsMatcher.group(1).trim() : "";
 
                 List<String> options = new ArrayList<>();
-                Pattern optionPattern = Pattern.compile("([A-D])\\.\\s*(.+?)(?=\\s*[A-D]\\.|$)", Pattern.DOTALL);
+                Pattern optionPattern = Pattern.compile("([A-D])\\.\\s*(.+?)(?=\\s*[A-D]\\.\\s|$)", Pattern.DOTALL);
                 Matcher optionMatcher = optionPattern.matcher(optionsText);
                 while (optionMatcher.find()) {
                     options.add(optionMatcher.group(1) + ". " + optionMatcher.group(2).trim());
@@ -149,31 +156,27 @@ public class GeminiService {
                 if (options.size() == 4) {
                     quizzes.add(createQuiz(pageId, question, options, answer));
                 }
-            } catch (Exception e) {
-                // Skip malformed questions
-                continue;
-            }
+            } catch (Exception ignored) { }
         }
 
-        // If parsing failed, return generic quiz
+        // Default quiz if parsing fails
         if (quizzes.isEmpty()) {
-            return Arrays.asList(
-                createQuiz(pageId, "What is the main topic discussed in this content?",
-                    Arrays.asList("A. Basic principles", "B. Advanced concepts", "C. Practical applications", "D. All of the above"), "D"),
-                createQuiz(pageId, "Which aspect is most emphasized in this content?",
-                    Arrays.asList("A. Historical context", "B. Scientific principles", "C. Mathematical formulas", "D. Experimental procedures"), "B"),
-                createQuiz(pageId, "What type of learning does this content support?",
-                    Arrays.asList("A. Memorization only", "B. Conceptual understanding", "C. Practical skills", "D. Both B and C"), "D"),
-                createQuiz(pageId, "How does this content relate to real-world applications?",
-                    Arrays.asList("A. No practical relevance", "B. Limited applications", "C. Broad practical significance", "D. Only theoretical importance"), "C"),
-                createQuiz(pageId, "What is the best approach to master this content?",
-                    Arrays.asList("A. Rote memorization", "B. Understanding concepts and connections", "C. Skipping difficult parts", "D. Reading once"), "B")
-            );
+            quizzes.addAll(Arrays.asList(
+                    createQuiz(pageId, "What is the main topic discussed in this content?",
+                            Arrays.asList("A. Basic principles", "B. Advanced concepts", "C. Practical applications", "D. All of the above"), "D"),
+                    createQuiz(pageId, "Which aspect is most emphasized in this content?",
+                            Arrays.asList("A. Historical context", "B. Scientific principles", "C. Mathematical formulas", "D. Experimental procedures"), "B"),
+                    createQuiz(pageId, "What type of learning does this content support?",
+                            Arrays.asList("A. Memorization only", "B. Conceptual understanding", "C. Practical skills", "D. Both B and C"), "D"),
+                    createQuiz(pageId, "How does this content relate to real-world applications?",
+                            Arrays.asList("A. No practical relevance", "B. Limited applications", "C. Broad practical significance", "D. Only theoretical importance"), "C"),
+                    createQuiz(pageId, "What is the best approach to master this content?",
+                            Arrays.asList("A. Rote memorization", "B. Understanding concepts and connections", "C. Skipping difficult parts", "D. Reading once"), "B")
+            ));
         }
 
         return quizzes;
     }
-
 
     private Quiz createQuiz(String pageId, String question, List<String> options, String answer) {
         Quiz quiz = new Quiz();
