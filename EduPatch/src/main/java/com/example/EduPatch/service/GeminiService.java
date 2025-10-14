@@ -9,8 +9,9 @@ import com.google.cloud.aiplatform.v1beta1.PredictionServiceClient;
 import com.google.cloud.aiplatform.v1beta1.PredictionServiceSettings;
 import com.google.protobuf.Value;
 import com.google.protobuf.util.JsonFormat;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,16 +23,16 @@ import java.util.regex.Pattern;
 @Service
 public class GeminiService {
 
-    @Value("${gemini.api.key}")
+    @org.springframework.beans.factory.annotation.Value("${gemini.api.key}")
     private String apiKey;
 
-    @Value("${gemini.project.id}")
+    @org.springframework.beans.factory.annotation.Value("${gemini.project.id}")
     private String projectId;
 
-    @Value("${gemini.location.id}")
+    @org.springframework.beans.factory.annotation.Value("${gemini.location.id}")
     private String locationId;
 
-    @Value("${gemini.publisher.model}")
+    @org.springframework.beans.factory.annotation.Value("${gemini.publisher.model}")
     private String publisherModel;
 
     private PredictionServiceClient predictionServiceClient;
