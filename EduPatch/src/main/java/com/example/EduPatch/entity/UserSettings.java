@@ -13,10 +13,6 @@ public class UserSettings {
     @Id
     private String id;
     private String userId;
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
     private Map<String, Object> notifications = new HashMap<>();
     private Map<String, Object> appearance = new HashMap<>();
     private Map<String, Object> privacy = new HashMap<>();
