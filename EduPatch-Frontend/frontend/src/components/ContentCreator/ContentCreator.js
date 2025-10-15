@@ -737,7 +737,7 @@ const ContentCreator = () => {
                           borderRadius: 2,
                           background: 'rgba(76, 175, 80, 0.1)',
                           border: `1px solid rgba(76, 175, 80, 0.3)`,
-                          color: 'white',
+                          color: colors.text,
                           '& .MuiAlert-icon': {
                             color: '#4caf50',
                           },
